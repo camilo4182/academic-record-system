@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
+@RequestMapping("users")
 public class UserController implements IUserController {
 
     private final IUserService userService;
@@ -22,7 +23,7 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<User> findById(@PathVariable("id") long id) {
         try {
             User user = userService.findById(id);
@@ -32,22 +33,9 @@ public class UserController implements IUserController {
         }
     }
 
-    /*
     @Override
-    @GetMapping("/{name}")
-    public ResponseEntity<User> findByName(@PathVariable("name") String name) {
-        try {
-            User user = userService.findByName(name);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    */
-
-    @Override
-    @GetMapping("/")
-    public ResponseEntity<List<User>> findAll(@RequestParam(required = false) String name) {
+    @GetMapping
+    public ResponseEntity<List<User>> findAll(@RequestParam(name = "name", required = false) String name) {
         if (name == null) {
             List<User> users = userService.findAll();
             if (users.isEmpty()) {
@@ -68,18 +56,18 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> save(@RequestBody User user) {
         try {
             userService.save(user);
-            return new ResponseEntity<>("User was created successfully", HttpStatus.OK);
+            return new ResponseEntity<>("User was created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable("id") long id, @RequestBody User user) {
         try {
             userService.update(id, user);
@@ -90,7 +78,7 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") long id) {
         try {
             userService.deleteById(id);
@@ -101,9 +89,10 @@ public class UserController implements IUserController {
     }
 
     @Override
-    @DeleteMapping("/")
+    @DeleteMapping
     public ResponseEntity<String> deleteAll() {
         userService.deleteAll();
         return new ResponseEntity<>("All users were deleted", HttpStatus.OK);
     }
+
 }
