@@ -51,8 +51,8 @@ public class UserService implements IUserService {
 
     @Override
     public void deleteById(long id) throws Exception {
-        int modifiedRows = userRepository.deleteById(id);
-        if (modifiedRows == 0) {
+        int deletedRows = userRepository.deleteById(id);
+        if (deletedRows == 0) {
             throw new Exception("User does not exist");
         }
     }

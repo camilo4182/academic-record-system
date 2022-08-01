@@ -1,15 +1,21 @@
 package training.path.academicrecordsystem.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 
     private long id;
     private String name;
+    private List<Course> courses;
 
     public User() {
+        courses = new ArrayList<>();
     }
 
     public User(String name) {
         this.name = name;
+        this.courses = new ArrayList<>();
     }
 
     public User(long id, String name) {
@@ -31,6 +37,18 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void addCourse(Course course) {
+        courses.add(course);
     }
 
     @Override
