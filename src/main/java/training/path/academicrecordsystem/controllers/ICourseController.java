@@ -7,12 +7,12 @@ import java.util.List;
 
 public interface ICourseController {
 
-    ResponseEntity<Course> findById(long userId, long courseId);
+    ResponseEntity<Course> findCourseByIdAndUser(long userId, long courseId);
     //ResponseEntity<Course> findByName(String name);
-    ResponseEntity<List<Course>> findAll(String name);
-    ResponseEntity<String> save(Course course);
-    ResponseEntity<String> update(long id, Course course);
-    ResponseEntity<String> deleteById(long id);
-    ResponseEntity<String> deleteAll();
+    ResponseEntity<List<Course>> findAllCoursesByUser(long userId);
+    ResponseEntity<String> saveCourseForUser(long userId, Course course);
+    ResponseEntity<String> update(long userId, long courseId, Course course);
+    ResponseEntity<String> deleteById(long userId, long courseId);
+    ResponseEntity<String> deleteAllCoursesByUser(long userId);
     
 }

@@ -10,9 +10,10 @@ public interface ICourseService {
     Course findByName(String name);
     List<Course> findCoursesByUser(long userId);
     List<Course> findAll();
-    void save(Course course) throws Exception;
-    void update(long id, Course course) throws Exception;
+    void save(long userId, Course course) throws Exception;
+    void update(long courseId, Course course) throws Exception;
     void deleteById(long id) throws Exception;
+    public void deleteCoursesByUser(long userId) throws Exception;
     void deleteAll();
     
 }

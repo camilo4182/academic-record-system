@@ -51,8 +51,13 @@ public class JdbcCourseRepository implements CourseRepository {
 
     @Override
     public int update(long id, Course course) {
-        String query = "UPDATE courses SET course_name = ?, created_by = ? WHERE course_id = ?";
-        return jdbcTemplate.update(query, course.getName(), course.getCreatedBy().getId(), id);
+        String query = "UPDATE courses SET course_name = ? WHERE course_id = ?";
+        return jdbcTemplate.update(query, course.getName(), id);
+    }
+
+    public int deleteByUser(long userId) {
+        String query = "DELETE FROM courses WHERE created_by = ?";
+        return jdbcTemplate.update(query, userId);
     }
 
     @Override

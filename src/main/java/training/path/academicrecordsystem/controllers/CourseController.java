@@ -3,10 +3,7 @@ package training.path.academicrecordsystem.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.services.ICourseService;
@@ -27,10 +24,9 @@ public class CourseController implements ICourseController {
 
     @Override
     @GetMapping("users/{user_id}/courses/{course_id}")
-    public ResponseEntity<Course> findById(@PathVariable("user_id") long userId, @PathVariable("course_id") long courseId) {
+    public ResponseEntity<Course> findCourseByIdAndUser(@PathVariable("user_id") long userId, @PathVariable("course_id") long courseId) {
         try {
             List<Course> courses = courseService.findCoursesByUser(userId);
-
             Course course = courses.stream().filter(c -> c.getId() == courseId).findFirst().orElse(new Course("not found", null));
             return new ResponseEntity<>(course, HttpStatus.OK);
         } catch (NoSuchElementException e) {
@@ -39,27 +35,62 @@ public class CourseController implements ICourseController {
     }
 
     @Override
-    public ResponseEntity<List<Course>> findAll(String name) {
-        return null;
+    @GetMapping("users/{user_id}/courses")
+    public ResponseEntity<List<Course>> findAllCoursesByUser(@PathVariable("user_id") long userId) {
+        try {
+            List<Course> courses = courseService.findCoursesByUser(userId);
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public ResponseEntity<String> save(Course course) {
-        return null;
+    @PostMapping("users/{user_id}/courses")
+    public ResponseEntity<String> saveCourseForUser(@PathVariable("user_id") long userId, @RequestBody Course course) {
+        try {
+            courseService.save(userId, course);
+            return new ResponseEntity<>("Course created successfully.", HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> update(long id, Course course) {
-        return null;
+    @PutMapping("users/{user_id}/courses/{course_id}")
+    public ResponseEntity<String> update(@PathVariable("user_id") long userId, @PathVariable("course_id") long courseId, @RequestBody Course course) {
+        try {
+            courseService.update(courseId, course);
+            return new ResponseEntity<>("Course updated successfully.", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> deleteById(long id) {
-        return null;
+    @DeleteMapping("users/{user_id}/courses/{course_id}")
+    public ResponseEntity<String> deleteById(@PathVariable("user_id") long userId, @PathVariable("course_id") long courseId) {
+        try {
+            courseService.deleteById(courseId);
+            return new ResponseEntity<>("Course deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    public ResponseEntity<String> deleteAll() {
-        return null;
+    @DeleteMapping("users/{user_id}/courses")
+    public ResponseEntity<String> deleteAllCoursesByUser(@PathVariable("user_id") long userId) {
+        try {
+            courseService.deleteCoursesByUser(userId);
+            return new ResponseEntity<>("All courses for user " + userId + " were deleted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 }
