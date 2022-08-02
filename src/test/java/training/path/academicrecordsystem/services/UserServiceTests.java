@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.UserRepository;
 
@@ -55,7 +56,7 @@ class UserServiceTests {
 	}
 
 	@Test
-	void givenThereAreUsers_whenFindAll_thenReturnListWithUsers() {
+	void givenThereAreUsers_whenFindAll_thenReturnListWithUsers() throws NoUsersException {
 		List<User> fakeList = new ArrayList<>();
 		fakeList.add(new User(1L, "Juan"));
 		fakeList.add(new User(2L, "Ana"));
@@ -63,6 +64,7 @@ class UserServiceTests {
 
 		when(userRepository.findAll()).thenReturn(fakeList);
 
+		assertDoesNotThrow(() -> userService.findAll());
 		List<User> foundUsers = userService.findAll();
 		assertEquals(3, foundUsers.size());
 		assertEquals("Juan", foundUsers.get(0).getName());
@@ -76,7 +78,7 @@ class UserServiceTests {
 
 		when(userRepository.findAll()).thenReturn(emptyUsersList);
 
-		assertThrows(Exception.class, () -> userService.findAll());
+		assertThrows(NoUsersException.class, () -> userService.findAll());
 	}
 
 }

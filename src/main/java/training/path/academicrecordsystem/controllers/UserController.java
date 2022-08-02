@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.services.IUserService;
 
@@ -36,9 +37,12 @@ public class UserController implements IUserController {
     @Override
     @GetMapping
     public ResponseEntity<List<User>> findAll() {
-        List<User> users = userService.findAll();
-        if (users.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        try {
+            List<User> users = userService.findAll();
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (NoUsersException e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @Override

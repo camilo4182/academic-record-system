@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.UserRepository;
 
@@ -29,8 +30,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<User> findAll() throws NoUsersException {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) throw new NoUsersException();
+        return users;
     }
 
     @Override
