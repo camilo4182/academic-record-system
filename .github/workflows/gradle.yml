@@ -1,4 +1,4 @@
-name: Java CI service layer unit testing with Gradle
+name: Java CI unit testing on service layer with Gradle
 
 on: [push]
 
