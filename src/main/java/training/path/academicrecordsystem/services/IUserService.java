@@ -12,6 +12,6 @@ public interface IUserService {
     void save(User user) throws Exception;
     void update(long id, User user) throws Exception;
     void deleteById(long id) throws Exception;
-    void deleteAll();
+    void deleteAll() throws Exception;
 
 }

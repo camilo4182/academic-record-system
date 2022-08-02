@@ -35,18 +35,16 @@ public class UserService implements IUserService {
 
     @Override
     public void save(User user) throws Exception {
+        if (user.getName().isEmpty()) throw new Exception("Name cannot be empty");
         int row = userRepository.save(user);
-        if (row == 0) {
-            throw new Exception("Could not create the user");
-        }
+        if (row == 0) throw new Exception("Could not create the user");
     }
 
     @Override
     public void update(long id, User user) throws Exception {
+        if (user.getName().isEmpty()) throw new Exception("Name cannot be empty");
         int modifiedRows = userRepository.update(id, user);
-        if (modifiedRows == 0) {
-            throw new Exception("Could not update the user");
-        }
+        if (modifiedRows == 0) throw new Exception("Could not update the user");
     }
 
     @Override
@@ -58,7 +56,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteAll() {
-        userRepository.deleteAll();
+    public void deleteAll() throws Exception {
+        if (userRepository.findAll().isEmpty()) throw new Exception("No users available");
+        int rowsDeleted = userRepository.deleteAll();
+        if (rowsDeleted == 0) throw new Exception("Cannot delete users that are assigned to a course");
     }
 }

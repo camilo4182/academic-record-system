@@ -9,7 +9,7 @@ public interface IUserController {
 
     ResponseEntity<User> findById(long id);
     //ResponseEntity<User> findByName(String name);
-    ResponseEntity<List<User>> findAll(String name);
+    ResponseEntity<List<User>> findAll();
     ResponseEntity<String> save(User user);
     ResponseEntity<String> update(long id, User user);
     ResponseEntity<String> deleteById(long id);

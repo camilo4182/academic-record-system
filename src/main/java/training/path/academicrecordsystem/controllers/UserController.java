@@ -35,24 +35,10 @@ public class UserController implements IUserController {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<User>> findAll(@RequestParam(name = "name", required = false) String name) {
-        if (name == null) {
-            List<User> users = userService.findAll();
-            if (users.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-        else {
-            try {
-                User user = userService.findByName(name);
-                List<User> foundUsers = new ArrayList<>();
-                foundUsers.add(user);
-                return new ResponseEntity<>(foundUsers, HttpStatus.OK);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+    public ResponseEntity<List<User>> findAll() {
+        List<User> users = userService.findAll();
+        if (users.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @Override
@@ -62,7 +48,7 @@ public class UserController implements IUserController {
             userService.save(user);
             return new ResponseEntity<>("User was created successfully", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,7 +59,7 @@ public class UserController implements IUserController {
             userService.update(id, user);
             return new ResponseEntity<>("User with id " + id + " was successfully update", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Could not find user with id " + id, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -91,8 +77,12 @@ public class UserController implements IUserController {
     @Override
     @DeleteMapping
     public ResponseEntity<String> deleteAll() {
-        userService.deleteAll();
-        return new ResponseEntity<>("All users were deleted", HttpStatus.OK);
+        try {
+            userService.deleteAll();
+            return new ResponseEntity<>("All users were deleted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+        }
     }
 
 }
