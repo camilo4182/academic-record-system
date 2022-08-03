@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import training.path.academicrecordsystem.exceptions.AlreadyExistingUserNameException;
+import training.path.academicrecordsystem.exceptions.EmptyUserNameException;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.UserRepository;
@@ -16,7 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +51,7 @@ class UserServiceTests {
 	}
 
 	@Test
-	void givenInvalidId_whenFindById_thenRaiseException() {
+	void givenInvalidId_whenFindById_thenThrowException() {
 		when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
 		assertThrows(NoSuchElementException.class, () -> userService.findById(100L));
@@ -73,12 +75,99 @@ class UserServiceTests {
 	}
 
 	@Test
-	void givenThereAreNotUsers_whenFindAll_thenRaiseException() {
+	void givenThereAreNotUsers_whenFindAll_thenThrowException() {
 		List<User> emptyUsersList = new ArrayList<>();
 
 		when(userRepository.findAll()).thenReturn(emptyUsersList);
 
 		assertThrows(NoUsersException.class, () -> userService.findAll());
+	}
+
+	@Test
+	void givenValidUserData_whenSave_thenReturnOne() throws AlreadyExistingUserNameException, EmptyUserNameException {
+		User user = new User();
+		user.setId(1L);
+		user.setName("Ana");
+
+		when(userRepository.save(any())).thenReturn(1);
+
+		assertEquals(1, userService.save(user));
+	}
+
+	@Test
+	void givenEmptyUserName_whenSave_thenThrowException() {
+		User user = new User();
+		user.setId(1L);
+		user.setName("");
+
+		when(userRepository.save(any())).thenReturn(0);
+
+		assertThrows(EmptyUserNameException.class, () -> userService.save(user));
+	}
+
+	@Test
+	void givenExistingUserName_whenSave_thenThrowException() {
+		User user = new User();
+		user.setId(1L);
+		user.setName("Juan");
+
+		when(userRepository.findByName(anyString())).thenReturn(Optional.of(user));
+		when(userRepository.save(any())).thenReturn(0);
+
+		assertThrows(AlreadyExistingUserNameException.class, () -> userService.save(user));
+	}
+
+	@Test
+	void givenExistingUser_whenUpdate_thenReturnOne() throws EmptyUserNameException {
+		User user = new User();
+		user.setName("Carlos");
+
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+		when(userRepository.update(anyLong(), any())).thenReturn(1);
+
+		assertEquals(1, userService.update(1L, user));
+	}
+
+	@Test
+	void givenNonExistingUser_whenUpdate_thenThrowException() {
+		User user = new User();
+		user.setName("Null");
+
+		when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+		when(userRepository.update(anyLong(), any())).thenReturn(0);
+
+		assertThrows(NoSuchElementException.class, () -> userService.update(10000L, user));
+	}
+
+	@Test
+	void givenEmptyName_whenUpdate_thenThrowException() {
+		User user = new User();
+		user.setId(1L);
+		user.setName("");
+
+		when(userRepository.update(anyLong(), any())).thenReturn(1);
+
+		assertThrows(EmptyUserNameException.class, () -> userService.update(1L, user));
+	}
+
+	@Test
+	void givenValidId_whenDeleteById_thenReturnOne() {
+		User user = new User();
+		user.setId(1L);
+		user.setName("Jorge");
+
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+		when(userRepository.deleteById(anyLong())).thenReturn(1);
+
+		assertEquals(1, userService.deleteById(1L));
+	}
+
+	@Test
+	void givenNonExistingId_whenDeleteById_thenThrowException() {
+		when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+		when(userRepository.deleteById(anyLong())).thenReturn(0);
+
+		assertThrows(NoSuchElementException.class, () -> userService.deleteById(100000L));
 	}
 
 }

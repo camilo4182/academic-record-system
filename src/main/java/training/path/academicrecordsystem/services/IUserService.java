@@ -10,9 +10,9 @@ public interface IUserService {
     User findById(long id);
     User findByName(String name);
     List<User> findAll() throws NoUsersException;
-    void save(User user) throws Exception;
-    void update(long id, User user) throws Exception;
-    void deleteById(long id) throws Exception;
+    int save(User user) throws Exception;
+    int update(long id, User user) throws Exception;
+    int deleteById(long id) throws Exception;
     void deleteAll() throws Exception;
 
 }

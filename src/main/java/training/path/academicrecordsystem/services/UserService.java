@@ -2,12 +2,14 @@ package training.path.academicrecordsystem.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import training.path.academicrecordsystem.exceptions.AlreadyExistingUserNameException;
+import training.path.academicrecordsystem.exceptions.EmptyUserNameException;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService implements IUserService {
@@ -37,25 +39,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void save(User user) throws Exception {
-        if (user.getName().isEmpty()) throw new Exception("Name cannot be empty");
-        int row = userRepository.save(user);
-        if (row == 0) throw new Exception("Could not create the user");
+    public int save(User user) throws EmptyUserNameException, AlreadyExistingUserNameException {
+        if (user.getName().isEmpty()) throw new EmptyUserNameException();
+        if (userRepository.findByName(user.getName()).isPresent()) throw new AlreadyExistingUserNameException(user.getName());
+        return userRepository.save(user);
     }
 
     @Override
-    public void update(long id, User user) throws Exception {
-        if (user.getName().isEmpty()) throw new Exception("Name cannot be empty");
-        int modifiedRows = userRepository.update(id, user);
-        if (modifiedRows == 0) throw new Exception("Could not update the user");
+    public int update(long id, User user) throws EmptyUserNameException {
+        if (user.getName().isEmpty()) throw new EmptyUserNameException();
+        if (userRepository.findById(id).isEmpty()) throw new NoSuchElementException();
+        return userRepository.update(id, user);
     }
 
     @Override
-    public void deleteById(long id) throws Exception {
-        int deletedRows = userRepository.deleteById(id);
-        if (deletedRows == 0) {
-            throw new Exception("User does not exist");
-        }
+    public int deleteById(long id) throws NoSuchElementException {
+        if (userRepository.findById(id).isEmpty()) throw new NoSuchElementException();
+        return userRepository.deleteById(id);
     }
 
     @Override
