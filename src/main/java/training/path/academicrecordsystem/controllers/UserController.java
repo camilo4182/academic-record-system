@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.services.IUserService;
+import training.path.academicrecordsystem.services.interfaces.IUserService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 

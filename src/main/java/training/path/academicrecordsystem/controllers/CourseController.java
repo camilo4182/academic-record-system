@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.services.ICourseService;
-import training.path.academicrecordsystem.services.IUserService;
+import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.repositories;
+package training.path.academicrecordsystem.repositories.interfaces;
 
 import training.path.academicrecordsystem.model.Course;
 

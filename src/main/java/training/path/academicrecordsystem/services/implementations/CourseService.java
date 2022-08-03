@@ -1,11 +1,12 @@
-package training.path.academicrecordsystem.services;
+package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.repositories.JdbcCourseRepository;
-import training.path.academicrecordsystem.repositories.JdbcUserRepository;
+import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
+import training.path.academicrecordsystem.repositories.implementations.JdbcUserRepository;
+import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
 

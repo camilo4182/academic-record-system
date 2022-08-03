@@ -1,10 +1,11 @@
-package training.path.academicrecordsystem.repositories;
+package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.rowmappers.CustomCourseRowMapper;
 
 import java.util.List;

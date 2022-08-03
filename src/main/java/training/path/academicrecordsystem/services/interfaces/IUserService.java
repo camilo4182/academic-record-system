@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.services;
+package training.path.academicrecordsystem.services.interfaces;
 
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;

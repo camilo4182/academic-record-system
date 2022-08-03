@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.services;
+package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -6,7 +6,8 @@ import training.path.academicrecordsystem.exceptions.AlreadyExistingUserNameExce
 import training.path.academicrecordsystem.exceptions.EmptyUserNameException;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.repositories.UserRepository;
+import training.path.academicrecordsystem.repositories.interfaces.UserRepository;
+import training.path.academicrecordsystem.services.interfaces.IUserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
