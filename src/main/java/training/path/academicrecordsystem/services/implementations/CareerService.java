@@ -2,6 +2,11 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import training.path.academicrecordsystem.dtos.CareerDTO;
+import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
+import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.mappers.CareerMapper;
+import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 
@@ -18,18 +23,33 @@ public class CareerService implements ICareerService {
     }
 
     @Override
-    public CareerDTO save(CareerDTO careerDTO) {
-        return null;
+    public CareerDTO save(CareerDTO careerDTO) throws BadArgumentsException {
+        if (careerDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
+        Career careerEntity = CareerMapper.createEntity(careerDTO);
+        careerRepository.save(careerEntity);
+        Career savedCareerEntity = careerRepository.findByName(careerEntity.getName()).orElseThrow();
+        return CareerMapper.createDTO(savedCareerEntity);
     }
 
     @Override
-    public CareerDTO update(long id, CareerDTO careerDTO) {
-        return null;
+    public CareerDTO update(long id, CareerDTO careerDTO) throws NotFoundResourceException, BadArgumentsException {
+        Optional<Career> foundCareerOptional = careerRepository.findById(id);
+        if (foundCareerOptional.isEmpty()) throw new NotFoundResourceException("Career " + careerDTO.getName() + " was not found");
+        if (careerDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
+        Career foundCareer = foundCareerOptional.orElseThrow();
+        Career newCareerInfo = CareerMapper.createEntity(careerDTO);
+        newCareerInfo.setId(foundCareer.getId());
+        careerRepository.update(id, newCareerInfo);
+        return CareerMapper.createDTO(foundCareer);
     }
 
     @Override
-    public CareerDTO deleteById(long id) {
-        return null;
+    public CareerDTO deleteById(long id) throws NotFoundResourceException, CouldNotPerformDBOperationException {
+        Optional<Career> foundCareerOptional = careerRepository.findById(id);
+        if (foundCareerOptional.isEmpty()) throw new NotFoundResourceException("Career with id " + id + " was not found to delete");
+        careerRepository.deleteById(id);
+        if (careerRepository.findById(id).isPresent()) throw new CouldNotPerformDBOperationException("Could not perform deletion for career with id " + id);
+        return CareerMapper.createDTO(foundCareerOptional.orElseThrow());
     }
 
     @Override
