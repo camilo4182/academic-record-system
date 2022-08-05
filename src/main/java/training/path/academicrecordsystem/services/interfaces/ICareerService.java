@@ -13,8 +13,8 @@ public interface ICareerService {
     CareerDTO save(CareerDTO careerDTO) throws BadArgumentsException;
     CareerDTO update(long id, CareerDTO careerDTO) throws NotFoundResourceException, BadArgumentsException;
     CareerDTO deleteById(long id) throws NotFoundResourceException, CouldNotPerformDBOperationException;
-    Optional<CareerDTO> findById(long id);
-    Optional<CareerDTO> findByName(String name);
-    List<CareerDTO> findAll();
+    CareerDTO findById(long id) throws NotFoundResourceException;
+    CareerDTO findByName(String name) throws NotFoundResourceException;
+    List<CareerDTO> findAll() throws NotFoundResourceException;
 
 }

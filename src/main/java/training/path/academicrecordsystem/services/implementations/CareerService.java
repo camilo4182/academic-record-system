@@ -47,23 +47,29 @@ public class CareerService implements ICareerService {
     public CareerDTO deleteById(long id) throws NotFoundResourceException, CouldNotPerformDBOperationException {
         Optional<Career> foundCareerOptional = careerRepository.findById(id);
         if (foundCareerOptional.isEmpty()) throw new NotFoundResourceException("Career with id " + id + " was not found to delete");
-        careerRepository.deleteById(id);
-        if (careerRepository.findById(id).isPresent()) throw new CouldNotPerformDBOperationException("Could not perform deletion for career with id " + id);
+        int deletedRows = careerRepository.deleteById(id);
+        if (deletedRows == 0) throw new CouldNotPerformDBOperationException("Could not perform deletion for career with id " + id);
         return CareerMapper.createDTO(foundCareerOptional.orElseThrow());
     }
 
     @Override
-    public Optional<CareerDTO> findById(long id) {
-        return Optional.empty();
+    public CareerDTO findById(long id) throws NotFoundResourceException {
+        Optional<Career> careerOptional = careerRepository.findById(id);
+        if (careerOptional.isEmpty()) throw new NotFoundResourceException("Career with id " + id + " does nt exist");
+        return CareerMapper.createDTO(careerOptional.orElseThrow());
     }
 
     @Override
-    public Optional<CareerDTO> findByName(String name) {
-        return Optional.empty();
+    public CareerDTO findByName(String name) throws NotFoundResourceException {
+        Optional<Career> careerOptional = careerRepository.findByName(name);
+        if (careerOptional.isEmpty()) throw new NotFoundResourceException("Career " + name + " is not register in the record system");
+        return CareerMapper.createDTO(careerOptional.orElseThrow());
     }
 
     @Override
-    public List<CareerDTO> findAll() {
-        return null;
+    public List<CareerDTO> findAll() throws NotFoundResourceException {
+        List<Career> careers = careerRepository.findAll();
+        if (careers.isEmpty()) throw new NotFoundResourceException("There are not careers register in the system yet");
+        return careers.stream().map(CareerMapper::createDTO).toList();
     }
 }
