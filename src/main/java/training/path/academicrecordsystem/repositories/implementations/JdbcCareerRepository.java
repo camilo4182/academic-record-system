@@ -1,14 +1,19 @@
 package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
+@Repository
 public class JdbcCareerRepository implements CareerRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -19,9 +24,14 @@ public class JdbcCareerRepository implements CareerRepository {
     }
 
     @Override
-    public Optional<Career> findById(long id) {
+    public Optional<Career> findById(String id) {
         String query = "SELECT * FROM careers WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), id));
+        try {
+            Career career = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), UUID.fromString(id));
+            return Optional.ofNullable(career);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -38,20 +48,26 @@ public class JdbcCareerRepository implements CareerRepository {
 
     @Override
     public int save(Career career) {
-        String query = "INSERT INTO careers (name) VALUES (?)";
-        return jdbcTemplate.update(query, career.getName());
+        String query = "INSERT INTO careers (id, name) VALUES (?, ?)";
+        return jdbcTemplate.update(query, UUID.fromString(career.getId()), career.getName());
     }
 
     @Override
-    public int update(long id, Career career) {
+    public int update(String id, Career career) {
         String query = "UPDATE careers SET name = ? WHERE id = ?";
-        return jdbcTemplate.update(query, career.getName(), id);
+        return jdbcTemplate.update(query, career.getName(), UUID.fromString(id));
     }
 
     @Override
-    public int deleteById(long id) {
+    public int deleteById(String id) {
         String query = "DELETE FROM careers WHERE id = ?";
-        return jdbcTemplate.update(query, id);
+        return jdbcTemplate.update(query, UUID.fromString(id));
+    }
+
+    @Override
+    public boolean exists(String id) {
+        String query = "SELECT * FROM careers WHERE id = ?";
+        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), UUID.fromString(id)));
     }
 
 }

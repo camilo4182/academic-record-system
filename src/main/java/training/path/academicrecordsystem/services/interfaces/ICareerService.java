@@ -1,20 +1,17 @@
 package training.path.academicrecordsystem.services.interfaces;
 
-import training.path.academicrecordsystem.dtos.CareerDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.model.Career;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ICareerService {
 
-    CareerDTO save(CareerDTO careerDTO) throws BadArgumentsException;
-    CareerDTO update(long id, CareerDTO careerDTO) throws NotFoundResourceException, BadArgumentsException;
-    CareerDTO deleteById(long id) throws NotFoundResourceException, CouldNotPerformDBOperationException;
-    CareerDTO findById(long id) throws NotFoundResourceException;
-    CareerDTO findByName(String name) throws NotFoundResourceException;
-    List<CareerDTO> findAll() throws NotFoundResourceException;
+    void save(Career career);
+    void update(Career career) throws NotFoundResourceException;
+    void deleteById(String id) throws NotFoundResourceException;
+    Career findById(String id) throws NotFoundResourceException;
+    Career findByName(String name) throws NotFoundResourceException;
+    List<Career> findAll();
 
 }

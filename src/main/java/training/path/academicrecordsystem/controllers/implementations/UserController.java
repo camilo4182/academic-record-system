@@ -1,9 +1,10 @@
-package training.path.academicrecordsystem.controllers;
+package training.path.academicrecordsystem.controllers.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.path.academicrecordsystem.controllers.interfaces.IUserController;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.services.interfaces.IUserService;

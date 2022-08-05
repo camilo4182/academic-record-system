@@ -1,9 +1,10 @@
-package training.path.academicrecordsystem.controllers;
+package training.path.academicrecordsystem.controllers.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.path.academicrecordsystem.controllers.interfaces.ICourseController;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 

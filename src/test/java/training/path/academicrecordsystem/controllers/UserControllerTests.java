@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import training.path.academicrecordsystem.controllers.implementations.UserController;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.services.interfaces.IUserService;
 

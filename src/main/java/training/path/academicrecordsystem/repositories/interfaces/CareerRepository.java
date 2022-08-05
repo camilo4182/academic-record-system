@@ -7,11 +7,12 @@ import java.util.Optional;
 
 public interface CareerRepository {
 
-    Optional<Career> findById(long id);
+    Optional<Career> findById(String id);
     Optional<Career> findByName(String name);
     List<Career> findAll();
     int save(Career career);
-    int update(long id, Career career);
-    int deleteById(long id);
+    int update(String id, Career career);
+    int deleteById(String id);
+    boolean exists(String id);
     
 }

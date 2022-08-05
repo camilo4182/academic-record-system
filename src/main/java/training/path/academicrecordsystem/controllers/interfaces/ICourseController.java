@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.controllers;
+package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.model.Course;

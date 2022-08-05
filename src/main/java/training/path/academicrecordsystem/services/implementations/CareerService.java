@@ -1,11 +1,12 @@
 package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import training.path.academicrecordsystem.dtos.CareerDTO;
+import org.springframework.stereotype.Service;
+import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.exceptions.BadArgumentsException;
 import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
-import training.path.academicrecordsystem.mappers.CareerMapper;
+import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
@@ -13,6 +14,7 @@ import training.path.academicrecordsystem.services.interfaces.ICareerService;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CareerService implements ICareerService {
 
     private final CareerRepository careerRepository;
@@ -23,53 +25,34 @@ public class CareerService implements ICareerService {
     }
 
     @Override
-    public CareerDTO save(CareerDTO careerDTO) throws BadArgumentsException {
-        if (careerDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
-        Career careerEntity = CareerMapper.createEntity(careerDTO);
-        careerRepository.save(careerEntity);
-        Career savedCareerEntity = careerRepository.findByName(careerEntity.getName()).orElseThrow();
-        return CareerMapper.createDTO(savedCareerEntity);
+    public void save(Career career) {
+        careerRepository.save(career);
     }
 
     @Override
-    public CareerDTO update(long id, CareerDTO careerDTO) throws NotFoundResourceException, BadArgumentsException {
-        Optional<Career> foundCareerOptional = careerRepository.findById(id);
-        if (foundCareerOptional.isEmpty()) throw new NotFoundResourceException("Career " + careerDTO.getName() + " was not found");
-        if (careerDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
-        Career foundCareer = foundCareerOptional.orElseThrow();
-        Career newCareerInfo = CareerMapper.createEntity(careerDTO);
-        newCareerInfo.setId(foundCareer.getId());
-        careerRepository.update(id, newCareerInfo);
-        return CareerMapper.createDTO(foundCareer);
+    public void update(Career career) throws NotFoundResourceException {
+        if (!careerRepository.exists(career.getId())) throw new NotFoundResourceException("Career " + career.getName() + " was not found");
+        careerRepository.update(career.getId(), career);
     }
 
     @Override
-    public CareerDTO deleteById(long id) throws NotFoundResourceException, CouldNotPerformDBOperationException {
-        Optional<Career> foundCareerOptional = careerRepository.findById(id);
-        if (foundCareerOptional.isEmpty()) throw new NotFoundResourceException("Career with id " + id + " was not found to delete");
-        int deletedRows = careerRepository.deleteById(id);
-        if (deletedRows == 0) throw new CouldNotPerformDBOperationException("Could not perform deletion for career with id " + id);
-        return CareerMapper.createDTO(foundCareerOptional.orElseThrow());
+    public void deleteById(String id) throws NotFoundResourceException {
+        if (!careerRepository.exists(id)) throw new NotFoundResourceException("Career " + id + " was not found");
+        careerRepository.deleteById(id);
     }
 
     @Override
-    public CareerDTO findById(long id) throws NotFoundResourceException {
-        Optional<Career> careerOptional = careerRepository.findById(id);
-        if (careerOptional.isEmpty()) throw new NotFoundResourceException("Career with id " + id + " does nt exist");
-        return CareerMapper.createDTO(careerOptional.orElseThrow());
+    public Career findById(String id) throws NotFoundResourceException {
+        return careerRepository.findById(id).orElseThrow(() -> new NotFoundResourceException("Career with id " + id + " does not exist"));
     }
 
     @Override
-    public CareerDTO findByName(String name) throws NotFoundResourceException {
-        Optional<Career> careerOptional = careerRepository.findByName(name);
-        if (careerOptional.isEmpty()) throw new NotFoundResourceException("Career " + name + " is not register in the record system");
-        return CareerMapper.createDTO(careerOptional.orElseThrow());
+    public Career findByName(String name) throws NotFoundResourceException {
+        return careerRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Career with  " + name + " does not exist"));
     }
 
     @Override
-    public List<CareerDTO> findAll() throws NotFoundResourceException {
-        List<Career> careers = careerRepository.findAll();
-        if (careers.isEmpty()) throw new NotFoundResourceException("There are not careers register in the system yet");
-        return careers.stream().map(CareerMapper::createDTO).toList();
+    public List<Career> findAll() {
+        return careerRepository.findAll();
     }
 }
