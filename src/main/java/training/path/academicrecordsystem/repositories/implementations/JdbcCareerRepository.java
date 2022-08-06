@@ -37,7 +37,12 @@ public class JdbcCareerRepository implements CareerRepository {
     @Override
     public Optional<Career> findByName(String name) {
         String query = "SELECT * FROM careers WHERE name = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), name));
+        try {
+            Career career = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), name);
+            return Optional.ofNullable(career);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

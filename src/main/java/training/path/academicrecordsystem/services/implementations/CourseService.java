@@ -2,10 +2,9 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
-import training.path.academicrecordsystem.repositories.implementations.JdbcUserRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
@@ -14,27 +13,37 @@ import java.util.List;
 public class CourseService implements ICourseService {
 
     private final JdbcCourseRepository jdbcCourseRepository;
-    private final JdbcUserRepository jdbcUserRepository;
 
     @Autowired
-    public CourseService(JdbcCourseRepository jdbcCourseRepository, JdbcUserRepository jdbcUserRepository) {
+    public CourseService(JdbcCourseRepository jdbcCourseRepository) {
         this.jdbcCourseRepository = jdbcCourseRepository;
-        this.jdbcUserRepository = jdbcUserRepository;
     }
 
     @Override
-    public Course findById(long id) {
-        return jdbcCourseRepository.findById(id).orElseThrow();
+    public void save(Course course) {
+        jdbcCourseRepository.save(course);
     }
 
     @Override
-    public Course findByName(String name) {
-        return jdbcCourseRepository.findByName(name).orElseThrow();
+    public void update(Course course) throws NotFoundResourceException {
+        if (!jdbcCourseRepository.exists(course.getId())) throw new NotFoundResourceException("Course " + course.getName() + " was not found");
+        jdbcCourseRepository.update(course.getId(), course);
     }
 
     @Override
-    public List<Course> findCoursesByUser(long userId) {
-        return jdbcCourseRepository.findCoursesByUser(userId);
+    public void deleteById(String id) throws NotFoundResourceException {
+        if (!jdbcCourseRepository.exists(id)) throw new NotFoundResourceException("Course " + id + " was not found");
+        jdbcCourseRepository.deleteById(id);
+    }
+
+    @Override
+    public Course findById(String id) throws NotFoundResourceException {
+        return jdbcCourseRepository.findById(id).orElseThrow(() -> new NotFoundResourceException("Course " + id + " was not found"));
+    }
+
+    @Override
+    public Course findByName(String name) throws NotFoundResourceException {
+        return jdbcCourseRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Course " + name + " was not found"));
     }
 
     @Override
@@ -42,42 +51,4 @@ public class CourseService implements ICourseService {
         return jdbcCourseRepository.findAll();
     }
 
-    @Override
-    public void save(long userId, Course course) throws Exception {
-        User user = jdbcUserRepository.findById(userId).orElseThrow();
-        course.setCreatedBy(user);
-        int row = jdbcCourseRepository.save(course);
-        if (row == 0) {
-            throw new Exception("Could not register the course");
-        }
-    }
-
-    @Override
-    public void update(long courseId, Course course) throws Exception {
-        int modifiedRows = jdbcCourseRepository.update(courseId, course);
-        if (modifiedRows == 0) {
-            throw new Exception("Could not update the course information");
-        }
-    }
-
-    @Override
-    public void deleteById(long id) throws Exception {
-        int deletedRows = jdbcCourseRepository.deleteById(id);
-        if (deletedRows == 0) {
-            throw new Exception("Course does not exist");
-        }
-    }
-
-    @Override
-    public void deleteCoursesByUser(long userId) throws Exception {
-        int deletedRows = jdbcCourseRepository.deleteByUser(userId);
-        if (deletedRows == 0) {
-            throw new Exception("User courses could not be deleted");
-        }
-    }
-
-    @Override
-    public void deleteAll() {
-        jdbcCourseRepository.deleteAll();
-    }
 }

@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,9 @@ import training.path.academicrecordsystem.repositories.interfaces.CourseReposito
 import training.path.academicrecordsystem.rowmappers.CustomCourseRowMapper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class JdbcCourseRepository implements CourseRepository {
@@ -22,21 +25,33 @@ public class JdbcCourseRepository implements CourseRepository {
     }
 
     @Override
-    public Optional<Course> findById(long id) {
-        String query = "SELECT * FROM courses WHERE course_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new CustomCourseRowMapper(), id));
+    public Optional<Course> findById(String id) {
+        String query = "SELECT * FROM courses WHERE id = ?";
+        try {
+            Course course = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), UUID.fromString(id));
+            return Optional.ofNullable(course);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Course> findByName(String name) {
-        String query = "SELECT * FROM courses WHERE course_name ILIKE ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), name));
+        String query = "SELECT * FROM courses WHERE name ILIKE ?";
+        try {
+            Course course = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), name);
+            return Optional.ofNullable(course);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
-    public List<Course> findCoursesByUser(long user_id) {
+    /*
+    public List<Course> findCoursesByUser(String id) {
         String query = "SELECT * FROM users INNER JOIN courses ON users.user_id = courses.created_by WHERE users.user_id = ?";
         return jdbcTemplate.query(query, new CustomCourseRowMapper(), user_id);
     }
+    */
 
     @Override
     public List<Course> findAll() {
@@ -46,31 +61,33 @@ public class JdbcCourseRepository implements CourseRepository {
 
     @Override
     public int save(Course course) {
-        String query = "INSERT INTO courses (course_name, created_by) VALUES (?, ?)";
-        return jdbcTemplate.update(query, course.getName(), course.getCreatedBy().getId());
+        String query = "INSERT INTO courses (id, name, credits) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(query, UUID.fromString(course.getId()), course.getName(), course.getCredits());
     }
 
     @Override
-    public int update(long id, Course course) {
-        String query = "UPDATE courses SET course_name = ? WHERE course_id = ?";
-        return jdbcTemplate.update(query, course.getName(), id);
+    public int update(String id, Course course) {
+        String query = "UPDATE courses SET name = ?, credits = ? WHERE id = ?";
+        return jdbcTemplate.update(query, course.getName(), course.getCredits(), UUID.fromString(id));
     }
 
-    public int deleteByUser(long userId) {
+    /*
+    public int deleteByUser(String id) {
         String query = "DELETE FROM courses WHERE created_by = ?";
         return jdbcTemplate.update(query, userId);
     }
+    */
 
     @Override
-    public int deleteById(long id) {
-        String query = "DELETE FROM courses WHERE course_id = ?";
-        return jdbcTemplate.update(query, id);
+    public int deleteById(String id) {
+        String query = "DELETE FROM courses WHERE id = ?";
+        return jdbcTemplate.update(query, UUID.fromString(id));
     }
 
     @Override
-    public int deleteAll() {
-        String query = "DELETE FROM courses";
-        return jdbcTemplate.update(query);
+    public boolean exists(String id) {
+        String query = "SELECT * FROM courses WHERE id = ?";
+        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), UUID.fromString(id)));
     }
 
     /*

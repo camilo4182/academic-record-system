@@ -1,19 +1,17 @@
 package training.path.academicrecordsystem.services.interfaces;
 
+import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Course;
 
 import java.util.List;
 
 public interface ICourseService {
 
-    Course findById(long id);
-    Course findByName(String name);
-    List<Course> findCoursesByUser(long userId);
+    void save(Course course);
+    void update(Course course) throws NotFoundResourceException;
+    void deleteById(String id) throws NotFoundResourceException;
+    Course findById(String id) throws NotFoundResourceException;
+    Course findByName(String name) throws NotFoundResourceException;
     List<Course> findAll();
-    void save(long userId, Course course) throws Exception;
-    void update(long courseId, Course course) throws Exception;
-    void deleteById(long id) throws Exception;
-    public void deleteCoursesByUser(long userId) throws Exception;
-    void deleteAll();
-    
+
 }

@@ -1,46 +1,36 @@
 package training.path.academicrecordsystem.model;
 
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
 public class Course {
 
-    private long id;
+    private String id;
     private String name;
-    private User createdBy;
+    private int credits;
+    private Set<Career> careers;
 
     public Course() {
+        careers = new HashSet<>();
     }
 
-    public Course(String name, User createdBy) {
-        this.name = name;
-        this.createdBy = createdBy;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
+    @Builder
+    public Course(String id, String name, int credits, Set<Career> careers) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
+        this.credits = credits;
+        this.careers = careers;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
+    public void addCareer(Career career) {
+        careers.add(career);
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public void removeCareer(Career career) {
+        careers.remove(career);
     }
-
-    @Override
-    public String toString() {
-        return "Course {" + "id=" + id + ", name='" + name + '\'' + ", createdBy=" + createdBy + '}';
-    }
-
 }
