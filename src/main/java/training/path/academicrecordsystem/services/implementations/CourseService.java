@@ -2,8 +2,10 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
@@ -49,6 +51,12 @@ public class CourseService implements ICourseService {
     @Override
     public List<Course> findAll() {
         return jdbcCourseRepository.findAll();
+    }
+
+    @Override
+    public List<CourseClass> getClassesByCourse(String courseId) throws NotFoundResourceException, CouldNotPerformDBOperationException {
+        if (!jdbcCourseRepository.exists(courseId)) throw new NotFoundResourceException("Course " + courseId + " was not found");
+        return jdbcCourseRepository.getClassesByCourse(courseId).orElseThrow(() -> new CouldNotPerformDBOperationException("Internal error"));
     }
 
 }

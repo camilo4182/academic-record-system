@@ -5,13 +5,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
+import training.path.academicrecordsystem.repositories.implementations.rowmappers.ClassesByCourseRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
-import training.path.academicrecordsystem.rowmappers.CustomCourseRowMapper;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,13 +46,6 @@ public class JdbcCourseRepository implements CourseRepository {
         }
     }
 
-    /*
-    public List<Course> findCoursesByUser(String id) {
-        String query = "SELECT * FROM users INNER JOIN courses ON users.user_id = courses.created_by WHERE users.user_id = ?";
-        return jdbcTemplate.query(query, new CustomCourseRowMapper(), user_id);
-    }
-    */
-
     @Override
     public List<Course> findAll() {
         String query = "SELECT * FROM courses";
@@ -72,13 +64,6 @@ public class JdbcCourseRepository implements CourseRepository {
         return jdbcTemplate.update(query, course.getName(), course.getCredits(), UUID.fromString(id));
     }
 
-    /*
-    public int deleteByUser(String id) {
-        String query = "DELETE FROM courses WHERE created_by = ?";
-        return jdbcTemplate.update(query, userId);
-    }
-    */
-
     @Override
     public int deleteById(String id) {
         String query = "DELETE FROM courses WHERE id = ?";
@@ -96,17 +81,19 @@ public class JdbcCourseRepository implements CourseRepository {
         }
     }
 
-    /*
-    static class CustomCourseRowMapper implements RowMapper<Course> {
-
-        @Override
-        public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Course course = new Course();
-            course.setId(rs.getInt("id"));
-            course.setName(rs.getString("name"));
-            course.setCreatedBy(rs.getObject("created_by", User.class));
-            return course;
+    @Override
+    public Optional<List<CourseClass>> getClassesByCourse(String courseId) {
+        String query = """
+                SELECT co.id AS course_id, name AS course_name, credits, cl.id AS class_id, available, professor_id
+                FROM courses co INNER JOIN classes cl
+                ON cl.course_id = co.id
+                WHERE co.id = ?""";
+        try {
+            List<CourseClass> classes = jdbcTemplate.query(query, new ClassesByCourseRowMapper(), UUID.fromString(courseId));
+            return Optional.of(classes);
+        } catch (DataAccessException e) {
+            return Optional.empty();
         }
     }
-    */
+
 }

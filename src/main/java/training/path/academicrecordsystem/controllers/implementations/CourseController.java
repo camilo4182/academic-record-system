@@ -4,13 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseController;
+import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
 import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
@@ -79,5 +83,17 @@ public class CourseController implements ICourseController {
     public ResponseEntity<List<CourseDTO>> findAll() {
         List<Course> courseList = courseService.findAll();
         return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
+    }
+
+    @GetMapping("courses/{courseId}/classes")
+    public ResponseEntity<List<CourseClassDTO>> getClassesByCourse(@PathVariable("courseId") String courseId) {
+        try {
+            List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
+            return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CouldNotPerformDBOperationException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

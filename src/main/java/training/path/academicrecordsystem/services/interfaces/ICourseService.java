@@ -1,7 +1,9 @@
 package training.path.academicrecordsystem.services.interfaces;
 
+import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
 
 import java.util.List;
 
@@ -13,5 +15,5 @@ public interface ICourseService {
     Course findById(String id) throws NotFoundResourceException;
     Course findByName(String name) throws NotFoundResourceException;
     List<Course> findAll();
-
+    List<CourseClass> getClassesByCourse(String courseId) throws NotFoundResourceException, CouldNotPerformDBOperationException;
 }

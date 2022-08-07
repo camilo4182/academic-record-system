@@ -1,6 +1,8 @@
 package training.path.academicrecordsystem.repositories.interfaces;
 
+import org.springframework.dao.DataAccessException;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +16,5 @@ public interface CourseRepository {
     int update(String id, Course course);
     int deleteById(String id);
     boolean exists(String id);
+    Optional<List<CourseClass>> getClassesByCourse(String courseId);
 }
