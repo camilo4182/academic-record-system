@@ -15,7 +15,6 @@ import training.path.academicrecordsystem.services.interfaces.ICareerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("careers")
 public class CareerController implements ICareerController {
 
     private final ICareerService careerService;
@@ -26,7 +25,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @PostMapping
+    @PostMapping("careers")
     public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) {
         try {
             Career career = CareerMapper.createEntity(careerDTO);
@@ -38,7 +37,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @PutMapping("{id}")
+    @PutMapping("careers/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) {
         try {
             careerDTO.setId(id);
@@ -53,7 +52,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @DeleteMapping("{id}")
+    @DeleteMapping("careers/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
         try {
             careerService.deleteById(id);
@@ -64,7 +63,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @GetMapping("{id}")
+    @GetMapping("careers/{id}")
     public ResponseEntity<CareerDTO> findById(@PathVariable("id") String id) {
         try {
             Career career = careerService.findById(id);
@@ -76,7 +75,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @GetMapping
+    @GetMapping("careers")
     public ResponseEntity<List<CareerDTO>> findAll() {
         List<Career> careerList = careerService.findAll();
         return new ResponseEntity<>(careerList.stream().map(CareerMapper::toDTO).toList(), HttpStatus.OK);
