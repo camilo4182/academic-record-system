@@ -4,19 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.repositories.implementations.JdbcProfessorRepository;
 import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProfessorService implements IProfessorService {
 
-    private final ProfessorRepository professorRepository;
+    private final JdbcProfessorRepository professorRepository;
 
     @Autowired
-    public ProfessorService(ProfessorRepository professorRepository) {
+    public ProfessorService(JdbcProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
     }
 
@@ -38,17 +38,17 @@ public class ProfessorService implements IProfessorService {
     }
 
     @Override
-    public Optional<Professor> findById(String id) {
-        return Optional.empty();
+    public Professor findById(String id) throws NotFoundResourceException {
+        return professorRepository.findById(id).orElseThrow(() -> new NotFoundResourceException("Professor " + id + " was not found"));
     }
 
     @Override
-    public Optional<Professor> findByName(String name) {
-        return Optional.empty();
+    public Professor findByName(String name) throws NotFoundResourceException {
+        return professorRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Course " + name + " was not found"));
     }
 
     @Override
     public List<Professor> findAll() {
-        return null;
+        return professorRepository.findAll();
     }
 }

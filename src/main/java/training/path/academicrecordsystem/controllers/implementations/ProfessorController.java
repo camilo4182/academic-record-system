@@ -64,12 +64,20 @@ public class ProfessorController implements IProfessorController {
     }
 
     @Override
-    public ResponseEntity<ProfessorDTO> findById(String id) {
-        return null;
+    @GetMapping("professors/{id}")
+    public ResponseEntity<ProfessorDTO> findById(@PathVariable("id") String id) {
+        try {
+            ProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
+            return new ResponseEntity<>(professorDTO, HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     @Override
+    @GetMapping("professors")
     public ResponseEntity<List<ProfessorDTO>> findAll() {
-        return null;
+        List<Professor> professorList = professorService.findAll();
+        return new ResponseEntity<>(professorList.stream().map(ProfessorMapper::toDTO).toList(), HttpStatus.OK);
     }
 }

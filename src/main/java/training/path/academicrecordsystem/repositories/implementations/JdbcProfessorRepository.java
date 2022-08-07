@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -46,17 +47,30 @@ public class JdbcProfessorRepository implements ProfessorRepository {
 
     @Override
     public Optional<Professor> findById(String id) {
-        return Optional.empty();
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id WHERE p.id = ?";
+        try {
+            Professor professor = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id));
+            return Optional.ofNullable(professor);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public Optional<Professor> findByName(String name) {
-        return Optional.empty();
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id WHERE name ILIKE ?";
+        try {
+            Professor professor = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), name);
+            return Optional.ofNullable(professor);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Professor> findAll() {
-        return null;
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class));
     }
 
     @Override
