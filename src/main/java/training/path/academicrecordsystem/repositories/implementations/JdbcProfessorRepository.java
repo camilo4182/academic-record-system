@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
 
@@ -76,6 +77,11 @@ public class JdbcProfessorRepository implements ProfessorRepository {
     @Override
     public boolean exists(String id) {
         String query = "SELECT * FROM professors WHERE id = ?";
-        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id)));
+        try {
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 }

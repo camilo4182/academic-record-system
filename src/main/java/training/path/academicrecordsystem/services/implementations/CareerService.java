@@ -26,7 +26,7 @@ public class CareerService implements ICareerService {
 
     @Override
     public void update(Career career) throws NotFoundResourceException {
-        if (!careerRepository.exists(career.getId())) throw new NotFoundResourceException("Career " + career.getName() + " was not found");
+        if (!careerRepository.exists(career.getId())) throw new NotFoundResourceException("Career " + career.getId() + " was not found");
         careerRepository.update(career.getId(), career);
     }
 

@@ -26,7 +26,7 @@ public class CourseService implements ICourseService {
 
     @Override
     public void update(Course course) throws NotFoundResourceException {
-        if (!jdbcCourseRepository.exists(course.getId())) throw new NotFoundResourceException("Course " + course.getName() + " was not found");
+        if (!jdbcCourseRepository.exists(course.getId())) throw new NotFoundResourceException("Course " + course.getId() + " was not found");
         jdbcCourseRepository.update(course.getId(), course);
     }
 

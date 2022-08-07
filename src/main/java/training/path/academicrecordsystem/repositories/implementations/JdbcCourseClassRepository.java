@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.implementations.rowmappers.CourseClassFindAllRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
@@ -70,6 +71,11 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
     @Override
     public boolean exists(String id) {
         String query = "SELECT * FROM classes WHERE id = ?";
-        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(id)));
+        try {
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(id));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 }

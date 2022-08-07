@@ -72,7 +72,12 @@ public class JdbcCareerRepository implements CareerRepository {
     @Override
     public boolean exists(String id) {
         String query = "SELECT * FROM careers WHERE id = ?";
-        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), UUID.fromString(id)));
+        try {
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), UUID.fromString(id));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 
 }

@@ -26,13 +26,13 @@ public class ProfessorService implements IProfessorService {
 
     @Override
     public void update(String id, Professor professor) throws NotFoundResourceException {
-        if (!professorRepository.exists(professor.getId())) throw new NotFoundResourceException("Professor " + professor.getName() + " was not found");
+        if (!professorRepository.exists(professor.getId())) throw new NotFoundResourceException("Professor " + professor.getId() + " was not found");
         professorRepository.update(id, professor);
     }
 
     @Override
     public void deleteById(String id) throws NotFoundResourceException {
-        if (!professorRepository.exists(id)) throw new NotFoundResourceException("Career " + id + " was not found");
+        if (!professorRepository.exists(id)) throw new NotFoundResourceException("Professor " + id + " was not found");
         professorRepository.deleteById(id);
     }
 
@@ -43,7 +43,7 @@ public class ProfessorService implements IProfessorService {
 
     @Override
     public Professor findByName(String name) throws NotFoundResourceException {
-        return professorRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Course " + name + " was not found"));
+        return professorRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Professor " + name + " was not found"));
     }
 
     @Override
