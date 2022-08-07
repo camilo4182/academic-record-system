@@ -36,7 +36,7 @@ public class CourseClassService implements ICourseClassService {
 
     @Override
     public CourseClass findById(String id) throws NotFoundResourceException {
-        return null;
+        return courseClassRepository.findById(id).orElseThrow(() -> new NotFoundResourceException("Class with id " + id + " was not found"));
     }
 
     @Override

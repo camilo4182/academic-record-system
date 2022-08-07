@@ -3,14 +3,12 @@ package training.path.academicrecordsystem.controllers.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
 
@@ -49,8 +47,14 @@ public class CourseClassController implements ICourseClassController {
     }
 
     @Override
-    public ResponseEntity<CourseClassDTO> findById(String id) {
-        return null;
+    @GetMapping("classes/{id}")
+    public ResponseEntity<CourseClassDTO> findById(@PathVariable("id") String id) {
+        try {
+            CourseClassDTO courseClassDTO = CourseClassMapper.toDTo(courseClassService.findById(id));
+            return new ResponseEntity<>(courseClassDTO, HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override

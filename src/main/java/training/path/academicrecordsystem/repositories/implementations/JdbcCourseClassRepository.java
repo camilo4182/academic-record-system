@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import training.path.academicrecordsystem.repositories.implementations.rowmapper
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +43,17 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public Optional<CourseClass> findById(String id) {
-        return Optional.empty();
+        String query = "SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary\n" +
+                "FROM classes cl INNER JOIN courses co ON co.id = cl.course_id\n" +
+                "INNER JOIN professors p ON p.id = cl.professor_id\n" +
+                "INNER JOIN users u ON p.id = u.id\n" +
+                "WHERE cl.id = ?";
+        try {
+            CourseClass courseClass = jdbcTemplate.queryForObject(query, new CourseClassFindAllRowMapper(), UUID.fromString(id));
+            return Optional.ofNullable(courseClass);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -55,6 +67,7 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public boolean exists(String id) {
-        return false;
+        String query = "SELECT * FROM classes";
+        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class)));
     }
 }
