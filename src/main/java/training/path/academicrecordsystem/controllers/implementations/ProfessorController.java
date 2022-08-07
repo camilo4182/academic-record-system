@@ -48,7 +48,7 @@ public class ProfessorController implements IProfessorController {
         } catch (NullRequestBodyException | BadArgumentsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +59,7 @@ public class ProfessorController implements IProfessorController {
             professorService.deleteById(id);
             return new ResponseEntity<>("Professor deleted", HttpStatus.OK);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -70,7 +70,7 @@ public class ProfessorController implements IProfessorController {
             ProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
             return new ResponseEntity<>(professorDTO, HttpStatus.OK);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

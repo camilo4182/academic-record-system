@@ -48,7 +48,7 @@ public class CareerController implements ICareerController {
         } catch (BadArgumentsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +59,7 @@ public class CareerController implements ICareerController {
             careerService.deleteById(id);
             return new ResponseEntity<>("Career was deleted", HttpStatus.OK);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -71,7 +71,7 @@ public class CareerController implements ICareerController {
             CareerDTO careerDTO = CareerMapper.toDTO(career);
             return new ResponseEntity<>(careerDTO, HttpStatus.OK);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

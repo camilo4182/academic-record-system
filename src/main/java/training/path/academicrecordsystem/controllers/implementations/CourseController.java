@@ -48,7 +48,7 @@ public class CourseController implements ICourseController {
         } catch (BadArgumentsException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +59,7 @@ public class CourseController implements ICourseController {
             courseService.deleteById(id);
             return new ResponseEntity<>("Course deleted", HttpStatus.OK);
         } catch (NotFoundResourceException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
