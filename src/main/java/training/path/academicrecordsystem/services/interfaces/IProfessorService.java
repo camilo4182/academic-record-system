@@ -10,7 +10,7 @@ public interface IProfessorService {
 
     void save(Professor professor);
     void update(String id, Professor professor) throws NotFoundResourceException;
-    void deleteById(String id);
+    void deleteById(String id) throws NotFoundResourceException;
     Optional<Professor> findById(String id);
     Optional<Professor> findByName(String name);
     List<Professor> findAll();

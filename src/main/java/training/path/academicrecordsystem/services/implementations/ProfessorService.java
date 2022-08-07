@@ -32,8 +32,9 @@ public class ProfessorService implements IProfessorService {
     }
 
     @Override
-    public void deleteById(String id) {
-
+    public void deleteById(String id) throws NotFoundResourceException {
+        if (!professorRepository.exists(id)) throw new NotFoundResourceException("Career " + id + " was not found");
+        professorRepository.deleteById(id);
     }
 
     @Override

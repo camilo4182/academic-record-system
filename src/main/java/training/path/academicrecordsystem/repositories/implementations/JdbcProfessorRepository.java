@@ -40,7 +40,8 @@ public class JdbcProfessorRepository implements ProfessorRepository {
 
     @Override
     public int deleteById(String id) {
-        return 0;
+        String queryUser = "DELETE FROM users WHERE id = ?";
+        return jdbcTemplate.update(queryUser, UUID.fromString(id));
     }
 
     @Override

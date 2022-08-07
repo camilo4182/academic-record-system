@@ -53,8 +53,14 @@ public class ProfessorController implements IProfessorController {
     }
 
     @Override
-    public ResponseEntity<String> deleteById(String id) {
-        return null;
+    @DeleteMapping("professors/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
+        try {
+            professorService.deleteById(id);
+            return new ResponseEntity<>("Professor deleted", HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NO_CONTENT);
+        }
     }
 
     @Override
