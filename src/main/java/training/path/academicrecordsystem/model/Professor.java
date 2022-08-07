@@ -11,15 +11,15 @@ import java.util.Set;
 public class Professor extends User {
 
     private float salary;
-    private Set<CourseClass> classes;
+    private Set<CourseClass> courseClasses;
 
     public Professor() {
     }
 
     @Builder
-    public Professor(String id, String name, String email, float salary, Set<CourseClass> classes) {
+    public Professor(String id, String name, String email, float salary, Set<CourseClass> courseClasses) {
         super(id, name, email);
         this.salary = salary;
-        this.classes = classes;
+        this.courseClasses = courseClasses;
     }
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
+import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 @Service
 public class CourseService implements ICourseService {
 
-    private final JdbcCourseRepository jdbcCourseRepository;
+    private final CourseRepository jdbcCourseRepository;
 
     @Autowired
-    public CourseService(JdbcCourseRepository jdbcCourseRepository) {
+    public CourseService(CourseRepository jdbcCourseRepository) {
         this.jdbcCourseRepository = jdbcCourseRepository;
     }
 

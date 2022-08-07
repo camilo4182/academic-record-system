@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.repositories.implementations.JdbcProfessorRepository;
 import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
@@ -13,10 +12,10 @@ import java.util.List;
 @Service
 public class ProfessorService implements IProfessorService {
 
-    private final JdbcProfessorRepository professorRepository;
+    private final ProfessorRepository professorRepository;
 
     @Autowired
-    public ProfessorService(JdbcProfessorRepository professorRepository) {
+    public ProfessorService(ProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
     }
 

@@ -2,17 +2,12 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
-import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CareerService implements ICareerService {
