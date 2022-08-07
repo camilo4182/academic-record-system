@@ -17,6 +17,7 @@ public class CustomUserJoinCourseRowMapper implements RowMapper<User> {
 
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+        /*
         User user = new User();
         user.setId(rs.getLong("user_id"));
         user.setName(rs.getString("user_name"));
@@ -30,5 +31,7 @@ public class CustomUserJoinCourseRowMapper implements RowMapper<User> {
             user.addCourse(course);
         }
         return user;
+        */
+        return null;
     }
 }

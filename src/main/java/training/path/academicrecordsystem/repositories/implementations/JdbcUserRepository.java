@@ -6,7 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.interfaces.UserRepository;
-import training.path.academicrecordsystem.rowmappers.CustomUserRowMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public Optional<User> findById(long id) {
         String query = "SELECT * FROM users WHERE user_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new CustomUserRowMapper(), id));
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(User.class), id));
     }
 
     @Override
@@ -36,7 +35,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         String query = "SELECT * FROM users";
-        return jdbcTemplate.query(query, new CustomUserRowMapper());
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(User.class));
     }
 
     @Override
