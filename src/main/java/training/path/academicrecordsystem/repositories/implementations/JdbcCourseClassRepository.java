@@ -33,12 +33,14 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public int update(String id, CourseClass courseClass) {
-        return 0;
+        String query = "UPDATE classes SET available = ? WHERE id = ?";
+        return jdbcTemplate.update(query, courseClass.isAvailable(), UUID.fromString(id));
     }
 
     @Override
     public int deleteById(String id) {
-        return 0;
+        String query = "DELETE FROM classes WHERE id = ?";
+        return jdbcTemplate.update(query, UUID.fromString(id));
     }
 
     @Override
@@ -67,7 +69,7 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public boolean exists(String id) {
-        String query = "SELECT * FROM classes";
-        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class)));
+        String query = "SELECT * FROM classes WHERE id = ?";
+        return Objects.nonNull(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(id)));
     }
 }

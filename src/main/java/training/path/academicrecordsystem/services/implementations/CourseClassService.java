@@ -26,12 +26,14 @@ public class CourseClassService implements ICourseClassService {
 
     @Override
     public void update(CourseClass courseClass) throws NotFoundResourceException {
-
+        if (!courseClassRepository.exists(courseClass.getId())) throw new NotFoundResourceException("Class does not exist");
+        courseClassRepository.update(courseClass.getId(), courseClass);
     }
 
     @Override
     public void deleteById(String id) throws NotFoundResourceException {
-
+        if (!courseClassRepository.exists(id)) throw new NotFoundResourceException("Class does not exist");
+        courseClassRepository.deleteById(id);
     }
 
     @Override

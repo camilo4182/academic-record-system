@@ -37,13 +37,28 @@ public class CourseClassController implements ICourseClassController {
     }
 
     @Override
-    public ResponseEntity<String> update(String id, CourseClassDTO courseClassDTO) {
-        return null;
+    @PutMapping("classes/{id}")
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseClassDTO courseClassDTO) {
+        try {
+            CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
+            courseClassService.update(courseClass);
+            return new ResponseEntity<>("Class updates", HttpStatus.OK);
+        } catch (BadArgumentsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
-    public ResponseEntity<String> deleteById(String id) {
-        return null;
+    @DeleteMapping("classes/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
+        try {
+            courseClassService.deleteById(id);
+            return new ResponseEntity<>("Class deleted", HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @Override
@@ -63,4 +78,5 @@ public class CourseClassController implements ICourseClassController {
         List<CourseClass> courseClasses = courseClassService.findAll();
         return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
     }
+
 }
