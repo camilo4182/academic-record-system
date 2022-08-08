@@ -11,6 +11,7 @@ import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCareerRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,6 +77,26 @@ public class CareerServiceTests {
         when(jdbcCareerRepository.deleteById(anyString())).thenReturn(0);
 
         assertThrows(NotFoundResourceException.class, () -> careerService.deleteById(id));
+    }
+
+    @Test
+    void givenValidId_whenFindById_thenItReturnsTheCareer() throws NotFoundResourceException {
+        Career career = Career.builder().id("1").name("Physics").build();
+
+        when(jdbcCareerRepository.findById(anyString())).thenReturn(Optional.of(career));
+
+        assertDoesNotThrow(() -> careerService.findById("1"));
+        Career foundCareer = careerService.findById("1");
+        assertEquals("Physics", foundCareer.getName());
+    }
+
+    @Test
+    void givenInvalidId_whenFindById_thenItThrowsException() {
+        String id = "0000";
+
+        when(jdbcCareerRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundResourceException.class, () -> careerService.findById(id));
     }
 
 }
