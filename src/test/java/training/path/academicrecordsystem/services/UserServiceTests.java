@@ -1,25 +1,10 @@
 package training.path.academicrecordsystem.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import training.path.academicrecordsystem.exceptions.AlreadyExistingUserNameException;
 import training.path.academicrecordsystem.exceptions.EmptyUserNameException;
 import training.path.academicrecordsystem.exceptions.NoUsersException;
-import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.repositories.interfaces.UserRepository;
-import training.path.academicrecordsystem.services.implementations.UserService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class UserServiceTests {
