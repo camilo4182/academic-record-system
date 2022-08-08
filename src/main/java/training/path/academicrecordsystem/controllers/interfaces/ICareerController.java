@@ -2,6 +2,8 @@ package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
+import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
+import training.path.academicrecordsystem.model.Course;
 
 import java.util.List;
 
@@ -12,5 +14,7 @@ public interface ICareerController {
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<CareerDTO> findById(String id);
     ResponseEntity<List<CareerDTO>> findAll();
+    ResponseEntity<String> assignCourseToCareer(String careerId, CourseDTO courseDTO);
+    ResponseEntity<List<CourseDTO>> findCoursesByCareers(String careerId);
 
 }

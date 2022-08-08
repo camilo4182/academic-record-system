@@ -8,10 +8,12 @@ import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
+import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
 import training.path.academicrecordsystem.exceptions.BadArgumentsException;
 import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
@@ -97,6 +99,17 @@ public class CareerController implements ICareerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (CouldNotPerformDBOperationException e) {
             return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    @GetMapping("careers/{careerId}/courses")
+    public ResponseEntity<List<CourseDTO>> findCoursesByCareers(@PathVariable("careerId") String careerId) {
+        try {
+            List<Course> courseList = careerService.findCoursesByCareer(careerId);
+            return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

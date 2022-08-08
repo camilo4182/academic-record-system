@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.repositories.implementations.rowmappers.CoursesByCareerRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 
 import java.util.List;
@@ -84,6 +86,19 @@ public class JdbcCareerRepository implements CareerRepository {
     public int insertIntoCareerClasses(String careerId, String classId) {
         String query = "INSERT INTO career_classes (career_id, class_id) VALUES (?, ?)";
         return jdbcTemplate.update(query, UUID.fromString(careerId), UUID.fromString(classId));
+    }
+
+    @Override
+    public List<Course> getCoursesByCareer(String careerId) {
+        String query = """
+                SELECT ca.name AS career_name, co.id AS course_id, co.name AS course_name, credits
+                FROM careers ca INNER JOIN career_classes cc ON ca.id = cc.career_id\s
+                INNER JOIN classes cl ON cc.class_id = cl.id\s
+                INNER JOIN courses co ON co.id = cl.course_id
+                WHERE ca.id = ?
+                GROUP BY career_name, co.id, co.name, credits
+                ORDER BY career_name;""";
+        return jdbcTemplate.query(query, new CoursesByCareerRowMapper(), UUID.fromString(careerId));
     }
 
 }

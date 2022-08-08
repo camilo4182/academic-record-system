@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
@@ -59,4 +60,11 @@ public class CareerService implements ICareerService {
             careerRepository.insertIntoCareerClasses(careerId, courseClass.getId());
         }
     }
+
+    @Override
+    public List<Course> findCoursesByCareer(String careerId) throws NotFoundResourceException {
+        if (!careerRepository.exists(careerId)) throw new NotFoundResourceException("Career with id " + careerId + " does not exist");
+        return careerRepository.getCoursesByCareer(careerId);
+    }
+
 }
