@@ -80,4 +80,10 @@ public class JdbcCareerRepository implements CareerRepository {
         }
     }
 
+    @Override
+    public int insertIntoCareerClasses(String careerId, String classId) {
+        String query = "INSERT INTO career_classes (career_id, class_id) VALUES (?, ?)";
+        return jdbcTemplate.update(query, UUID.fromString(careerId), UUID.fromString(classId));
+    }
+
 }

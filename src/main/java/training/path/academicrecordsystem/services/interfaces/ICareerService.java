@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services.interfaces;
 
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.CourseClass;
 
 import java.util.List;
 
@@ -13,5 +14,6 @@ public interface ICareerService {
     Career findById(String id) throws NotFoundResourceException;
     Career findByName(String name) throws NotFoundResourceException;
     List<Career> findAll();
+    void assignClassesToCareer(String careerId, List<CourseClass> classes) throws NotFoundResourceException;
 
 }

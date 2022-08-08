@@ -16,7 +16,9 @@ public class CourseClassMapper {
         courseClassDTO.setId(courseClass.getId());
         courseClassDTO.setAvailable(courseClass.isAvailable());
         courseClassDTO.setProfessorId(courseClass.getProfessor().getId());
+        courseClassDTO.setProfessorName(courseClass.getProfessor().getName());
         courseClassDTO.setCourseId(courseClass.getCourse().getId());
+        courseClassDTO.setCourseName(courseClass.getCourse().getName());
         return courseClassDTO;
     }
 

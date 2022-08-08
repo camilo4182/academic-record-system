@@ -5,12 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
+import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
 import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
+import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
 
@@ -18,10 +22,12 @@ import java.util.List;
 public class CareerController implements ICareerController {
 
     private final ICareerService careerService;
+    private final ICourseService courseService;
 
     @Autowired
-    public CareerController(ICareerService careerService) {
+    public CareerController(ICareerService careerService, ICourseService courseService) {
         this.careerService = careerService;
+        this.courseService = courseService;
     }
 
     @Override
@@ -80,4 +86,18 @@ public class CareerController implements ICareerController {
         List<Career> careerList = careerService.findAll();
         return new ResponseEntity<>(careerList.stream().map(CareerMapper::toDTO).toList(), HttpStatus.OK);
     }
+
+    @PutMapping("careers/{careerId}/courses")
+    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseDTO courseDTO) {
+        try {
+            List<CourseClass> classesByCourse = courseService.getClassesByCourse(courseDTO.getId());
+            careerService.assignClassesToCareer(careerId, classesByCourse);
+            return new ResponseEntity<>("Course was assigned to the career", HttpStatus.OK);
+        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (CouldNotPerformDBOperationException e) {
+            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

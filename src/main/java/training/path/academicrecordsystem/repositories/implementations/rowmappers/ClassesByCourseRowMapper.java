@@ -14,7 +14,7 @@ public class ClassesByCourseRowMapper implements RowMapper<CourseClass> {
     @Override
     public CourseClass mapRow(ResultSet rs, int rowNum) throws SQLException {
         CourseClass courseClass = new CourseClass();
-        courseClass.setId(rs.getObject("course_id", UUID.class).toString());
+        courseClass.setId(rs.getObject("class_id", UUID.class).toString());
         courseClass.setAvailable(rs.getBoolean("available"));
 
         Professor professor = new Professor();

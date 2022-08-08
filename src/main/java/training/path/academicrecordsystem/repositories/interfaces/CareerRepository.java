@@ -14,5 +14,6 @@ public interface CareerRepository {
     int update(String id, Career career);
     int deleteById(String id);
     boolean exists(String id);
+    int insertIntoCareerClasses(String careerId, String classId);
     
 }
