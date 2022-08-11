@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.implementations.JdbcProfessorRepository;
 import training.path.academicrecordsystem.services.implementations.ProfessorService;
@@ -53,7 +52,7 @@ class ProfessorServiceTests {
 		when(jdbcProfessorRepository.exists(anyString())).thenReturn(false);
 		when(jdbcProfessorRepository.update(anyString(), any())).thenReturn(0);
 
-		assertThrows(NotFoundResourceException.class, () -> professorService.update("000", professor));
+		assertThrows(ResourceNotFoundException.class, () -> professorService.update("000", professor));
 	}
 
 
@@ -78,7 +77,7 @@ class ProfessorServiceTests {
 		when(jdbcProfessorRepository.exists(anyString())).thenReturn(false);
 		when(jdbcProfessorRepository.deleteById(anyString())).thenReturn(0);
 
-		assertThrows(NotFoundResourceException.class, () -> professorService.deleteById(id));
+		assertThrows(ResourceNotFoundException.class, () -> professorService.deleteById(id));
 	}
 
 	@Test
@@ -96,7 +95,7 @@ class ProfessorServiceTests {
 
 		when(jdbcProfessorRepository.findById(anyString())).thenReturn(Optional.empty());
 
-		assertThrows(NotFoundResourceException.class, () -> professorService.findById("000"));
+		assertThrows(ResourceNotFoundException.class, () -> professorService.findById("000"));
 	}
 
 }

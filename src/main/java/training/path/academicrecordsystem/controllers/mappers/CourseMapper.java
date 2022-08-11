@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Course;
 
@@ -18,7 +18,7 @@ public class CourseMapper {
         return courseDTO;
     }
     
-    public static Course toEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadArgumentsException {
+    public static Course toEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadResourceDataException {
         validateCourseDTO(courseDTO);
         Course course = new Course();
         course.setId(courseDTO.getId());
@@ -27,7 +27,7 @@ public class CourseMapper {
         return course;
     }
     
-    public static Course createEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadArgumentsException {
+    public static Course createEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadResourceDataException {
         validateCourseDTO(courseDTO);
         Course course = new Course();
         course.setId(UUID.randomUUID().toString());
@@ -36,10 +36,12 @@ public class CourseMapper {
         return course;
     }
 
-    private static void validateCourseDTO(CourseDTO courseDTO) throws NullRequestBodyException, BadArgumentsException {
-        if (!Objects.nonNull(courseDTO)) throw new NullRequestBodyException("CourseDTO object is null");
-        if (!Objects.nonNull(courseDTO.getName())) throw new BadArgumentsException("Name cannot be null");
-        if (courseDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
+    private static void validateCourseDTO(CourseDTO courseDTO) throws NullRequestBodyException, BadResourceDataException {
+        if (Objects.isNull(courseDTO)) throw new NullRequestBodyException("You must provide course information");
+        if (Objects.isNull(courseDTO.getName())) throw new BadResourceDataException("Course name cannot be null");
+        if (courseDTO.getName().isEmpty()) throw new BadResourceDataException("You must provide course name");
+        if (courseDTO.getName().isBlank()) throw new BadResourceDataException("Course name cannot be just blank spaces");
+        if (courseDTO.getCredits() < 0 || courseDTO.getCredits() > 10) throw new BadResourceDataException("Course credits must be between 0 and 10");
     }
     
 }

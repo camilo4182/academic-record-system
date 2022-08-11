@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Professor;
 
@@ -19,7 +19,7 @@ public class ProfessorMapper {
         return professorDTO;
     }
 
-    public static Professor toEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadArgumentsException {
+    public static Professor toEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadResourceDataException {
         validateProfessorDTO(professorDTO);
         Professor professor = new Professor();
         professor.setId(professorDTO.getId());
@@ -29,7 +29,7 @@ public class ProfessorMapper {
         return professor;
     }
 
-    public static Professor createEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadArgumentsException {
+    public static Professor createEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadResourceDataException {
         validateProfessorDTO(professorDTO);
         Professor professor = new Professor();
         professor.setId(UUID.randomUUID().toString());
@@ -39,13 +39,15 @@ public class ProfessorMapper {
         return professor;
     }
 
-    private static void validateProfessorDTO(ProfessorDTO professorDTO) throws NullRequestBodyException, BadArgumentsException {
-        if (!Objects.nonNull(professorDTO)) throw new NullRequestBodyException("ProfessorDTO object is null");
-        if (!Objects.nonNull(professorDTO.getName())) throw new BadArgumentsException("Name cannot be null");
-        if (!Objects.nonNull(professorDTO.getEmail())) throw new BadArgumentsException("Email cannot be null");
-        if (professorDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be empty");
-        if (professorDTO.getEmail().isBlank()) throw new BadArgumentsException("Email cannot be empty");
-        if (professorDTO.getSalary() < 0) throw new BadArgumentsException("Salary must be greater than zero");
+    private static void validateProfessorDTO(ProfessorDTO professorDTO) throws NullRequestBodyException, BadResourceDataException {
+        if (Objects.isNull(professorDTO)) throw new NullRequestBodyException("You must provide professor information");
+        if (Objects.isNull(professorDTO.getName())) throw new BadResourceDataException("Professor name cannot be bull");
+        if (Objects.isNull(professorDTO.getEmail())) throw new BadResourceDataException("Email cannot be null");
+        if (professorDTO.getName().isEmpty()) throw new BadResourceDataException("You must provide the professor name");
+        if (professorDTO.getName().isBlank()) throw new BadResourceDataException("Professor name cannot be just blank spaces");
+        if (professorDTO.getEmail().isEmpty()) throw new BadResourceDataException("You must provide the professor email");
+        if (professorDTO.getEmail().isBlank()) throw new BadResourceDataException("Professor email cannot be just blank spaces");
+        if (professorDTO.getSalary() < 0) throw new BadResourceDataException("Professor salary must be greater than zero");
     }
 
 }

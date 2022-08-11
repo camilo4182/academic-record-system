@@ -2,8 +2,8 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
@@ -27,25 +27,25 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public void update(Course course) throws NotFoundResourceException {
-        if (!jdbcCourseRepository.exists(course.getId())) throw new NotFoundResourceException("Course " + course.getId() + " was not found");
+    public void update(Course course) throws ResourceNotFoundException {
+        if (!jdbcCourseRepository.exists(course.getId())) throw new ResourceNotFoundException("Course " + course.getId() + " was not found");
         jdbcCourseRepository.update(course.getId(), course);
     }
 
     @Override
-    public void deleteById(String id) throws NotFoundResourceException {
-        if (!jdbcCourseRepository.exists(id)) throw new NotFoundResourceException("Course " + id + " was not found");
+    public void deleteById(String id) throws ResourceNotFoundException {
+        if (!jdbcCourseRepository.exists(id)) throw new ResourceNotFoundException("Course " + id + " was not found");
         jdbcCourseRepository.deleteById(id);
     }
 
     @Override
-    public Course findById(String id) throws NotFoundResourceException {
-        return jdbcCourseRepository.findById(id).orElseThrow(() -> new NotFoundResourceException("Course " + id + " was not found"));
+    public Course findById(String id) throws ResourceNotFoundException {
+        return jdbcCourseRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course " + id + " was not found"));
     }
 
     @Override
-    public Course findByName(String name) throws NotFoundResourceException {
-        return jdbcCourseRepository.findByName(name).orElseThrow(() -> new NotFoundResourceException("Course " + name + " was not found"));
+    public Course findByName(String name) throws ResourceNotFoundException {
+        return jdbcCourseRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Course " + name + " was not found"));
     }
 
     @Override
@@ -59,9 +59,9 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public List<CourseClass> getClassesByCourse(String courseId) throws NotFoundResourceException, CouldNotPerformDBOperationException {
-        if (!jdbcCourseRepository.exists(courseId)) throw new NotFoundResourceException("Course " + courseId + " was not found");
-        return jdbcCourseRepository.getClassesByCourse(courseId).orElseThrow(() -> new CouldNotPerformDBOperationException("Internal error"));
+    public List<CourseClass> getClassesByCourse(String courseId) throws ResourceNotFoundException, CouldNotPerformOperationException {
+        if (!jdbcCourseRepository.exists(courseId)) throw new ResourceNotFoundException("Course " + courseId + " was not found");
+        return jdbcCourseRepository.getClassesByCourse(courseId).orElseThrow(() -> new CouldNotPerformOperationException("Internal error"));
     }
 
 }

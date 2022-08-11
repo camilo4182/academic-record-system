@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
-import training.path.academicrecordsystem.model.Career;
-import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCourseClassRepository;
 import training.path.academicrecordsystem.services.implementations.CourseClassService;
@@ -54,7 +52,7 @@ public class CourseClassServiceTests {
         when(jdbcCourseClassRepository.exists(anyString())).thenReturn(false);
         when(jdbcCourseClassRepository.update(anyString(), any())).thenReturn(1);
 
-        assertThrows(NotFoundResourceException.class, () -> courseClassService.update(career));
+        assertThrows(ResourceNotFoundException.class, () -> courseClassService.update(career));
     }
 
     @Test
@@ -74,11 +72,11 @@ public class CourseClassServiceTests {
         when(jdbcCourseClassRepository.exists(anyString())).thenReturn(false);
         when(jdbcCourseClassRepository.deleteById(anyString())).thenReturn(0);
 
-        assertThrows(NotFoundResourceException.class, () -> courseClassService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> courseClassService.deleteById(id));
     }
 
     @Test
-    void givenValidId_whenFindById_thenItReturnsTheCourseClass() throws NotFoundResourceException {
+    void givenValidId_whenFindById_thenItReturnsTheCourseClass() throws ResourceNotFoundException {
         CourseClass career = CourseClass.builder().id("1").available(true).build();
 
         when(jdbcCourseClassRepository.findById(anyString())).thenReturn(Optional.of(career));
@@ -94,7 +92,7 @@ public class CourseClassServiceTests {
 
         when(jdbcCourseClassRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundResourceException.class, () -> courseClassService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> courseClassService.findById(id));
     }
 
 }

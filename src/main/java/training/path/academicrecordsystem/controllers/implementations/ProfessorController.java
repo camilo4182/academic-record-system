@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IProfessorController;
 import training.path.academicrecordsystem.controllers.mappers.ProfessorMapper;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
@@ -33,7 +33,7 @@ public class ProfessorController implements IProfessorController {
             Professor professor = ProfessorMapper.createEntity(professorDTO);
             professorService.save(professor);
             return new ResponseEntity<>("Professor registered", HttpStatus.OK);
-        } catch (NullRequestBodyException | BadArgumentsException e) {
+        } catch (NullRequestBodyException | BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -46,9 +46,9 @@ public class ProfessorController implements IProfessorController {
             Professor professor = ProfessorMapper.toEntity(professorDTO);
             professorService.update(id, professor);
             return new ResponseEntity<>("Professor information updated", HttpStatus.OK);
-        } catch (NullRequestBodyException | BadArgumentsException e) {
+        } catch (NullRequestBodyException | BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -59,7 +59,7 @@ public class ProfessorController implements IProfessorController {
         try {
             professorService.deleteById(id);
             return new ResponseEntity<>("Professor deleted", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -70,7 +70,7 @@ public class ProfessorController implements IProfessorController {
         try {
             ProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
             return new ResponseEntity<>(professorDTO, HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

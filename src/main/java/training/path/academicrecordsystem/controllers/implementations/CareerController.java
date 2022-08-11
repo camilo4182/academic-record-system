@@ -3,15 +3,17 @@ package training.path.academicrecordsystem.controllers.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
+import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
@@ -40,8 +42,10 @@ public class CareerController implements ICareerController {
             Career career = CareerMapper.createEntity(careerDTO);
             careerService.save(career);
             return new ResponseEntity<>("Career was registered", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+        } catch (BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NullRequestBodyException e) {
+            return new ResponseEntity<>(e.getMessage() + " register the career", HttpStatus.NO_CONTENT);
         }
     }
 
@@ -53,9 +57,9 @@ public class CareerController implements ICareerController {
             Career career = CareerMapper.toEntity(careerDTO);
             careerService.update(career);
             return new ResponseEntity<>("Career was updated", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+        } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -66,7 +70,7 @@ public class CareerController implements ICareerController {
         try {
             careerService.deleteById(id);
             return new ResponseEntity<>("Career was deleted", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -78,7 +82,7 @@ public class CareerController implements ICareerController {
             Career career = careerService.findById(id);
             CareerDTO careerDTO = CareerMapper.toDTO(career);
             return new ResponseEntity<>(careerDTO, HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -103,10 +107,10 @@ public class CareerController implements ICareerController {
             List<CourseClass> classesByCourse = courseService.getClassesByCourse(courseDTO.getId());
             careerService.assignClassesToCareer(careerId, classesByCourse);
             return new ResponseEntity<>("Course was assigned to the career", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (CouldNotPerformDBOperationException e) {
-            return new ResponseEntity<>("Internal error", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (CouldNotPerformOperationException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -116,7 +120,7 @@ public class CareerController implements ICareerController {
         try {
             List<Course> courseList = careerService.findCoursesByCareer(careerId);
             return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

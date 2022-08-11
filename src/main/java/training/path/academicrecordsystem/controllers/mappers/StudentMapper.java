@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.model.Student;
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ public class StudentMapper {
         return studentDTO;
     }
 
-    public static Student toEntity(StudentDTO studentDTO) throws BadArgumentsException {
+    public static Student toEntity(StudentDTO studentDTO) throws BadResourceDataException {
         validateStudentDTO(studentDTO);
         Student student = new Student();
         student.setId(studentDTO.getId());
@@ -28,7 +28,7 @@ public class StudentMapper {
         return student;
     }
 
-    public static Student createEntity(StudentDTO studentDTO) throws BadArgumentsException {
+    public static Student createEntity(StudentDTO studentDTO) throws BadResourceDataException {
         validateStudentDTO(studentDTO);
         Student student = new Student();
         student.setId(UUID.randomUUID().toString());
@@ -38,13 +38,14 @@ public class StudentMapper {
         return student;
     }
 
-    private static void validateStudentDTO(StudentDTO studentDTO) throws BadArgumentsException {
-        if (Objects.isNull(studentDTO.getName())) throw new BadArgumentsException("Name cannot be null");
-        if (studentDTO.getName().isEmpty()) throw new BadArgumentsException("Name cannot be empty");
-        if (studentDTO.getName().isBlank()) throw new BadArgumentsException("Name cannot be blank");
-        if (Objects.isNull(studentDTO.getEmail())) throw new BadArgumentsException("Email cannot be null");
-        if (studentDTO.getEmail().isEmpty()) throw new BadArgumentsException("Email cannot be empty");
-        if (studentDTO.getEmail().isBlank()) throw new BadArgumentsException("Email cannot be blank");
+    private static void validateStudentDTO(StudentDTO studentDTO) throws BadResourceDataException {
+        if (Objects.isNull(studentDTO.getName())) throw new BadResourceDataException("Student name cannot be null");
+        if (studentDTO.getName().isEmpty()) throw new BadResourceDataException("You must provide a student name");
+        if (studentDTO.getName().isBlank()) throw new BadResourceDataException("Student name cannot be just blank spaces");
+        if (Objects.isNull(studentDTO.getEmail())) throw new BadResourceDataException("Student email cannot be null");
+        if (studentDTO.getEmail().isEmpty()) throw new BadResourceDataException("You must provide student email");
+        if (studentDTO.getEmail().isBlank()) throw new BadResourceDataException("Student email cannot be just blank spaces");
+        if (studentDTO.getAverageGrade() < 0.0 || studentDTO.getAverageGrade() > 5.0) throw new BadResourceDataException("Student average grades must be between 0.0 and 5.0");
     }
 
 }

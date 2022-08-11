@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
 
@@ -31,8 +31,8 @@ public class StudentController implements IStudentController {
         try {
             Student student = StudentMapper.createEntity(studentDTO);
             studentService.save(student);
-            return new ResponseEntity<>("Student created", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+            return new ResponseEntity<>("Student registered", HttpStatus.OK);
+        } catch (BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,10 +44,10 @@ public class StudentController implements IStudentController {
             studentDTO.setId(id);
             Student student = StudentMapper.toEntity(studentDTO);
             studentService.update(id, student);
-            return new ResponseEntity<>("Student updated", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+            return new ResponseEntity<>("Student information updated", HttpStatus.OK);
+        } catch (BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -57,8 +57,8 @@ public class StudentController implements IStudentController {
     public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
         try {
             studentService.deleteById(id);
-            return new ResponseEntity<>("Student was deleted", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+            return new ResponseEntity<>("Student deleted", HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -69,7 +69,7 @@ public class StudentController implements IStudentController {
         try {
             StudentDTO studentDTO = StudentMapper.toDTO(studentService.findById(id));
             return new ResponseEntity<>(studentDTO, HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

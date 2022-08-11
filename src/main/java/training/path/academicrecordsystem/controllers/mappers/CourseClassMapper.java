@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
@@ -22,7 +22,7 @@ public class CourseClassMapper {
         return courseClassDTO;
     }
 
-    public static CourseClass toEntity(CourseClassDTO courseClassDTO) throws BadArgumentsException {
+    public static CourseClass toEntity(CourseClassDTO courseClassDTO) throws BadResourceDataException {
         validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(courseClassDTO.getId());
@@ -39,7 +39,7 @@ public class CourseClassMapper {
         return courseClass;
     }
 
-    public static CourseClass createEntity(CourseClassDTO courseClassDTO) throws BadArgumentsException {
+    public static CourseClass createEntity(CourseClassDTO courseClassDTO) throws BadResourceDataException {
         validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(UUID.randomUUID().toString());
@@ -56,9 +56,11 @@ public class CourseClassMapper {
         return courseClass;
     }
 
-    private static void validateDTO(CourseClassDTO courseClassDTO) throws BadArgumentsException {
-        if (!Objects.nonNull(courseClassDTO.getProfessorId())) throw new BadArgumentsException("Class must be assigned to a professor");
-        if (!Objects.nonNull(courseClassDTO.getCourseId())) throw new BadArgumentsException("Class must have a course associated");
+    private static void validateDTO(CourseClassDTO courseClassDTO) throws BadResourceDataException {
+        if (Objects.isNull(courseClassDTO.getProfessorId()) || courseClassDTO.getProfessorId().isBlank())
+            throw new BadResourceDataException("Class must be assigned to a professor");
+        if (Objects.isNull(courseClassDTO.getCourseId()) || courseClassDTO.getCourseId().isBlank())
+            throw new BadResourceDataException("Class must have a course associated");
     }
 
 }

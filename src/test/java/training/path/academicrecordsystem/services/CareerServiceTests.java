@@ -3,10 +3,8 @@ package training.path.academicrecordsystem.services;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCareerRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
@@ -17,8 +15,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -56,7 +52,7 @@ public class CareerServiceTests {
         when(jdbcCareerRepository.exists(anyString())).thenReturn(false);
         when(jdbcCareerRepository.update(anyString(), any())).thenReturn(1);
 
-        assertThrows(NotFoundResourceException.class, () -> careerService.update(career));
+        assertThrows(ResourceNotFoundException.class, () -> careerService.update(career));
     }
 
     @Test
@@ -76,11 +72,11 @@ public class CareerServiceTests {
         when(jdbcCareerRepository.exists(anyString())).thenReturn(false);
         when(jdbcCareerRepository.deleteById(anyString())).thenReturn(0);
 
-        assertThrows(NotFoundResourceException.class, () -> careerService.deleteById(id));
+        assertThrows(ResourceNotFoundException.class, () -> careerService.deleteById(id));
     }
 
     @Test
-    void givenValidId_whenFindById_thenItReturnsTheCareer() throws NotFoundResourceException {
+    void givenValidId_whenFindById_thenItReturnsTheCareer() throws ResourceNotFoundException {
         Career career = Career.builder().id("1").name("Physics").build();
 
         when(jdbcCareerRepository.findById(anyString())).thenReturn(Optional.of(career));
@@ -96,7 +92,7 @@ public class CareerServiceTests {
 
         when(jdbcCareerRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundResourceException.class, () -> careerService.findById(id));
+        assertThrows(ResourceNotFoundException.class, () -> careerService.findById(id));
     }
 
 }

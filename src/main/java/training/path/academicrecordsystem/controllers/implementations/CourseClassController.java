@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
 
@@ -32,7 +32,7 @@ public class CourseClassController implements ICourseClassController {
             CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
             courseClassService.save(courseClass);
             return new ResponseEntity<>("Class registered", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+        } catch (BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -43,10 +43,10 @@ public class CourseClassController implements ICourseClassController {
         try {
             CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
             courseClassService.update(courseClass);
-            return new ResponseEntity<>("Class updates", HttpStatus.OK);
-        } catch (BadArgumentsException e) {
+            return new ResponseEntity<>("Class updated", HttpStatus.OK);
+        } catch (BadResourceDataException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -57,7 +57,7 @@ public class CourseClassController implements ICourseClassController {
         try {
             courseClassService.deleteById(id);
             return new ResponseEntity<>("Class deleted", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -68,7 +68,7 @@ public class CourseClassController implements ICourseClassController {
         try {
             CourseClassDTO courseClassDTO = CourseClassMapper.toDTo(courseClassService.findById(id));
             return new ResponseEntity<>(courseClassDTO, HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

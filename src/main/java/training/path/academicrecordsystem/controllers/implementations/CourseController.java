@@ -9,9 +9,9 @@ import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
-import training.path.academicrecordsystem.exceptions.BadArgumentsException;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformDBOperationException;
-import training.path.academicrecordsystem.exceptions.NotFoundResourceException;
+import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
@@ -37,7 +37,7 @@ public class CourseController implements ICourseController {
             Course course = CourseMapper.createEntity(courseDTO);
             courseService.save(course);
             return new ResponseEntity<>("Course created", HttpStatus.OK);
-        } catch (BadArgumentsException | NullRequestBodyException e) {
+        } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -50,9 +50,9 @@ public class CourseController implements ICourseController {
             Course course = CourseMapper.toEntity(courseDTO);
             courseService.update(course);
             return new ResponseEntity<>("Course updated", HttpStatus.OK);
-        } catch (BadArgumentsException | NullRequestBodyException e) {
+        } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -63,7 +63,7 @@ public class CourseController implements ICourseController {
         try {
             courseService.deleteById(id);
             return new ResponseEntity<>("Course deleted", HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
@@ -74,7 +74,7 @@ public class CourseController implements ICourseController {
         try {
             CourseDTO courseDTO = CourseMapper.toDTO(courseService.findById(id));
             return new ResponseEntity<>(courseDTO, HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
@@ -98,9 +98,9 @@ public class CourseController implements ICourseController {
         try {
             List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
             return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
-        } catch (NotFoundResourceException e) {
+        } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (CouldNotPerformDBOperationException e) {
+        } catch (CouldNotPerformOperationException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
