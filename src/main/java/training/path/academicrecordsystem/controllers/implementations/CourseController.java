@@ -94,10 +94,10 @@ public class CourseController implements ICourseController {
     }
 
     @GetMapping("courses/{courseId}/classes")
-    public ResponseEntity<List<CourseClassDTO>> getClassesByCourse(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<List<CourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) {
         try {
             List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
-            return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
+            return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (CouldNotPerformOperationException e) {

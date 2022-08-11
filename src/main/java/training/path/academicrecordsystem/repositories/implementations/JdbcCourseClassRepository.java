@@ -46,11 +46,14 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public Optional<CourseClass> findById(String id) {
-        String query = "SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary\n" +
-                "FROM classes cl INNER JOIN courses co ON co.id = cl.course_id\n" +
-                "INNER JOIN professors p ON p.id = cl.professor_id\n" +
-                "INNER JOIN users u ON p.id = u.id\n" +
-                "WHERE cl.id = ?";
+        String query =
+                """
+                SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN professors p ON p.id = cl.professor_id
+                INNER JOIN users u ON p.id = u.id
+                WHERE cl.id = ?;
+                """;
         try {
             CourseClass courseClass = jdbcTemplate.queryForObject(query, new CourseClassFindAllRowMapper(), UUID.fromString(id));
             return Optional.ofNullable(courseClass);
@@ -61,20 +64,26 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public List<CourseClass> findAll() {
-        String query = "SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary\n" +
-                "FROM classes cl INNER JOIN courses co ON co.id = cl.course_id\n" +
-                "INNER JOIN professors p ON p.id = cl.professor_id\n" +
-                "INNER JOIN users u ON p.id = u.id";
+        String query =
+                """
+                SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN professors p ON p.id = cl.professor_id
+                INNER JOIN users u ON p.id = u.id;
+                """;
         return jdbcTemplate.query(query, new CourseClassFindAllRowMapper());
     }
 
     @Override
     public List<CourseClass> findAll(int limit, int offset) {
-        String query = "SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary\n" +
-                "FROM classes cl INNER JOIN courses co ON co.id = cl.course_id\n" +
-                "INNER JOIN professors p ON p.id = cl.professor_id\n" +
-                "INNER JOIN users u ON p.id = u.id\n" +
-                "LIMIT ? OFFSET ?";
+        String query =
+                """
+                SELECT cl.id AS class_id, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN professors p ON p.id = cl.professor_id
+                INNER JOIN users u ON p.id = u.id
+                LIMIT ? OFFSET ?;
+                """;
         return jdbcTemplate.query(query, new CourseClassFindAllRowMapper(), limit, offset);
     }
 

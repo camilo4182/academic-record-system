@@ -3,7 +3,6 @@ package training.path.academicrecordsystem.controllers.interfaces;
 import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
-import training.path.academicrecordsystem.model.Course;
 
 import java.util.List;
 
@@ -16,6 +15,6 @@ public interface ICareerController {
     ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
 
     ResponseEntity<String> assignCourseToCareer(String careerId, CourseDTO courseDTO);
-    ResponseEntity<List<CourseDTO>> findCoursesByCareers(String careerId);
+    ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId);
 
 }

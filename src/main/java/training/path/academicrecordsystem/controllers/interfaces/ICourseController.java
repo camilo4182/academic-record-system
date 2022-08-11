@@ -13,6 +13,6 @@ public interface ICourseController {
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<CourseDTO> findById(String id);
     ResponseEntity<List<CourseDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<List<CourseClassDTO>> getClassesByCourse(String courseId);
+    ResponseEntity<List<CourseClassDTO>> findClassesByCourse(String courseId);
 
 }

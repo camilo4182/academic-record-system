@@ -20,11 +20,13 @@ public class ClassesByCourseRowMapper implements RowMapper<CourseClass> {
         Professor professor = new Professor();
         professor.setId(rs.getObject("prof_id", UUID.class).toString());
         professor.setName(rs.getString("prof_name"));
+        professor.setEmail(rs.getString("prof_email"));
         courseClass.setProfessor(professor);
 
         Course course = new Course();
         course.setId(rs.getObject("course_id", UUID.class).toString());
         course.setName(rs.getString("course_name"));
+        course.setCredits(rs.getInt("credits"));
         courseClass.setCourse(course);
 
         return courseClass;

@@ -57,7 +57,12 @@ public class JdbcStudentRepository implements StudentRepository {
 
     @Override
     public List<Student> findAll() {
-        String query = "SELECT * FROM students s INNER JOIN users u ON s.id = u.id ORDER BY u.name";
+        String query =
+                """
+                SELECT *
+                FROM students s INNER JOIN users u ON s.id = u.id
+                ORDER BY u.name
+                """;
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Student.class));
     }
 

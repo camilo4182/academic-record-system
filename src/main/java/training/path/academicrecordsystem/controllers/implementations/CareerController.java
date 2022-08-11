@@ -106,7 +106,7 @@ public class CareerController implements ICareerController {
         try {
             List<CourseClass> classesByCourse = courseService.getClassesByCourse(courseDTO.getId());
             careerService.assignClassesToCareer(careerId, classesByCourse);
-            return new ResponseEntity<>("Course was assigned to the career", HttpStatus.OK);
+            return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (CouldNotPerformOperationException e) {
@@ -116,7 +116,7 @@ public class CareerController implements ICareerController {
 
     @Override
     @GetMapping("careers/{careerId}/courses")
-    public ResponseEntity<List<CourseDTO>> findCoursesByCareers(@PathVariable("careerId") String careerId) {
+    public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId) {
         try {
             List<Course> courseList = careerService.findCoursesByCareer(careerId);
             return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);

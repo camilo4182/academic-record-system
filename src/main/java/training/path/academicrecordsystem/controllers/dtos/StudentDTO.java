@@ -10,6 +10,4 @@ public class StudentDTO {
     private String email;
     private float averageGrade;
 
-    public StudentDTO() {
-    }
 }

@@ -8,6 +8,7 @@ import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
@@ -32,7 +33,7 @@ public class CourseClassController implements ICourseClassController {
             CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
             courseClassService.save(courseClass);
             return new ResponseEntity<>("Class registered", HttpStatus.OK);
-        } catch (BadResourceDataException e) {
+        } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,7 +45,7 @@ public class CourseClassController implements ICourseClassController {
             CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
             courseClassService.update(courseClass);
             return new ResponseEntity<>("Class updated", HttpStatus.OK);
-        } catch (BadResourceDataException e) {
+        } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -66,7 +67,7 @@ public class CourseClassController implements ICourseClassController {
     @GetMapping("classes/{id}")
     public ResponseEntity<CourseClassDTO> findById(@PathVariable("id") String id) {
         try {
-            CourseClassDTO courseClassDTO = CourseClassMapper.toDTo(courseClassService.findById(id));
+            CourseClassDTO courseClassDTO = CourseClassMapper.toDTO(courseClassService.findById(id));
             return new ResponseEntity<>(courseClassDTO, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -84,7 +85,7 @@ public class CourseClassController implements ICourseClassController {
         else {
             courseClasses = courseClassService.findAll(limit, offset);
         }
-        return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
+        return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
     }
 
 }
