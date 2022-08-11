@@ -18,6 +18,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class CourseController implements ICourseController {
@@ -80,8 +81,15 @@ public class CourseController implements ICourseController {
 
     @Override
     @GetMapping("courses")
-    public ResponseEntity<List<CourseDTO>> findAll() {
-        List<Course> courseList = courseService.findAll();
+    public ResponseEntity<List<CourseDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                   @RequestParam(name = "offset", required = false) Integer offset) {
+        List<Course> courseList;
+        if (Objects.isNull(limit) && Objects.isNull(offset)) {
+            courseList = courseService.findAll();
+        }
+        else {
+            courseList = courseService.findAll(limit, offset);
+        }
         return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
     }
 

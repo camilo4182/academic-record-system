@@ -45,4 +45,9 @@ public class CourseClassService implements ICourseClassService {
     public List<CourseClass> findAll() {
         return courseClassRepository.findAll();
     }
+
+    @Override
+    public List<CourseClass> findAll(int limit, int offset) {
+        return courseClassRepository.findAll(limit, offset);
+    }
 }

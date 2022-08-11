@@ -19,6 +19,7 @@ import training.path.academicrecordsystem.services.interfaces.ICareerService;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class CareerController implements ICareerController {
@@ -84,8 +85,15 @@ public class CareerController implements ICareerController {
 
     @Override
     @GetMapping("careers")
-    public ResponseEntity<List<CareerDTO>> findAll() {
-        List<Career> careerList = careerService.findAll();
+    public ResponseEntity<List<CareerDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                   @RequestParam(name = "offset", required = false) Integer offset) {
+        List<Career> careerList;
+        if (Objects.isNull(limit) && Objects.isNull(offset)) {
+            careerList = careerService.findAll();
+        }
+        else {
+            careerList = careerService.findAll(limit, offset);
+        }
         return new ResponseEntity<>(careerList.stream().map(CareerMapper::toDTO).toList(), HttpStatus.OK);
     }
 

@@ -11,6 +11,6 @@ public interface IProfessorController {
     ResponseEntity<String> update(String id, ProfessorDTO professorDTO);
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<ProfessorDTO> findById(String id);
-    ResponseEntity<List<ProfessorDTO>> findAll();
+    ResponseEntity<List<ProfessorDTO>> findAll(Integer limit, Integer offset);
 
 }

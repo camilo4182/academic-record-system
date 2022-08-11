@@ -12,6 +12,8 @@ public interface StudentRepository {
     int deleteById(String id);
     Optional<Student> findById(String id);
     List<Student> findAll();
+    List<Student> findAll(int limit, int offset);
+
     boolean exists(String id);
 
 }

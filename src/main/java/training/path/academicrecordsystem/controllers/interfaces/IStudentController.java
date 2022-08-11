@@ -11,6 +11,6 @@ public interface IStudentController {
     ResponseEntity<String> update(String id, StudentDTO studentDTO);
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<StudentDTO> findById(String id);
-    ResponseEntity<List<StudentDTO>> findAll();
+    ResponseEntity<List<StudentDTO>> findAll(Integer limit, Integer offset);
 
 }

@@ -13,6 +13,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class CourseClassController implements ICourseClassController {
@@ -74,8 +75,15 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @GetMapping("classes")
-    public ResponseEntity<List<CourseClassDTO>> findAll() {
-        List<CourseClass> courseClasses = courseClassService.findAll();
+    public ResponseEntity<List<CourseClassDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                        @RequestParam(name = "offset", required = false) Integer offset) {
+        List<CourseClass> courseClasses;
+        if (Objects.isNull(limit) && Objects.isNull(offset)) {
+            courseClasses = courseClassService.findAll();
+        }
+        else {
+            courseClasses = courseClassService.findAll(limit, offset);
+        }
         return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTo).toList(), HttpStatus.OK);
     }
 

@@ -14,6 +14,7 @@ import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class ProfessorController implements IProfessorController {
@@ -76,8 +77,15 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @GetMapping("professors")
-    public ResponseEntity<List<ProfessorDTO>> findAll() {
-        List<Professor> professorList = professorService.findAll();
+    public ResponseEntity<List<ProfessorDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                      @RequestParam(name = "offset", required = false) Integer offset) {
+        List<Professor> professorList;
+        if (Objects.isNull(limit) && Objects.isNull(offset)) {
+            professorList = professorService.findAll();
+        }
+        else {
+            professorList = professorService.findAll(limit, offset);
+        }
         return new ResponseEntity<>(professorList.stream().map(ProfessorMapper::toDTO).toList(), HttpStatus.OK);
     }
 }

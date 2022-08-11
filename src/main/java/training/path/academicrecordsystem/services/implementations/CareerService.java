@@ -54,6 +54,11 @@ public class CareerService implements ICareerService {
     }
 
     @Override
+    public List<Career> findAll(int limit, int offset) {
+        return careerRepository.findAll(limit, offset);
+    }
+
+    @Override
     public void assignClassesToCareer(String careerId, List<CourseClass> classes) throws NotFoundResourceException {
         if (!careerRepository.exists(careerId)) throw new NotFoundResourceException("Career with id " + careerId + " does not exist");
         for (CourseClass courseClass : classes) {

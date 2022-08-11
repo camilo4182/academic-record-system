@@ -12,5 +12,6 @@ public interface IStudentService {
     void deleteById(String id) throws NotFoundResourceException;
     Student findById(String id) throws NotFoundResourceException;
     List<Student> findAll();
+    List<Student> findAll(int limit, int offset);
 
 }

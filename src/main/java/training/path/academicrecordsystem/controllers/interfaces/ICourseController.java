@@ -12,6 +12,6 @@ public interface ICourseController {
     ResponseEntity<String> update(String id, CourseDTO courseDTO);
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<CourseDTO> findById(String id);
-    ResponseEntity<List<CourseDTO>> findAll();
+    ResponseEntity<List<CourseDTO>> findAll(Integer limit, Integer offset);
 
 }

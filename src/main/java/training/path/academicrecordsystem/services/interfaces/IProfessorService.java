@@ -13,5 +13,7 @@ public interface IProfessorService {
     Professor findById(String id) throws NotFoundResourceException;
     Professor findByName(String name) throws NotFoundResourceException;
     List<Professor> findAll();
+    List<Professor> findAll(int limit, int offset);
+
 
 }

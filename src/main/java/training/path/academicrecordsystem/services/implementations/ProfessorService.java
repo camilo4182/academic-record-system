@@ -50,4 +50,9 @@ public class ProfessorService implements IProfessorService {
     public List<Professor> findAll() {
         return professorRepository.findAll();
     }
+
+    @Override
+    public List<Professor> findAll(int limit, int offset) {
+        return professorRepository.findAll(limit, offset);
+    }
 }

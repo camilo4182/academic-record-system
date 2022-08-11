@@ -46,4 +46,9 @@ public class StudentService implements IStudentService {
     public List<Student> findAll() {
         return studentRepository.findAll();
     }
+
+    @Override
+    public List<Student> findAll(int limit, int offset) {
+        return studentRepository.findAll(limit, offset);
+    }
 }

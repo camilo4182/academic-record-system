@@ -12,6 +12,8 @@ public interface CourseClassRepository {
     int deleteById(String id);
     Optional<CourseClass> findById(String id);
     List<CourseClass> findAll();
+    List<CourseClass> findAll(int limit, int offset);
+
     boolean exists(String id);
     
 }

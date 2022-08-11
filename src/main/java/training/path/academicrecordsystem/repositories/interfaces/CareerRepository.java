@@ -11,6 +11,7 @@ public interface CareerRepository {
     Optional<Career> findById(String id);
     Optional<Career> findByName(String name);
     List<Career> findAll();
+    List<Career> findAll(int limit, int offset);
     int save(Career career);
     int update(String id, Career career);
     int deleteById(String id);

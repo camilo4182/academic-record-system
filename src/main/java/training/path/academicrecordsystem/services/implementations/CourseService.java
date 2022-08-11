@@ -54,6 +54,11 @@ public class CourseService implements ICourseService {
     }
 
     @Override
+    public List<Course> findAll(int limit, int offset) {
+        return jdbcCourseRepository.findAll(limit, offset);
+    }
+
+    @Override
     public List<CourseClass> getClassesByCourse(String courseId) throws NotFoundResourceException, CouldNotPerformDBOperationException {
         if (!jdbcCourseRepository.exists(courseId)) throw new NotFoundResourceException("Course " + courseId + " was not found");
         return jdbcCourseRepository.getClassesByCourse(courseId).orElseThrow(() -> new CouldNotPerformDBOperationException("Internal error"));

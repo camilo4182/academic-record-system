@@ -13,7 +13,8 @@ public interface ICareerController {
     ResponseEntity<String> update(String id, CareerDTO careerDTO);
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<CareerDTO> findById(String id);
-    ResponseEntity<List<CareerDTO>> findAll();
+    ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
+
     ResponseEntity<String> assignCourseToCareer(String careerId, CourseDTO courseDTO);
     ResponseEntity<List<CourseDTO>> findCoursesByCareers(String careerId);
 

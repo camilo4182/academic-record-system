@@ -69,6 +69,16 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
     }
 
     @Override
+    public List<CourseClass> findAll(int limit, int offset) {
+        String query = "SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary\n" +
+                "FROM classes cl INNER JOIN courses co ON co.id = cl.course_id\n" +
+                "INNER JOIN professors p ON p.id = cl.professor_id\n" +
+                "INNER JOIN users u ON p.id = u.id\n" +
+                "LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, new CourseClassFindAllRowMapper(), limit, offset);
+    }
+
+    @Override
     public boolean exists(String id) {
         String query = "SELECT * FROM classes WHERE id = ?";
         try {

@@ -70,8 +70,14 @@ public class JdbcProfessorRepository implements ProfessorRepository {
 
     @Override
     public List<Professor> findAll() {
-        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id";
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class));
+    }
+
+    @Override
+    public List<Professor> findAll(int limit, int offset) {
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY name LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class), limit, offset);
     }
 
     @Override

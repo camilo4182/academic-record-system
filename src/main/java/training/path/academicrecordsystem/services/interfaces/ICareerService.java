@@ -15,6 +15,7 @@ public interface ICareerService {
     Career findById(String id) throws NotFoundResourceException;
     Career findByName(String name) throws NotFoundResourceException;
     List<Career> findAll();
+    List<Career> findAll(int limit, int offset);
     void assignClassesToCareer(String careerId, List<CourseClass> classes) throws NotFoundResourceException;
     List<Course> findCoursesByCareer(String careerId) throws NotFoundResourceException;
 

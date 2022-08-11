@@ -49,8 +49,14 @@ public class JdbcCareerRepository implements CareerRepository {
 
     @Override
     public List<Career> findAll() {
-        String query = "SELECT * FROM careers";
+        String query = "SELECT * FROM careers ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Career.class));
+    }
+
+    @Override
+    public List<Career> findAll(int limit, int offset) {
+        String query = "SELECT * FROM careers ORDER BY name LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Career.class), limit, offset);
     }
 
     @Override

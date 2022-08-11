@@ -48,8 +48,14 @@ public class JdbcCourseRepository implements CourseRepository {
 
     @Override
     public List<Course> findAll() {
-        String query = "SELECT * FROM courses";
+        String query = "SELECT * FROM courses ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Course.class));
+    }
+
+    @Override
+    public List<Course> findAll(int limit, int offset) {
+        String query = "SELECT * FROM courses ORDER BY name LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Course.class), limit, offset);
     }
 
     @Override

@@ -15,5 +15,7 @@ public interface ICourseService {
     Course findById(String id) throws NotFoundResourceException;
     Course findByName(String name) throws NotFoundResourceException;
     List<Course> findAll();
+    List<Course> findAll(int limit, int offset);
+
     List<CourseClass> getClassesByCourse(String courseId) throws NotFoundResourceException, CouldNotPerformDBOperationException;
 }

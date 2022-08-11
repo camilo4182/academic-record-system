@@ -13,6 +13,7 @@ import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class StudentController implements IStudentController {
@@ -75,8 +76,15 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students")
-    public ResponseEntity<List<StudentDTO>> findAll() {
-        List<Student> studentList = studentService.findAll();
+    public ResponseEntity<List<StudentDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                    @RequestParam(name = "offset", required = false) Integer offset) {
+        List<Student> studentList;
+        if (Objects.isNull(limit) && Objects.isNull(offset)) {
+            studentList = studentService.findAll();
+        }
+        else {
+            studentList = studentService.findAll(limit, offset);
+        }
         return new ResponseEntity<>(studentList.stream().map(StudentMapper::toDTO).toList(), HttpStatus.OK);
     }
 }
