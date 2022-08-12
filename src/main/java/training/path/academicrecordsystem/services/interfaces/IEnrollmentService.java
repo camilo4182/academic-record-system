@@ -1,12 +1,13 @@
 package training.path.academicrecordsystem.services.interfaces;
 
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Enrollment;
 
 import java.util.List;
 
 public interface IEnrollmentService {
 
-    void save(Enrollment enrollment);
+    void save(Enrollment enrollment) throws ResourceNotFoundException;
     void update(String id, Enrollment enrollment);
     void deleteById(String id);
     Enrollment finById(String id);

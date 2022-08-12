@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
@@ -98,11 +98,10 @@ public class StudentController implements IStudentController {
 
     @Override
     @PostMapping("students/{studentId}/courses")
-    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody EnrollmentDTO enrollmentDTO) {
+    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
         try {
-            Student student = studentService.findById(studentId);
-            //enrollmentDTO.setStudent(StudentMapper.toDTO(student));
-            Enrollment enrollment = EnrollmentMapper.createEntity(enrollmentDTO);
+            requestBodyEnrollmentDTO.setStudentId(studentId);
+            Enrollment enrollment = EnrollmentMapper.createEntity(requestBodyEnrollmentDTO);
             enrollmentService.save(enrollment);
             return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
         } catch (BadResourceDataException | NullRequestBodyException e) {

@@ -23,12 +23,12 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public int save(Enrollment enrollment) {
-        String query = "INSERT INTO enrollments (id, semester, student_id, career_id, class_id) VALUES (?, ?, ?, ?, ?);";
-        return jdbcTemplate.update(query, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
-                UUID.fromString(enrollment.getStudent().getId()),
-                UUID.fromString(enrollment.getCareer().getId()),
-                UUID.fromString(enrollment.getCourseClass().getId()));
+    public void save(Enrollment enrollment) {
+        String queryEnrollments = "INSERT INTO enrollments (id, semester, student_id) VALUES (?, ?, ?);";
+        jdbcTemplate.update(queryEnrollments, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
+                UUID.fromString(enrollment.getStudent().getId()));
+        String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id) VALUES (?, ?);";
+        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(enrollment.getCourseClass().getId()));
     }
 
     @Override

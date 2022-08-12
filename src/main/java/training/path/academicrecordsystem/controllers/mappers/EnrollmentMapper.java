@@ -1,7 +1,6 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
-import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Career;
@@ -14,67 +13,53 @@ import java.util.UUID;
 
 public class EnrollmentMapper {
 
-    public static EnrollmentDTO toDTO(Enrollment enrollment) {
-        EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
+    public static RequestBodyEnrollmentDTO toDTO(Enrollment enrollment) {
+        RequestBodyEnrollmentDTO enrollmentDTO = new RequestBodyEnrollmentDTO();
         enrollmentDTO.setSemester(enrollment.getSemester());
-
-        //ResponseBodyStudentDTO requestBodyStudentDTO = StudentMapper.toDTO(enrollment.getStudent());
-        //enrollmentDTO.setStudent(requestBodyStudentDTO);
-
-        //ResponseBodyCourseClassDTO responseBodyCourseClassDTO = CourseClassMapper.toDTO(enrollment.getCourseClass());
-        //enrollmentDTO.setCourseClass(responseBodyCourseClassDTO);
 
         return enrollmentDTO;
     }
 
-    public static Enrollment toEntity(EnrollmentDTO enrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
-        validateDTO(enrollmentDTO);
+    public static Enrollment toEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
+        validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();
         enrollment.setId(enrollment.getId());
-        enrollment.setSemester(enrollmentDTO.getSemester());
+        enrollment.setSemester(requestBodyEnrollmentDTO.getSemester());
 
         Student student = new Student();
-        student.setId(enrollmentDTO.getStudent().getId());
+        student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
         CourseClass courseClass = new CourseClass();
-        courseClass.setId(enrollmentDTO.getCourseClass().getId());
+        courseClass.setId(requestBodyEnrollmentDTO.getCourseClassId());
         enrollment.setCourseClass(courseClass);
-
-        Career career = new Career();
-        career.setId(enrollmentDTO.getCareer().getId());
-        enrollment.setCareer(career);
 
         return enrollment;
     }
 
-    public static Enrollment createEntity(EnrollmentDTO enrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
-        validateDTO(enrollmentDTO);
+    public static Enrollment createEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
+        validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();
         enrollment.setId(UUID.randomUUID().toString());
-        enrollment.setSemester(enrollmentDTO.getSemester());
+        enrollment.setSemester(requestBodyEnrollmentDTO.getSemester());
 
         Student student = new Student();
-        student.setId(enrollmentDTO.getStudent().getId());
+        student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
         CourseClass courseClass = new CourseClass();
-        courseClass.setId(enrollmentDTO.getCourseClass().getId());
+        courseClass.setId(requestBodyEnrollmentDTO.getCourseClassId());
         enrollment.setCourseClass(courseClass);
-
-        Career career = new Career();
-        career.setId(enrollmentDTO.getCareer().getId());
-        enrollment.setCareer(career);
 
         return enrollment;
     }
 
-    private static void validateDTO(EnrollmentDTO enrollmentDTO) throws BadResourceDataException {
-        if (Objects.isNull(enrollmentDTO.getStudent())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
-        if (Objects.isNull(enrollmentDTO.getCourseClass())) throw new BadResourceDataException("You must enroll to a class");
-        if (enrollmentDTO.getSemester() < 1 || enrollmentDTO.getSemester() > 12) throw new BadResourceDataException("The semester must be between 1 and 12");
+    private static void validateDTO(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException {
+        if (Objects.isNull(requestBodyEnrollmentDTO.getStudentId())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
+        if (Objects.isNull(requestBodyEnrollmentDTO.getCourseClassId())) throw new BadResourceDataException("You must enroll to a class");
+        if (requestBodyEnrollmentDTO.getSemester() < 1 || requestBodyEnrollmentDTO.getSemester() > 12) throw new BadResourceDataException("The semester must be between 1 and 12");
     }
 
 }

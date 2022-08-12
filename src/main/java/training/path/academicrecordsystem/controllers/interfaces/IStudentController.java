@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
-import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
 
@@ -14,6 +14,6 @@ public interface IStudentController {
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<ResponseBodyStudentDTO> findById(String id);
     ResponseEntity<List<ResponseBodyStudentDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<String> enroll(String studentId, EnrollmentDTO enrollmentDTO);
+    ResponseEntity<String> enroll(String studentId, RequestBodyEnrollmentDTO requestBodyEnrollmentDTO);
 
 }
