@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
@@ -94,7 +94,7 @@ public class CourseController implements ICourseController {
     }
 
     @GetMapping("courses/{courseId}/classes")
-    public ResponseEntity<List<CourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) {
         try {
             List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
             return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);

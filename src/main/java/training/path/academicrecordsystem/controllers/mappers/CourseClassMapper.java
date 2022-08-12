@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
-import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
@@ -14,59 +15,67 @@ import java.util.UUID;
 
 public class CourseClassMapper {
 
-    public static CourseClassDTO toDTO(CourseClass courseClass) {
-        CourseClassDTO courseClassDTO = new CourseClassDTO();
-        courseClassDTO.setId(courseClass.getId());
-        courseClassDTO.setAvailable(courseClass.isAvailable());
+    public static ResponseBodyCourseClassDTO toDTO(CourseClass courseClass) {
+        ResponseBodyCourseClassDTO responseBodyCourseClassDTO = new ResponseBodyCourseClassDTO();
+        responseBodyCourseClassDTO.setId(courseClass.getId());
+        responseBodyCourseClassDTO.setAvailable(courseClass.isAvailable());
+        responseBodyCourseClassDTO.setCapacity(courseClass.getCapacity());
+        responseBodyCourseClassDTO.setEnrolledStudents(courseClass.getEnrolledStudents());
 
         CourseDTO courseDTO = CourseMapper.toDTO(courseClass.getCourse());
-        courseClassDTO.setCourse(courseDTO);
+        responseBodyCourseClassDTO.setCourse(courseDTO);
 
         ProfessorDTO professorDTO = ProfessorMapper.toDTO(courseClass.getProfessor());
-        courseClassDTO.setProfessor(professorDTO);
+        responseBodyCourseClassDTO.setProfessor(professorDTO);
 
-        return courseClassDTO;
+        return responseBodyCourseClassDTO;
     }
 
-    public static CourseClass toEntity(CourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static CourseClass toEntity(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
         validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(courseClassDTO.getId());
         courseClass.setAvailable(courseClassDTO.isAvailable());
+        courseClass.setCapacity(courseClassDTO.getCapacity());
+        courseClass.setEnrolledStudents(courseClassDTO.getEnrolledStudents());
 
         Course course = new Course();
-        course.setId(courseClassDTO.getCourse().getId());
+        course.setId(courseClassDTO.getCourseId());
         courseClass.setCourse(course);
 
         Professor professor = new Professor();
-        professor.setId(courseClassDTO.getProfessor().getId());
+        professor.setId(courseClassDTO.getProfessorId());
         courseClass.setProfessor(professor);
 
         return courseClass;
     }
 
-    public static CourseClass createEntity(CourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static CourseClass createEntity(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
         validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(UUID.randomUUID().toString());
         courseClass.setAvailable(courseClassDTO.isAvailable());
+        courseClass.setCapacity(courseClassDTO.getCapacity());
+        courseClass.setEnrolledStudents(courseClassDTO.getEnrolledStudents());
 
         Course course = new Course();
-        course.setId(courseClassDTO.getCourse().getId());
+        course.setId(courseClassDTO.getCourseId());
         courseClass.setCourse(course);
 
         Professor professor = new Professor();
-        professor.setId(courseClassDTO.getProfessor().getId());
+        professor.setId(courseClassDTO.getProfessorId());
         courseClass.setProfessor(professor);
 
         return courseClass;
     }
 
-    private static void validateDTO(CourseClassDTO courseClassDTO) throws BadResourceDataException {
-        if (Objects.isNull(courseClassDTO.getCourse())) throw new BadResourceDataException("You must assign this class to a course");
-        if (Objects.isNull(courseClassDTO.getProfessor())) throw new BadResourceDataException("You must assign a professor to this class");
-        if (courseClassDTO.getCourse().getId().isBlank()) throw new BadResourceDataException("Course id cannot be empty");
-        if (courseClassDTO.getProfessor().getId().isBlank()) throw new BadResourceDataException("Professor id cannot be empty");
+    private static void validateDTO(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException {
+        if (Objects.isNull(courseClassDTO.getCourseId())) throw new BadResourceDataException("You must assign this class to a course");
+        if (Objects.isNull(courseClassDTO.getProfessorId())) throw new BadResourceDataException("You must assign a professor to this class");
+        if (courseClassDTO.getCourseId().isBlank()) throw new BadResourceDataException("Course id cannot be empty");
+        if (courseClassDTO.getProfessorId().isBlank()) throw new BadResourceDataException("Professor id cannot be empty");
+        if (courseClassDTO.getCapacity() <= 0) throw new BadResourceDataException("Capacity must be greater than 0");
+        if (courseClassDTO.getEnrolledStudents() < 0) throw new BadResourceDataException("The amount of enrolled students cannot be negative");
     }
 
 }

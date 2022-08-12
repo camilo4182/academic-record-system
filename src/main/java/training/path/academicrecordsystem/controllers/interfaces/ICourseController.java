@@ -1,7 +1,7 @@
 package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
-import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 
 import java.util.List;
@@ -13,6 +13,6 @@ public interface ICourseController {
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<CourseDTO> findById(String id);
     ResponseEntity<List<CourseDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<List<CourseClassDTO>> findClassesByCourse(String courseId);
+    ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(String courseId);
 
 }

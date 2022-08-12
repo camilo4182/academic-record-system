@@ -7,7 +7,7 @@ public class EnrollmentDTO {
 
     private String id;
     private RequestBodyStudentDTO student;
-    private CourseClassDTO courseClass;
+    private RequestBodyCourseClassDTO courseClass;
     private CareerDTO career;
     private int semester;
 

@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
@@ -28,7 +29,7 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @PostMapping("classes")
-    public ResponseEntity<String> save(@RequestBody CourseClassDTO courseClassDTO) {
+    public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) {
         try {
             CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
             courseClassService.save(courseClass);
@@ -40,8 +41,9 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @PutMapping("classes/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseClassDTO courseClassDTO) {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyCourseClassDTO courseClassDTO) {
         try {
+            courseClassDTO.setId(id);
             CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
             courseClassService.update(courseClass);
             return new ResponseEntity<>("Class updated", HttpStatus.OK);
@@ -65,10 +67,10 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @GetMapping("classes/{id}")
-    public ResponseEntity<CourseClassDTO> findById(@PathVariable("id") String id) {
+    public ResponseEntity<ResponseBodyCourseClassDTO> findById(@PathVariable("id") String id) {
         try {
-            CourseClassDTO courseClassDTO = CourseClassMapper.toDTO(courseClassService.findById(id));
-            return new ResponseEntity<>(courseClassDTO, HttpStatus.OK);
+            ResponseBodyCourseClassDTO responseBodyCourseClassDTO = CourseClassMapper.toDTO(courseClassService.findById(id));
+            return new ResponseEntity<>(responseBodyCourseClassDTO, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -76,8 +78,8 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @GetMapping("classes")
-    public ResponseEntity<List<CourseClassDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
-                                                        @RequestParam(name = "offset", required = false) Integer offset) {
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                                    @RequestParam(name = "offset", required = false) Integer offset) {
         List<CourseClass> courseClasses;
         if (Objects.isNull(limit) && Objects.isNull(offset)) {
             courseClasses = courseClassService.findAll();
