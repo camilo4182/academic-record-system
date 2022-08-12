@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.repositories.implementations.rowmappers;
+package training.path.academicrecordsystem.repositories.rowmappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import training.path.academicrecordsystem.model.Career;

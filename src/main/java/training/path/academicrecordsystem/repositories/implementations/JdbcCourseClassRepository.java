@@ -5,13 +5,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.repositories.implementations.rowmappers.CourseClassFindAllRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.CourseClassFindAllRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 

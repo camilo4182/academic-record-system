@@ -7,11 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.repositories.implementations.rowmappers.CoursesByCareerRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.CoursesByCareerRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 

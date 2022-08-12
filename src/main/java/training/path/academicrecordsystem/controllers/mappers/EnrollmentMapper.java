@@ -1,11 +1,11 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
-import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
+import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
@@ -20,10 +20,10 @@ public class EnrollmentMapper {
         enrollmentDTO.setSemester(enrollment.getSemester());
 
         StudentDTO studentDTO = StudentMapper.toDTO(enrollment.getStudent());
-        enrollmentDTO.setStudentDTO(studentDTO);
+        enrollmentDTO.setStudent(studentDTO);
 
         CourseClassDTO courseClassDTO = CourseClassMapper.toDTO(enrollment.getCourseClass());
-        enrollmentDTO.setCourseClassDTO(courseClassDTO);
+        enrollmentDTO.setCourseClass(courseClassDTO);
 
         return enrollmentDTO;
     }
@@ -35,11 +35,17 @@ public class EnrollmentMapper {
         enrollment.setId(enrollment.getId());
         enrollment.setSemester(enrollmentDTO.getSemester());
 
-        Student student = StudentMapper.toEntity(enrollmentDTO.getStudentDTO());
+        Student student = new Student();
+        student.setId(enrollmentDTO.getStudent().getId());
         enrollment.setStudent(student);
 
-        CourseClass courseClass = CourseClassMapper.toEntity(enrollmentDTO.getCourseClassDTO());
+        CourseClass courseClass = new CourseClass();
+        courseClass.setId(enrollmentDTO.getCourseClass().getId());
         enrollment.setCourseClass(courseClass);
+
+        Career career = new Career();
+        career.setId(enrollmentDTO.getCareer().getId());
+        enrollment.setCareer(career);
 
         return enrollment;
     }
@@ -51,18 +57,24 @@ public class EnrollmentMapper {
         enrollment.setId(UUID.randomUUID().toString());
         enrollment.setSemester(enrollmentDTO.getSemester());
 
-        Student student = StudentMapper.toEntity(enrollmentDTO.getStudentDTO());
+        Student student = new Student();
+        student.setId(enrollmentDTO.getStudent().getId());
         enrollment.setStudent(student);
 
-        CourseClass courseClass = CourseClassMapper.toEntity(enrollmentDTO.getCourseClassDTO());
+        CourseClass courseClass = new CourseClass();
+        courseClass.setId(enrollmentDTO.getCourseClass().getId());
         enrollment.setCourseClass(courseClass);
+
+        Career career = new Career();
+        career.setId(enrollmentDTO.getCareer().getId());
+        enrollment.setCareer(career);
 
         return enrollment;
     }
 
     private static void validateDTO(EnrollmentDTO enrollmentDTO) throws BadResourceDataException {
-        if (Objects.isNull(enrollmentDTO.getStudentDTO())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
-        if (Objects.isNull(enrollmentDTO.getCourseClassDTO())) throw new BadResourceDataException("You must enroll to a class");
+        if (Objects.isNull(enrollmentDTO.getStudent())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
+        if (Objects.isNull(enrollmentDTO.getCourseClass())) throw new BadResourceDataException("You must enroll to a class");
         if (enrollmentDTO.getSemester() < 1 || enrollmentDTO.getSemester() > 12) throw new BadResourceDataException("The semester must be between 1 and 12");
     }
 

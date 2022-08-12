@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Enrollment;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentByStudentRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentsInformationRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class EnrollmentRepository implements IEnrollmentRepository {
@@ -22,7 +25,10 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     @Override
     public int save(Enrollment enrollment) {
         String query = "INSERT INTO enrollments (id, semester, student_id, career_id, class_id) VALUES (?, ?, ?, ?, ?);";
-        return 0;
+        return jdbcTemplate.update(query, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
+                UUID.fromString(enrollment.getStudent().getId()),
+                UUID.fromString(enrollment.getCareer().getId()),
+                UUID.fromString(enrollment.getCourseClass().getId()));
     }
 
     @Override
@@ -40,9 +46,30 @@ public class EnrollmentRepository implements IEnrollmentRepository {
         return Optional.empty();
     }
 
+    public Optional<Enrollment> findByStudent(String studentId) {
+        String query =
+                """
+                SELECT e.id AS enroll_id, cl.id AS class_id, co.name AS course_name, semester, s.id AS student_id, u.name AS student_name, u.email AS student_email, available
+                FROM enrollments e INNER JOIN classes cl ON e.class_id = cl.id
+                INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN students s ON s.id = e.student_id
+                INNER JOIN users u ON u.id = s.id;
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new EnrollmentByStudentRowMapper(), studentId));
+    }
+
     @Override
     public List<Enrollment> findAll() {
-        return null;
+        String query =
+                """
+                SELECT e.id AS enroll_id, cl.id AS class_id, co.id AS course_id, co.name AS course_name, semester, s.id AS student_id, u.name AS student_name, u.email AS student_email, available, p.id AS prof_id
+                FROM enrollments e INNER JOIN classes cl ON e.class_id = cl.id
+                INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN students s ON s.id = e.student_id
+                INNER JOIN users u ON u.id = s.id
+                INNER JOIN professors p ON u.id = p.id;
+                """;
+        return jdbcTemplate.query(query, new EnrollmentsInformationRowMapper());
     }
 
     @Override

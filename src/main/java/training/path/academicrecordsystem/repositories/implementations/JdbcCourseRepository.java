@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.repositories.implementations.rowmappers.ClassesByCourseRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.ClassesByCourseRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 
 import java.util.List;

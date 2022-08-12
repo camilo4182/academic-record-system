@@ -4,12 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
+import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
+import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
 
 import java.util.List;
@@ -19,10 +24,12 @@ import java.util.Objects;
 public class StudentController implements IStudentController {
 
     private final IStudentService studentService;
+    private final IEnrollmentService enrollmentService;
 
     @Autowired
-    public StudentController(IStudentService studentService) {
+    public StudentController(IStudentService studentService, IEnrollmentService enrollmentService) {
         this.studentService = studentService;
+        this.enrollmentService = enrollmentService;
     }
 
     @Override
@@ -86,5 +93,21 @@ public class StudentController implements IStudentController {
             studentList = studentService.findAll(limit, offset);
         }
         return new ResponseEntity<>(studentList.stream().map(StudentMapper::toDTO).toList(), HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("students/{studentId}/courses")
+    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody EnrollmentDTO enrollmentDTO) {
+        try {
+            Student student = studentService.findById(studentId);
+            enrollmentDTO.setStudent(StudentMapper.toDTO(student));
+            Enrollment enrollment = EnrollmentMapper.createEntity(enrollmentDTO);
+            enrollmentService.save(enrollment);
+            return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
+        } catch (BadResourceDataException | NullRequestBodyException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 }
