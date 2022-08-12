@@ -7,6 +7,7 @@ import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
+import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 
 import java.util.List;
@@ -15,10 +16,12 @@ import java.util.List;
 public class CareerService implements ICareerService {
 
     private final CareerRepository careerRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CareerService(CareerRepository careerRepository) {
+    public CareerService(CareerRepository careerRepository, CourseRepository courseRepository) {
         this.careerRepository = careerRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -59,17 +62,16 @@ public class CareerService implements ICareerService {
     }
 
     @Override
-    public void assignClassesToCareer(String careerId, List<CourseClass> classes) throws ResourceNotFoundException {
+    public void assignCourseToCareer(String courseId, String careerId) throws ResourceNotFoundException {
         if (!careerRepository.exists(careerId)) throw new ResourceNotFoundException("Career with id " + careerId + " does not exist");
-        for (CourseClass courseClass : classes) {
-            careerRepository.insertIntoCareerClasses(careerId, courseClass.getId());
-        }
+        if (!courseRepository.exists(courseId)) throw new ResourceNotFoundException("Course with id " + courseId + " does not exist");
+        careerRepository.assignCourseToCareer(courseId, careerId);
     }
 
     @Override
     public List<Course> findCoursesByCareer(String careerId) throws ResourceNotFoundException {
         if (!careerRepository.exists(careerId)) throw new ResourceNotFoundException("Career with id " + careerId + " does not exist");
-        return careerRepository.getCoursesByCareer(careerId);
+        return careerRepository.findCoursesByCareer(careerId);
     }
 
 }

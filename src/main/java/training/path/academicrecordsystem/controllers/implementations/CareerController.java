@@ -104,13 +104,10 @@ public class CareerController implements ICareerController {
     @PutMapping("careers/{careerId}/courses")
     public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseDTO courseDTO) {
         try {
-            List<CourseClass> classesByCourse = courseService.getClassesByCourse(courseDTO.getId());
-            careerService.assignClassesToCareer(careerId, classesByCourse);
+            careerService.assignCourseToCareer(courseDTO.getId(), careerId);
             return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (CouldNotPerformOperationException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -88,20 +88,19 @@ public class JdbcCareerRepository implements CareerRepository {
     }
 
     @Override
-    public int insertIntoCareerClasses(String careerId, String classId) {
-        String query = "INSERT INTO career_classes (career_id, class_id) VALUES (?, ?)";
-        return jdbcTemplate.update(query, UUID.fromString(careerId), UUID.fromString(classId));
+    public void assignCourseToCareer(String courseId, String careerId) {
+        String query = "INSERT INTO career_courses (career_id, course_id) VALUES (?, ?);";
+        jdbcTemplate.update(query, UUID.fromString(careerId), UUID.fromString(courseId));
     }
 
     @Override
-    public List<Course> getCoursesByCareer(String careerId) {
+    public List<Course> findCoursesByCareer(String careerId) {
         String query = """
-                SELECT ca.name AS career_name, co.id AS course_id, co.name AS course_name, credits
-                FROM careers ca INNER JOIN career_classes cc ON ca.id = cc.career_id\s
-                INNER JOIN classes cl ON cc.class_id = cl.id\s
-                INNER JOIN courses co ON co.id = cl.course_id
+                SELECT ca.id AS career_id, ca.name AS career_name, co.id AS course_id, co.name AS course_name, credits
+                FROM careers ca INNER JOIN career_courses cc ON ca.id = cc.career_id
+                INNER JOIN courses co ON co.id = cc.course_id
                 WHERE ca.id = ?
-                GROUP BY career_name, co.id, co.name, credits
+                GROUP BY ca.id, ca.name, co.id, co.name, credits
                 ORDER BY career_name;""";
         return jdbcTemplate.query(query, new CoursesByCareerRowMapper(), UUID.fromString(careerId));
     }

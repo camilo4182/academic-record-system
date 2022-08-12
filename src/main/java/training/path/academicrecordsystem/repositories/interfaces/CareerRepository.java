@@ -16,7 +16,7 @@ public interface CareerRepository {
     int update(String id, Career career);
     int deleteById(String id);
     boolean exists(String id);
-    int insertIntoCareerClasses(String careerId, String classId);
-    List<Course> getCoursesByCareer(String careerName);
+    void assignCourseToCareer(String courseId, String careerId);
+    List<Course> findCoursesByCareer(String careerName);
     
 }
