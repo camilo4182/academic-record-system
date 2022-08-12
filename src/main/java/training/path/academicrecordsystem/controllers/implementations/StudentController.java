@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
@@ -34,9 +35,9 @@ public class StudentController implements IStudentController {
 
     @Override
     @PostMapping("students")
-    public ResponseEntity<String> save(@RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) {
         try {
-            Student student = StudentMapper.createEntity(studentDTO);
+            Student student = StudentMapper.createEntity(requestBodyStudentDTO);
             studentService.save(student);
             return new ResponseEntity<>("Student registered", HttpStatus.OK);
         } catch (BadResourceDataException e) {
@@ -46,10 +47,10 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping("students/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO) {
         try {
-            studentDTO.setId(id);
-            Student student = StudentMapper.toEntity(studentDTO);
+            requestBodyStudentDTO.setId(id);
+            Student student = StudentMapper.toEntity(requestBodyStudentDTO);
             studentService.update(id, student);
             return new ResponseEntity<>("Student information updated", HttpStatus.OK);
         } catch (BadResourceDataException e) {
@@ -72,10 +73,10 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students/{id}")
-    public ResponseEntity<StudentDTO> findById(@PathVariable("id") String id) {
+    public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) {
         try {
-            StudentDTO studentDTO = StudentMapper.toDTO(studentService.findById(id));
-            return new ResponseEntity<>(studentDTO, HttpStatus.OK);
+            ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
+            return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -83,8 +84,8 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students")
-    public ResponseEntity<List<StudentDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
-                                                    @RequestParam(name = "offset", required = false) Integer offset) {
+    public ResponseEntity<List<ResponseBodyStudentDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                               @RequestParam(name = "offset", required = false) Integer offset) {
         List<Student> studentList;
         if (Objects.isNull(limit) && Objects.isNull(offset)) {
             studentList = studentService.findAll();
@@ -100,7 +101,7 @@ public class StudentController implements IStudentController {
     public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody EnrollmentDTO enrollmentDTO) {
         try {
             Student student = studentService.findById(studentId);
-            enrollmentDTO.setStudent(StudentMapper.toDTO(student));
+            //enrollmentDTO.setStudent(StudentMapper.toDTO(student));
             Enrollment enrollment = EnrollmentMapper.createEntity(enrollmentDTO);
             enrollmentService.save(enrollment);
             return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);

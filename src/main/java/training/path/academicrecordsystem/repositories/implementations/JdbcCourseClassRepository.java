@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.repositories.rowmappers.CourseClassFindAllRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.CourseClassInfoRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
 
 import java.util.List;
@@ -25,15 +25,35 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
 
     @Override
     public int save(CourseClass courseClass) {
-        String query = "INSERT INTO classes (id, available, course_id, professor_id) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(query, UUID.fromString(courseClass.getId()), courseClass.isAvailable(),
-                UUID.fromString(courseClass.getCourse().getId()), UUID.fromString(courseClass.getProfessor().getId()));
+        String query =
+                """
+                INSERT INTO classes (id, capacity, enrolled_students, available, course_id, professor_id)
+                VALUES (?, ?, ?, ?, ?, ?);
+                """;
+        return jdbcTemplate.update(query,
+                UUID.fromString(courseClass.getId()),
+                courseClass.getCapacity(),
+                courseClass.getEnrolledStudents(),
+                courseClass.isAvailable(),
+                UUID.fromString(courseClass.getCourse().getId()),
+                UUID.fromString(courseClass.getProfessor().getId()));
     }
 
     @Override
     public int update(String id, CourseClass courseClass) {
-        String query = "UPDATE classes SET available = ? WHERE id = ?";
-        return jdbcTemplate.update(query, courseClass.isAvailable(), UUID.fromString(id));
+        String query =
+                """
+                UPDATE classes SET
+                capacity = ?, enrolled_students = ?, available = ?, course_id = ?, professor_id = ?
+                WHERE id = ?;
+                """;
+        return jdbcTemplate.update(query,
+                courseClass.getCapacity(),
+                courseClass.getEnrolledStudents(),
+                courseClass.isAvailable(),
+                UUID.fromString(courseClass.getCourse().getId()),
+                UUID.fromString(courseClass.getProfessor().getId()),
+                UUID.fromString(id));
     }
 
     @Override
@@ -46,14 +66,14 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
     public Optional<CourseClass> findById(String id) {
         String query =
                 """
-                SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id
                 WHERE cl.id = ?;
                 """;
         try {
-            CourseClass courseClass = jdbcTemplate.queryForObject(query, new CourseClassFindAllRowMapper(), UUID.fromString(id));
+            CourseClass courseClass = jdbcTemplate.queryForObject(query, new CourseClassInfoRowMapper(), UUID.fromString(id));
             return Optional.ofNullable(courseClass);
         } catch (DataAccessException e) {
             return Optional.empty();
@@ -64,25 +84,25 @@ public class JdbcCourseClassRepository implements CourseClassRepository {
     public List<CourseClass> findAll() {
         String query =
                 """
-                SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id;
                 """;
-        return jdbcTemplate.query(query, new CourseClassFindAllRowMapper());
+        return jdbcTemplate.query(query, new CourseClassInfoRowMapper());
     }
 
     @Override
     public List<CourseClass> findAll(int limit, int offset) {
         String query =
                 """
-                SELECT cl.id AS class_id, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id
                 LIMIT ? OFFSET ?;
                 """;
-        return jdbcTemplate.query(query, new CourseClassFindAllRowMapper(), limit, offset);
+        return jdbcTemplate.query(query, new CourseClassInfoRowMapper(), limit, offset);
     }
 
     @Override

@@ -9,12 +9,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class CourseClassFindAllRowMapper implements RowMapper<CourseClass> {
+public class CourseClassInfoRowMapper implements RowMapper<CourseClass> {
 
     @Override
     public CourseClass mapRow(ResultSet rs, int rowNum) throws SQLException {
         CourseClass courseClass = new CourseClass();
         courseClass.setId(rs.getObject("class_id", UUID.class).toString());
+        courseClass.setCapacity(rs.getInt("capacity"));
+        courseClass.setEnrolledStudents(rs.getInt("enrolled_students"));
         courseClass.setAvailable(rs.getBoolean("available"));
 
         Professor professor = new Professor();
@@ -32,4 +34,5 @@ public class CourseClassFindAllRowMapper implements RowMapper<CourseClass> {
 
         return courseClass;
     }
+
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 public class EnrollmentDTO {
 
     private String id;
-    private StudentDTO student;
+    private RequestBodyStudentDTO student;
     private CourseClassDTO courseClass;
     private CareerDTO career;
     private int semester;

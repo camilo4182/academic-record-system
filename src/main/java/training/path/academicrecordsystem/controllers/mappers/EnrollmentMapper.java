@@ -2,7 +2,7 @@ package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.CourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.EnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.StudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Career;
@@ -19,8 +19,8 @@ public class EnrollmentMapper {
         EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
         enrollmentDTO.setSemester(enrollment.getSemester());
 
-        StudentDTO studentDTO = StudentMapper.toDTO(enrollment.getStudent());
-        enrollmentDTO.setStudent(studentDTO);
+        //ResponseBodyStudentDTO requestBodyStudentDTO = StudentMapper.toDTO(enrollment.getStudent());
+        //enrollmentDTO.setStudent(requestBodyStudentDTO);
 
         CourseClassDTO courseClassDTO = CourseClassMapper.toDTO(enrollment.getCourseClass());
         enrollmentDTO.setCourseClass(courseClassDTO);
