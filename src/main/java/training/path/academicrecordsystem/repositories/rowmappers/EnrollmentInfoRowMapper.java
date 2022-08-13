@@ -1,21 +1,23 @@
 package training.path.academicrecordsystem.repositories.rowmappers;
 
 import org.springframework.jdbc.core.RowMapper;
-import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.model.Enrollment;
-import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.model.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class EnrollmentByStudentRowMapper implements RowMapper<Enrollment> {
+public class EnrollmentInfoRowMapper implements RowMapper<Enrollment> {
 
     @Override
     public Enrollment mapRow(ResultSet rs, int rowNum) throws SQLException {
         Enrollment enrollment = new Enrollment();
-        enrollment.setId(rs.getObject("enroll_id", UUID.class).toString());
+        enrollment.setId(rs.getObject("enrollment_id", UUID.class).toString());
+
+        Student student = new Student();
+        student.setId(rs.getObject("student_id", UUID.class).toString());
+        student.setName(rs.getString("student"));
+        enrollment.setStudent(student);
 
         while (rs.next()) {
             Course course = new Course();
@@ -36,7 +38,10 @@ public class EnrollmentByStudentRowMapper implements RowMapper<Enrollment> {
             courseClass.setAvailable(rs.getBoolean("available"));
 
             enrollment.addClass(courseClass);
+
+
         }
+
         return enrollment;
     }
 

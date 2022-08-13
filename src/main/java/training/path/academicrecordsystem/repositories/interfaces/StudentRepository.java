@@ -1,5 +1,6 @@
 package training.path.academicrecordsystem.repositories.interfaces;
 
+import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface StudentRepository {
     Optional<Student> findById(String id);
     List<Student> findAll();
     List<Student> findAll(int limit, int offset);
-
     boolean exists(String id);
+    List<Enrollment> findEnrollmentsBySemester(String studentId, int semester);
 
 }

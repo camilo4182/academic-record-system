@@ -5,8 +5,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRowMapper;
 
 import java.util.List;
@@ -97,4 +99,24 @@ public class JdbcStudentRepository implements StudentRepository {
             return false;
         }
     }
+
+    @Override
+    public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) {
+        String query =
+                """
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_name
+                FROM users u INNER JOIN students s ON u.id = s.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN enrollment_classes ec ON e.id = ec.enrollment_id
+                INNER JOIN classes cl ON cl.id = ec.class_id
+                INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN (
+                            SELECT p.id AS professor_id, u.name AS professor_name
+                            FROM professors p INNER JOIN users u ON u.id = p.id
+                           ) AS prof ON cl.professor_id = prof.professor_id
+                WHERE s.id = ? AND semester = ?;
+                """;
+        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper(), UUID.fromString(studentId), semester);
+    }
+
 }

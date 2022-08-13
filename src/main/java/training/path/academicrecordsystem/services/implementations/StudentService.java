@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.services.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
@@ -50,4 +51,12 @@ public class StudentService implements IStudentService {
     public List<Student> findAll(int limit, int offset) {
         return studentRepository.findAll(limit, offset);
     }
+
+    @Override
+    public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) throws ResourceNotFoundException {
+        if (!studentRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
+        return studentRepository.findEnrollmentsBySemester(studentId, semester);
+    }
+
+
 }

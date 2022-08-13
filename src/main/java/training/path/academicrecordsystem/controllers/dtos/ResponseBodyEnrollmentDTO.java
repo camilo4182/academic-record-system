@@ -5,11 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RequestBodyEnrollmentDTO {
+public class ResponseBodyEnrollmentDTO {
 
     private String id;
-    private String studentId;
-    private List<String> courseClassIds;
+    private List<ResponseBodyCourseClassDTO> classes;
     private int semester;
 
 }

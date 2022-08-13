@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.services.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
@@ -26,10 +27,12 @@ public class EnrollmentService implements IEnrollmentService {
     }
 
     @Override
-    public void save(Enrollment enrollment) throws ResourceNotFoundException {
+    public void save(Enrollment enrollment, List<CourseClass> courseClasses) throws ResourceNotFoundException {
         if (!studentRepository.exists(enrollment.getStudent().getId())) throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
-        if (!courseClassRepository.exists(enrollment.getCourseClass().getId())) throw new ResourceNotFoundException("Class with id " + enrollment.getCourseClass().getId() + " was not found");
-        enrollmentRepository.save(enrollment);
+        for (CourseClass courseClass : courseClasses) {
+            if (!courseClassRepository.exists(courseClass.getId())) throw new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found");
+            enrollmentRepository.save(enrollment, courseClass);
+        }
     }
 
     @Override

@@ -3,10 +3,10 @@ package training.path.academicrecordsystem.repositories.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
-import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentByStudentRowMapper;
-import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentsInformationRowMapper;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +23,12 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public void save(Enrollment enrollment) {
+    public void save(Enrollment enrollment, CourseClass courseClass) {
         String queryEnrollments = "INSERT INTO enrollments (id, semester, student_id) VALUES (?, ?, ?);";
         jdbcTemplate.update(queryEnrollments, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
                 UUID.fromString(enrollment.getStudent().getId()));
         String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id) VALUES (?, ?);";
-        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(enrollment.getCourseClass().getId()));
+        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(courseClass.getId()));
     }
 
     @Override
@@ -46,18 +46,6 @@ public class EnrollmentRepository implements IEnrollmentRepository {
         return Optional.empty();
     }
 
-    public Optional<Enrollment> findByStudent(String studentId) {
-        String query =
-                """
-                SELECT e.id AS enroll_id, cl.id AS class_id, co.name AS course_name, semester, s.id AS student_id, u.name AS student_name, u.email AS student_email, available
-                FROM enrollments e INNER JOIN classes cl ON e.class_id = cl.id
-                INNER JOIN courses co ON co.id = cl.course_id
-                INNER JOIN students s ON s.id = e.student_id
-                INNER JOIN users u ON u.id = s.id;
-                """;
-        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new EnrollmentByStudentRowMapper(), studentId));
-    }
-
     @Override
     public List<Enrollment> findAll() {
         String query =
@@ -69,7 +57,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
                 INNER JOIN users u ON u.id = s.id
                 INNER JOIN professors p ON u.id = p.id;
                 """;
-        return jdbcTemplate.query(query, new EnrollmentsInformationRowMapper());
+        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper());
     }
 
     @Override
