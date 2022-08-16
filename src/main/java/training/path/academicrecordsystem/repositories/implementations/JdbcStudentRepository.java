@@ -104,7 +104,7 @@ public class JdbcStudentRepository implements StudentRepository {
     public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) {
         String query =
                 """
-                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_name
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, semester, cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_name
                 FROM users u INNER JOIN students s ON u.id = s.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN enrollment_classes ec ON e.id = ec.enrollment_id
