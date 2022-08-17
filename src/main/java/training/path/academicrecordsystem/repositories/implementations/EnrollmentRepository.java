@@ -29,6 +29,8 @@ public class EnrollmentRepository implements IEnrollmentRepository {
                 UUID.fromString(enrollment.getStudent().getId()));
         String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id) VALUES (?, ?);";
         jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(courseClass.getId()));
+        String queryUpdateClass = "UPDATE classes SET enrolled_students = ? WHERE id = ?";
+        jdbcTemplate.update(queryUpdateClass, courseClass.getEnrolledStudents(), UUID.fromString(courseClass.getId()));
     }
 
     @Override

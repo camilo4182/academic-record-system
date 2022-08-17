@@ -31,6 +31,7 @@ public class EnrollmentService implements IEnrollmentService {
         if (!studentRepository.exists(enrollment.getStudent().getId())) throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
         for (CourseClass courseClass : courseClasses) {
             if (!courseClassRepository.exists(courseClass.getId())) throw new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found");
+            courseClass.setEnrolledStudents(courseClassRepository.findById(courseClass.getId()).orElseThrow().getEnrolledStudents() + 1);
             enrollmentRepository.save(enrollment, courseClass);
         }
     }
