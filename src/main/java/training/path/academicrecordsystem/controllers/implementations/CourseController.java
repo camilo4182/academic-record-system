@@ -17,6 +17,7 @@ import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class CourseController implements ICourseController {
 
     @Override
     @PostMapping("courses")
-    public ResponseEntity<String> save(@RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<String> save(@Valid @RequestBody CourseDTO courseDTO) {
         try {
             Course course = CourseMapper.createEntity(courseDTO);
             courseService.save(course);

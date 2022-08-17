@@ -20,6 +20,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,7 @@ public class CareerController implements ICareerController {
 
     @Override
     @PostMapping("careers")
-    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) {
+    public ResponseEntity<String> save(@Valid @RequestBody CareerDTO careerDTO) {
         try {
             Career career = CareerMapper.createEntity(careerDTO);
             careerService.save(career);

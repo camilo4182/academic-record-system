@@ -28,7 +28,7 @@ public class CourseMapper {
     }
     
     public static Course createEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadResourceDataException {
-        validateCourseDTO(courseDTO);
+        //validateCourseDTO(courseDTO);
         Course course = new Course();
         course.setId(UUID.randomUUID().toString());
         course.setName(courseDTO.getName());
