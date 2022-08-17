@@ -59,7 +59,7 @@ public class CareerController implements ICareerController {
     @PutMapping("careers/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) {
         try {
-            if (!Objects.equals(id, careerDTO.getId())) throw new BadResourceDataException("Invalid id in URI");
+            careerDTO.setId(id);
             Career career = CareerMapper.toEntity(careerDTO);
             careerService.update(career);
             return new ResponseEntity<>("Career was updated", HttpStatus.OK);
