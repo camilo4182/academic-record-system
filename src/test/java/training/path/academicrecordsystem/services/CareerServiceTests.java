@@ -1,15 +1,24 @@
 package training.path.academicrecordsystem.services;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCareerRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +27,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Import(ValidationAutoConfiguration.class)
 public class CareerServiceTests {
+
+    @Autowired
+    Validator validator;
 
     @Mock
     JdbcCareerRepository jdbcCareerRepository;
@@ -27,12 +40,24 @@ public class CareerServiceTests {
     CareerService careerService;
 
     @Test
-    void givenValidCareerDTO_whenSave_thenItDoesNotThrowException() {
+    void givenValidCareer_whenSave_thenItDoesNotThrowException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("System Engineering").build();
 
-        when(jdbcCareerRepository.save(career)).thenReturn(1);
+        when(jdbcCareerRepository.save(any())).thenReturn(1);
 
         assertDoesNotThrow(() -> careerService.save(career));
+    }
+
+    @Test
+    void givenBlankId_whenSave_thenItThrowsException() {
+        Career career = Career.builder().name("System Engineering").build();
+
+        when(jdbcCareerRepository.save(any())).thenReturn(0);
+
+        //assertThrows(ConstraintViolationException.class, () -> careerService.save(career));
+
+        Set<ConstraintViolation<Career>> violations = validator.validate(career);
+        assertFalse(violations.isEmpty());
     }
 
     @Test

@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
@@ -9,10 +10,13 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
+import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
+@Validated
 public class CareerService implements ICareerService {
 
     private final CareerRepository careerRepository;
