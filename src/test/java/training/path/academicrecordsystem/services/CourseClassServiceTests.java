@@ -27,10 +27,10 @@ public class CourseClassServiceTests {
     CourseClassService courseClassService;
 
     @Test
-    void givenValidCourseClassDTO_whenSave_thenItDoesNotThrowException() {
+    void givenValidCourseClass_whenSave_thenItDoesNotThrowException() {
         CourseClass courseClass = CourseClass.builder().id(UUID.randomUUID().toString()).available(true).build();
 
-        when(jdbcCourseClassRepository.save(courseClass)).thenReturn(1);
+        when(jdbcCourseClassRepository.save(any())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseClassService.save(courseClass));
     }
