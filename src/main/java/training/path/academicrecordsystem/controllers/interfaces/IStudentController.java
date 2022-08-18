@@ -5,6 +5,7 @@ import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollment
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -16,7 +17,7 @@ public interface IStudentController {
     ResponseEntity<String> deleteById(String id);
     ResponseEntity<ResponseBodyStudentDTO> findById(String id);
     ResponseEntity<List<ResponseBodyStudentDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<String> enroll(String studentId, RequestBodyEnrollmentDTO requestBodyEnrollmentDTO);
-    ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(String studentId, Integer semester);
+    ResponseEntity<String> enroll(@UUIDValidator String studentId, @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO);
+    ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@UUIDValidator String studentId, Integer semester);
 
 }

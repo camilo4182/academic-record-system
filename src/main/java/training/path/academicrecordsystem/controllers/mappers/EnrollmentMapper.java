@@ -23,7 +23,7 @@ public class EnrollmentMapper {
     }
 
     public static Enrollment toEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
-        validateDTO(requestBodyEnrollmentDTO);
+        //validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();
         enrollment.setId(enrollment.getId());
@@ -43,7 +43,7 @@ public class EnrollmentMapper {
     }
 
     public static Enrollment createEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
-        validateDTO(requestBodyEnrollmentDTO);
+        //validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();
         enrollment.setId(UUID.randomUUID().toString());

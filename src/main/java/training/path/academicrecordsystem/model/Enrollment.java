@@ -2,7 +2,9 @@ package training.path.academicrecordsystem.model;
 
 import lombok.Builder;
 import lombok.Data;
+import training.path.academicrecordsystem.config.UUIDRegex;
 
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,9 +12,18 @@ import java.util.Set;
 @Data
 public class Enrollment {
 
+    @NotBlank(message = "Enrollment id cannot be blank")
+    @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
+
+    @Min(value = 1, message = "Semester must be between 1 and 12")
+    @Max(value = 12, message = "Semester must be between 1 and 12")
     private int semester;
+
+    @NotNull(message = "Enrollment must be associated to a student")
     private Student student;
+
+    @NotEmpty(message = "Enrollments must have at least one class registered")
     private Set<CourseClass> courseClasses;
 
     public Enrollment() {

@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
@@ -13,6 +14,7 @@ import training.path.academicrecordsystem.services.interfaces.IEnrollmentService
 import java.util.List;
 
 @Service
+@Validated
 public class EnrollmentService implements IEnrollmentService {
 
     private final IEnrollmentRepository enrollmentRepository;
