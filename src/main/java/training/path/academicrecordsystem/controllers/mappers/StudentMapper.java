@@ -26,7 +26,7 @@ public class StudentMapper {
     }
 
     public static Student toEntity(RequestBodyStudentDTO requestBodyStudentDTO) throws BadResourceDataException {
-        validateStudentDTO(requestBodyStudentDTO);
+        //validateStudentDTO(requestBodyStudentDTO);
         Student student = new Student();
         student.setId(requestBodyStudentDTO.getId());
         student.setName(requestBodyStudentDTO.getName());
@@ -41,7 +41,7 @@ public class StudentMapper {
     }
 
     public static Student createEntity(RequestBodyStudentDTO requestBodyStudentDTO) throws BadResourceDataException {
-        validateStudentDTO(requestBodyStudentDTO);
+        //validateStudentDTO(requestBodyStudentDTO);
         Student student = new Student();
         student.setId(UUID.randomUUID().toString());
         student.setName(requestBodyStudentDTO.getName());
