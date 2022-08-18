@@ -2,7 +2,14 @@ package training.path.academicrecordsystem.model;
 
 import lombok.Builder;
 import lombok.Data;
+import training.path.academicrecordsystem.config.UUIDRegex;
+import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
+import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -10,9 +17,17 @@ import java.util.Set;
 @Data
 public class Course {
 
+    @NotBlank(message = "Course id cannot be empty")
+    @Pattern(message = "Invalid id format", regexp = UUIDRegex.UUIRegex)
     private String id;
+
+    @NotBlank(message = "You must provide a course name")
     private String name;
+
+    @Min(value = 0, message = "A course must have a minimum of 0 credits")
+    @Max(value = 10, message = "A course cannot have more than 10 credits")
     private int credits;
+
     private Set<Career> careers;
     private Map<String, CourseClass> classes;
 

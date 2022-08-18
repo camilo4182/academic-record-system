@@ -33,7 +33,7 @@ public class CourseController implements ICourseController {
 
     @Override
     @PostMapping("courses")
-    public ResponseEntity<String> save(@Valid @RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<String> save(@RequestBody CourseDTO courseDTO) {
         try {
             Course course = CourseMapper.createEntity(courseDTO);
             courseService.save(course);

@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
@@ -12,6 +13,7 @@ import training.path.academicrecordsystem.services.interfaces.ICourseService;
 import java.util.List;
 
 @Service
+@Validated
 public class CourseService implements ICourseService {
 
     private final CourseRepository jdbcCourseRepository;

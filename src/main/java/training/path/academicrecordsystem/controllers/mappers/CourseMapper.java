@@ -19,7 +19,7 @@ public class CourseMapper {
     }
     
     public static Course toEntity(CourseDTO courseDTO) throws NullRequestBodyException, BadResourceDataException {
-        validateCourseDTO(courseDTO);
+        //validateCourseDTO(courseDTO);
         Course course = new Course();
         course.setId(courseDTO.getId());
         course.setName(courseDTO.getName());
