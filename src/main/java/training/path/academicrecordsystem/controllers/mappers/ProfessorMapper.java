@@ -20,7 +20,7 @@ public class ProfessorMapper {
     }
 
     public static Professor toEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadResourceDataException {
-        validateProfessorDTO(professorDTO);
+        //validateProfessorDTO(professorDTO);
         Professor professor = new Professor();
         professor.setId(professorDTO.getId());
         professor.setName(professorDTO.getName());
@@ -30,7 +30,7 @@ public class ProfessorMapper {
     }
 
     public static Professor createEntity(ProfessorDTO professorDTO) throws NullRequestBodyException, BadResourceDataException {
-        validateProfessorDTO(professorDTO);
+        //validateProfessorDTO(professorDTO);
         Professor professor = new Professor();
         professor.setId(UUID.randomUUID().toString());
         professor.setName(professorDTO.getName());

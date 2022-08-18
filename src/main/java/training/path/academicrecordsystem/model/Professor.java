@@ -4,13 +4,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class Professor extends User {
 
+    @Min(value = 1000, message = "Professor salary must be greater than 1000")
+    @Max(value = 100000, message = "Professor salary cannot exceed 100000")
     private float salary;
+
     private Set<CourseClass> courseClasses;
 
     public Professor() {

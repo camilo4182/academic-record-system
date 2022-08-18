@@ -2,6 +2,7 @@ package training.path.academicrecordsystem.services.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
@@ -10,6 +11,7 @@ import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 import java.util.List;
 
 @Service
+@Validated
 public class ProfessorService implements IProfessorService {
 
     private final ProfessorRepository professorRepository;
@@ -39,11 +41,6 @@ public class ProfessorService implements IProfessorService {
     @Override
     public Professor findById(String id) throws ResourceNotFoundException {
         return professorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Professor " + id + " was not found"));
-    }
-
-    @Override
-    public Professor findByName(String name) throws ResourceNotFoundException {
-        return professorRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Professor " + name + " was not found"));
     }
 
     @Override
