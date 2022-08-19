@@ -2,11 +2,10 @@ package training.path.academicrecordsystem.model;
 
 import lombok.Builder;
 import lombok.Data;
+import training.path.academicrecordsystem.config.UUIDRegex;
 import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +14,11 @@ import java.util.Set;
 public class Career {
 
     @NotBlank(message = "Career id cannot be null")
-    @Pattern(message = "Invalid id format", regexp = "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+    @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
-    @NotBlank(message = "Career name cannot be null or blank")
+    @NotBlank(message = "You must provide the career name")
+    @Size(min = 4, message = "Career name must have at least 4 characters")
     private String name;
 
     private Set<Course> courses;
