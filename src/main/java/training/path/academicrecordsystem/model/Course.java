@@ -6,10 +6,7 @@ import training.path.academicrecordsystem.config.UUIDRegex;
 import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
 import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,6 +19,7 @@ public class Course {
     private String id;
 
     @NotBlank(message = "You must provide a course name")
+    @Size(min = 4, message = "Course name must have at least 4 characters")
     private String name;
 
     @Min(value = 0, message = "A course must have a minimum of 0 credits")

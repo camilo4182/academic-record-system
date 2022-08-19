@@ -6,6 +6,7 @@ import training.path.academicrecordsystem.config.UUIDRegex;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 public abstract class User {
@@ -14,10 +15,11 @@ public abstract class User {
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
-    @NotBlank(message = "User name cannot be blank")
+    @NotBlank(message = "User name is mandatory")
+    @Size(min = 4, message = "User name must have at least 4 characters")
     private String name;
 
-    @NotBlank(message = "User email cannot be blank")
+    @NotBlank(message = "User email is mandatory")
     @Email(message = "User email must be a well-formed email address")
     private String email;
 
