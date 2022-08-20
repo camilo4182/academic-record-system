@@ -18,15 +18,13 @@ import java.util.List;
 
 public interface ICareerController {
 
-    @Validated(OnCreate.class)
     ResponseEntity<String> save(@Valid CareerDTO careerDTO);
-    @Validated(OnUpdate.class)
-    ResponseEntity<String> update(@UUIDValidator(groups = OnUpdate.class) String id, @Valid CareerDTO careerDTO);
-    ResponseEntity<String> deleteById(@UUIDValidator String id);
-    ResponseEntity<CareerDTO> findById(@UUIDValidator String id);
-    ResponseEntity<List<CareerDTO>> findAll(@Min(0) Integer limit, @Min(0) Integer offset);
+    ResponseEntity<String> update(String id, @Valid CareerDTO careerDTO);
+    ResponseEntity<String> deleteById(String id);
+    ResponseEntity<CareerDTO> findById(String id);
+    ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
     @Validated(OnAssignToCareer.class)
-    ResponseEntity<String> assignCourseToCareer(@UUIDValidator(groups = OnAssignToCareer.class) String careerId, @Valid CourseDTO courseDTO);
-    ResponseEntity<List<CourseDTO>> findCoursesByCareer(@UUIDValidator String careerId);
+    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseDTO courseDTO);
+    ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId);
 
 }

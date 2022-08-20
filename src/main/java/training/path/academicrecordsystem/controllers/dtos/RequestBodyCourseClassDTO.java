@@ -20,7 +20,6 @@ public class RequestBodyCourseClassDTO {
     private String professorId;
 
     private int capacity;
-    private int enrolledStudents;
     private boolean available;
 
 }

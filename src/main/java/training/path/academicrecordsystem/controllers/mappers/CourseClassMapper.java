@@ -20,7 +20,6 @@ public class CourseClassMapper {
         responseBodyCourseClassDTO.setId(courseClass.getId());
         responseBodyCourseClassDTO.setAvailable(courseClass.isAvailable());
         responseBodyCourseClassDTO.setCapacity(courseClass.getCapacity());
-        responseBodyCourseClassDTO.setEnrolledStudents(courseClass.getEnrolledStudents());
 
         CourseDTO courseDTO = CourseMapper.toDTO(courseClass.getCourse());
         responseBodyCourseClassDTO.setCourse(courseDTO);
@@ -37,7 +36,6 @@ public class CourseClassMapper {
         courseClass.setId(courseClassDTO.getId());
         courseClass.setAvailable(courseClassDTO.isAvailable());
         courseClass.setCapacity(courseClassDTO.getCapacity());
-        courseClass.setEnrolledStudents(courseClassDTO.getEnrolledStudents());
 
         Course course = new Course();
         course.setId(courseClassDTO.getCourseId());
@@ -56,7 +54,6 @@ public class CourseClassMapper {
         courseClass.setId(UUID.randomUUID().toString());
         courseClass.setAvailable(courseClassDTO.isAvailable());
         courseClass.setCapacity(courseClassDTO.getCapacity());
-        courseClass.setEnrolledStudents(courseClassDTO.getEnrolledStudents());
 
         Course course = new Course();
         course.setId(courseClassDTO.getCourseId());
@@ -75,7 +72,6 @@ public class CourseClassMapper {
         if (courseClassDTO.getCourseId().isBlank()) throw new BadResourceDataException("Course id cannot be empty");
         if (courseClassDTO.getProfessorId().isBlank()) throw new BadResourceDataException("Professor id cannot be empty");
         if (courseClassDTO.getCapacity() <= 0) throw new BadResourceDataException("Capacity must be greater than 0");
-        if (courseClassDTO.getEnrolledStudents() < 0) throw new BadResourceDataException("The amount of enrolled students cannot be negative");
     }
 
 }

@@ -33,7 +33,7 @@ public class EnrollmentMapper {
         student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
-        for (String classId : requestBodyEnrollmentDTO.getCourseClassIds()) {
+        for (String classId : requestBodyEnrollmentDTO.getClassIds()) {
             CourseClass courseClass = new CourseClass();
             courseClass.setId(classId);
             enrollment.addClass(courseClass);
@@ -53,7 +53,7 @@ public class EnrollmentMapper {
         student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
-        for (String classId : requestBodyEnrollmentDTO.getCourseClassIds()) {
+        for (String classId : requestBodyEnrollmentDTO.getClassIds()) {
             CourseClass courseClass = new CourseClass();
             courseClass.setId(classId);
             enrollment.addClass(courseClass);
@@ -64,7 +64,7 @@ public class EnrollmentMapper {
 
     private static void validateDTO(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException {
         if (Objects.isNull(requestBodyEnrollmentDTO.getStudentId())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
-        if (Objects.isNull(requestBodyEnrollmentDTO.getCourseClassIds())) throw new BadResourceDataException("You must enroll to a class");
+        if (Objects.isNull(requestBodyEnrollmentDTO.getClassIds())) throw new BadResourceDataException("You must enroll to a class");
         if (requestBodyEnrollmentDTO.getSemester() < 1 || requestBodyEnrollmentDTO.getSemester() > 12) throw new BadResourceDataException("The semester must be between 1 and 12");
     }
 

@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 @Data
 public class CareerDTO {
 
-    @Null(message = "Don't provide id for career", groups = OnCreate.class)
+    @Null(message = "Don't provide id for career")
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 

@@ -22,8 +22,8 @@ public class Course {
     @Size(min = 4, message = "Course name must have at least 4 characters")
     private String name;
 
-    @Min(value = 0, message = "A course must have a minimum of 0 credits")
-    @Max(value = 10, message = "A course cannot have more than 10 credits")
+    @Min(value = 0, message = "A course can only have credits between 0 and 10")
+    @Max(value = 10, message = "A course can only have credits between 0 and 10")
     private int credits;
 
     private Set<Career> careers;
