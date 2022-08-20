@@ -29,7 +29,7 @@ public class EnrollmentController implements IEnrollmentController {
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findAll(Integer limit, Integer offset) {
         List<Enrollment> enrollments;
         if (Objects.isNull(limit) && Objects.isNull(offset)) enrollments = enrollmentService.findAll();
-        else enrollments = enrollmentService.findAll(limit, offset);
+        else enrollments = enrollmentService.findAll();
         return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
     }
 

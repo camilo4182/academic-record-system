@@ -45,16 +45,6 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public int update(String id, Enrollment enrollment) {
-        return 0;
-    }
-
-    @Override
-    public int deleteById(String id) {
-        return 0;
-    }
-
-    @Override
     public Optional<Enrollment> findById(String id) {
         String query = """
                 SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
@@ -78,11 +68,6 @@ public class EnrollmentRepository implements IEnrollmentRepository {
                 INNER JOIN professors p ON u.id = p.id;
                 """;
         return jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper());
-    }
-
-    @Override
-    public List<Enrollment> findAll(int limit, int offset) {
-        return null;
     }
 
     @Override

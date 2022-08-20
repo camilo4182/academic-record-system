@@ -60,27 +60,8 @@ public class EnrollmentService implements IEnrollmentService {
     }
 
     @Override
-    public void update(String id, Enrollment enrollment) {
-
-    }
-
-    @Override
-    public void deleteById(String id) {
-
-    }
-
-    @Override
-    public Enrollment finById(String id) {
-        return null;
-    }
-
-    @Override
     public List<Enrollment> findAll() {
         return enrollmentRepository.findAll();
     }
 
-    @Override
-    public List<Enrollment> findAll(int limit, int offset) {
-        return null;
-    }
 }

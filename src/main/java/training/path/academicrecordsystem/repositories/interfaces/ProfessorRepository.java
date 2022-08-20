@@ -15,8 +15,6 @@ public interface ProfessorRepository {
 
     Optional<Professor> findById(String id);
 
-    Optional<Professor> findByName(String name);
-
     List<Professor> findAll();
 
     List<Professor> findAll(int limit, int offset);

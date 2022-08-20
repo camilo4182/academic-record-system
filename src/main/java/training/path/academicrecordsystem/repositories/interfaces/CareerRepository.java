@@ -10,8 +10,6 @@ public interface CareerRepository {
 
     Optional<Career> findById(String id);
 
-    Optional<Career> findByName(String name);
-
     List<Career> findAll();
 
     List<Career> findAll(int limit, int offset);

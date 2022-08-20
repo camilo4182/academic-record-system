@@ -5,12 +5,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,17 +49,6 @@ public class JdbcProfessorRepository implements ProfessorRepository {
         String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id WHERE p.id = ?";
         try {
             Professor professor = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id));
-            return Optional.ofNullable(professor);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Professor> findByName(String name) {
-        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id WHERE name ILIKE ?";
-        try {
-            Professor professor = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), name);
             return Optional.ofNullable(professor);
         } catch (DataAccessException e) {
             return Optional.empty();
