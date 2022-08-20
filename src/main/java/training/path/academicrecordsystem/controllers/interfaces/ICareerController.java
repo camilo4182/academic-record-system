@@ -23,12 +23,18 @@ import java.util.List;
 public interface ICareerController {
 
     ResponseEntity<String> save(@Valid CareerDTO careerDTO) throws NullRequestBodyException, BadResourceDataException;
+
     ResponseEntity<String> update(String id, @Valid CareerDTO careerDTO) throws ResourceNotFoundException;
+
     ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<CareerDTO> findById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
+
     @Validated(OnAssignToCareer.class)
     ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId) throws ResourceNotFoundException;
+
     ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId) throws ResourceNotFoundException;
 
 }

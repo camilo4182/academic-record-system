@@ -21,9 +21,13 @@ public interface IEnrollmentService {
     void saveClass(@Valid Enrollment enrollment, @NotEmpty List<CourseClass> courseClasses) throws ResourceNotFoundException, NotMatchEnrollmentStudentException;
 
     void update(@UUIDValidator String id, @Valid Enrollment enrollment);
+
     void deleteById(@UUIDValidator String id);
+
     Enrollment finById(@UUIDValidator String id);
+
     List<Enrollment> findAll();
+
     List<Enrollment> findAll(@Min(0) int limit, @Min(0) int offset);
 
 }

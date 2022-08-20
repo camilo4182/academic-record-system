@@ -11,9 +11,13 @@ import java.util.List;
 public interface ICourseClassController {
 
     ResponseEntity<String> save(@Valid RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException;
+
     ResponseEntity<String> update(String id, @Valid RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException;
+
     ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<ResponseBodyCourseClassDTO> findById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(Integer limit, Integer offset);
     
 }

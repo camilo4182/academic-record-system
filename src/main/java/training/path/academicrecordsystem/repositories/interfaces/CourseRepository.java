@@ -23,4 +23,5 @@ public interface CourseRepository {
     boolean exists(String id);
 
     List<CourseClass> getClassesByCourse(String courseId);
+
 }

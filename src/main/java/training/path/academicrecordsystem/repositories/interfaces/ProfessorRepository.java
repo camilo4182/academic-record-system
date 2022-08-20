@@ -8,11 +8,17 @@ import java.util.Optional;
 public interface ProfessorRepository {
 
     int save(Professor professor);
+
     int update(String id, Professor professor);
+
     int deleteById(String id);
+
     Optional<Professor> findById(String id);
+
     Optional<Professor> findByName(String name);
+
     List<Professor> findAll();
+
     List<Professor> findAll(int limit, int offset);
 
     boolean exists(String id);

@@ -11,11 +11,15 @@ import java.util.List;
 public interface IProfessorService {
 
     void save(@Valid Professor professor);
-    void update(@UUIDValidator String id, @Valid Professor professor) throws ResourceNotFoundException;
-    void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;
-    Professor findById(@UUIDValidator String id) throws ResourceNotFoundException;
-    List<Professor> findAll();
-    List<Professor> findAll(@Min(0) int limit, @Min(0) int offset);
 
+    void update(@UUIDValidator String id, @Valid Professor professor) throws ResourceNotFoundException;
+
+    void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;
+
+    Professor findById(@UUIDValidator String id) throws ResourceNotFoundException;
+
+    List<Professor> findAll();
+
+    List<Professor> findAll(@Min(0) int limit, @Min(0) int offset);
 
 }

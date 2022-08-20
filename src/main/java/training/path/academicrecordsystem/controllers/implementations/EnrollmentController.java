@@ -28,12 +28,8 @@ public class EnrollmentController implements IEnrollmentController {
     @GetMapping("enrollments")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findAll(Integer limit, Integer offset) {
         List<Enrollment> enrollments;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) {
-            enrollments = enrollmentService.findAll();
-        }
-        else {
-            enrollments = enrollmentService.findAll(limit, offset);
-        }
+        if (Objects.isNull(limit) && Objects.isNull(offset)) enrollments = enrollmentService.findAll();
+        else enrollments = enrollmentService.findAll(limit, offset);
         return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
     }
 

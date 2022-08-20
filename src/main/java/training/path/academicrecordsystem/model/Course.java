@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 public class Course {
 
     @NotBlank(message = "Course id cannot be empty")
-    @Pattern(message = "Invalid id format", regexp = UUIDRegex.UUIRegex)
+    @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
     @NotBlank(message = "You must provide a course name")
