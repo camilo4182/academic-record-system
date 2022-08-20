@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.response.ExceptionResponse;
 import training.path.academicrecordsystem.exceptions.response.ValidationExceptionResponse;
 
@@ -18,8 +19,6 @@ import java.util.List;
 
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
-
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -49,6 +48,16 @@ public class ErrorHandlingControllerAdvice {
         }
         response.setErrors(errors);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    ResponseEntity<ExceptionResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setHttpStatus(HttpStatus.NOT_FOUND);
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
 }

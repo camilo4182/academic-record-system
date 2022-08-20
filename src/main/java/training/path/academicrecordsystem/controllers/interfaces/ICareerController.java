@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseOnlyIdDTO;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
@@ -20,12 +21,12 @@ import java.util.List;
 public interface ICareerController {
 
     ResponseEntity<String> save(@Valid CareerDTO careerDTO);
-    ResponseEntity<String> update(String id, @Valid CareerDTO careerDTO);
-    ResponseEntity<String> deleteById(String id);
-    ResponseEntity<CareerDTO> findById(String id);
+    ResponseEntity<String> update(String id, @Valid CareerDTO careerDTO) throws ResourceNotFoundException;
+    ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
+    ResponseEntity<CareerDTO> findById(String id) throws ResourceNotFoundException;
     ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
     @Validated(OnAssignToCareer.class)
-    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId);
-    ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId);
+    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId) throws ResourceNotFoundException;
+    ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId) throws ResourceNotFoundException;
 
 }

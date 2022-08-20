@@ -34,12 +34,10 @@ import java.util.Objects;
 public class CareerController implements ICareerController {
 
     private final ICareerService careerService;
-    private final ICourseService courseService;
 
     @Autowired
-    public CareerController(ICareerService careerService, ICourseService courseService) {
+    public CareerController(ICareerService careerService) {
         this.careerService = careerService;
-        this.courseService = courseService;
     }
 
     @Override
@@ -58,7 +56,7 @@ public class CareerController implements ICareerController {
 
     @Override
     @PutMapping("careers/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) throws ResourceNotFoundException {
         try {
             careerDTO.setId(id);
             Career career = CareerMapper.toEntity(careerDTO);
@@ -66,32 +64,22 @@ public class CareerController implements ICareerController {
             return new ResponseEntity<>("Career was updated", HttpStatus.OK);
         } catch (BadResourceDataException | NullRequestBodyException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     @DeleteMapping("careers/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
-        try {
-            careerService.deleteById(id);
-            return new ResponseEntity<>("Career was deleted", HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        careerService.deleteById(id);
+        return new ResponseEntity<>("Career was deleted", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("careers/{id}")
-    public ResponseEntity<CareerDTO> findById(@PathVariable("id") String id) {
-        try {
-            Career career = careerService.findById(id);
-            CareerDTO careerDTO = CareerMapper.toDTO(career);
-            return new ResponseEntity<>(careerDTO, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<CareerDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        Career career = careerService.findById(id);
+        CareerDTO careerDTO = CareerMapper.toDTO(career);
+        return new ResponseEntity<>(careerDTO, HttpStatus.OK);
     }
 
     @Override
@@ -109,24 +97,16 @@ public class CareerController implements ICareerController {
     }
 
     @PutMapping("careers/{careerId}/courses")
-    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseOnlyIdDTO courseId) {
-        try {
-            careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
-            return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException {
+        careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
+        return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("careers/{careerId}/courses")
-    public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId) {
-        try {
-            List<Course> courseList = careerService.findCoursesByCareer(careerId);
-            return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId) throws ResourceNotFoundException {
+        List<Course> courseList = careerService.findCoursesByCareer(careerId);
+        return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
     }
 
 }
