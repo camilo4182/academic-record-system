@@ -82,9 +82,9 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students/{studentId}/enrollment")
-    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
-        List<Enrollment> enrollmentList = studentService.findEnrollmentInfo(studentId);
-        return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
+    public ResponseEntity<ResponseBodyEnrollmentDTO> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
+        Enrollment enrollment = studentService.findEnrollmentInfo(studentId);
+        return new ResponseEntity<>(EnrollmentMapper.toDTO(enrollment), HttpStatus.OK);
     }
 
     @Override

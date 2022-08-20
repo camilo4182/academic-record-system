@@ -9,7 +9,6 @@ import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
-import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRowMapper;
 
 import java.util.List;
@@ -103,16 +102,34 @@ public class JdbcStudentRepository implements StudentRepository {
     }
 
     @Override
-    public List<Enrollment> findEnrollmentInfo(String studentId) {
+    public Enrollment findEnrollmentInfo(String studentId) {
         String query =
                 """
-                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, semester, cl.id AS class_id, capacity,
+                    enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_name,
+                    e.career_id AS career_id, c.name AS career
                 FROM users u INNER JOIN students s ON u.id = s.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN careers c ON c.id = e.career_id
-                WHERE s.id = ?;
+                INNER JOIN enrollment_classes ec ON e.id = ec.enrollment_id
+                INNER JOIN classes cl ON cl.id = ec.class_id
+                INNER JOIN courses co ON co.id = cl.course_id
+                INNER JOIN (
+                            SELECT p.id AS professor_id, u.name AS professor_name
+                            FROM professors p INNER JOIN users u ON u.id = p.id
+                           ) AS prof ON cl.professor_id = prof.professor_id
+                WHERE s.id = ?
                 """;
-        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper(), UUID.fromString(studentId));
+        List<Enrollment> enrollmentList = jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId));
+        Enrollment enrollment = new Enrollment();
+        enrollment.setId(enrollmentList.get(0).getId());
+        enrollment.setStudent(enrollmentList.get(0).getStudent());
+
+        for (Enrollment e : enrollmentList) {
+            enrollment.addClass(e.getCourseClasses().get(0));
+        }
+
+        return enrollment;
     }
 
     @Override

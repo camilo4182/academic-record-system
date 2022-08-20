@@ -15,9 +15,14 @@ public class EnrollmentFullInfoRowMapper implements RowMapper<Enrollment> {
         enrollment.setId(rs.getObject("enrollment_id", UUID.class).toString());
         enrollment.setSemester(rs.getInt("semester"));
 
+        Career career = new Career();
+        career.setId(rs.getObject("career_id", UUID.class).toString());
+        career.setName(rs.getString("career"));
+
         Student student = new Student();
         student.setId(rs.getObject("student_id", UUID.class).toString());
         student.setName(rs.getString("student"));
+        student.setCareer(career);
         enrollment.setStudent(student);
 
         Course course = new Course();
