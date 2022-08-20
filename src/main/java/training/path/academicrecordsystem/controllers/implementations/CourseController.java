@@ -40,7 +40,8 @@ public class CourseController implements ICourseController {
 
     @Override
     @PutMapping("courses/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseDTO courseDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseDTO courseDTO)
+            throws ResourceNotFoundException {
         courseDTO.setId(id);
         Course course = CourseMapper.toEntity(courseDTO);
         courseService.update(course);
@@ -76,7 +77,8 @@ public class CourseController implements ICourseController {
     }
 
     @GetMapping("courses/{courseId}/classes")
-    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) throws ResourceNotFoundException {
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId)
+            throws ResourceNotFoundException {
         try {
             List<CourseClass> classesList = courseService.findClassesByCourse(courseId);
             return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);

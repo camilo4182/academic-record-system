@@ -4,13 +4,10 @@ import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClas
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class CourseClassMapper {
@@ -31,7 +28,6 @@ public class CourseClassMapper {
     }
 
     public static CourseClass toEntity(RequestBodyCourseClassDTO courseClassDTO) {
-        //validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(courseClassDTO.getId());
         courseClass.setAvailable(courseClassDTO.isAvailable());
@@ -49,7 +45,6 @@ public class CourseClassMapper {
     }
 
     public static CourseClass createEntity(RequestBodyCourseClassDTO courseClassDTO) {
-        //validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(UUID.randomUUID().toString());
         courseClass.setAvailable(courseClassDTO.isAvailable());
@@ -64,14 +59,6 @@ public class CourseClassMapper {
         courseClass.setProfessor(professor);
 
         return courseClass;
-    }
-
-    private static void validateDTO(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException {
-        if (Objects.isNull(courseClassDTO.getCourseId())) throw new BadResourceDataException("You must assign this class to a course");
-        if (Objects.isNull(courseClassDTO.getProfessorId())) throw new BadResourceDataException("You must assign a professor to this class");
-        if (courseClassDTO.getCourseId().isBlank()) throw new BadResourceDataException("Course id cannot be empty");
-        if (courseClassDTO.getProfessorId().isBlank()) throw new BadResourceDataException("Professor id cannot be empty");
-        if (courseClassDTO.getCapacity() <= 0) throw new BadResourceDataException("Capacity must be greater than 0");
     }
 
 }

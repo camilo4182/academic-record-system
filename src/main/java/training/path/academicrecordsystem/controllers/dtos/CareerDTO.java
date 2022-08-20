@@ -2,11 +2,8 @@ package training.path.academicrecordsystem.controllers.dtos;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 import training.path.academicrecordsystem.config.UUIDRegex;
-import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
-import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
 import javax.validation.constraints.*;
 

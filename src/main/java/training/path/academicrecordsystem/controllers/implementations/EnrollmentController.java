@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IEnrollmentController;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
@@ -27,27 +25,6 @@ public class EnrollmentController implements IEnrollmentController {
     }
 
     @Override
-    @PostMapping("")
-    public ResponseEntity<String> save(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<String> update(String id, RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<String> deleteById(String id) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<ResponseBodyEnrollmentDTO> findById(String id) {
-        return null;
-    }
-
-    @Override
     @GetMapping("enrollments")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findAll(Integer limit, Integer offset) {
         List<Enrollment> enrollments;
@@ -59,4 +36,5 @@ public class EnrollmentController implements IEnrollmentController {
         }
         return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
     }
+
 }

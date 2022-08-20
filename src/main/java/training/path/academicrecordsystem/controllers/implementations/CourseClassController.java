@@ -37,7 +37,8 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @PutMapping("classes/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyCourseClassDTO courseClassDTO)
+            throws ResourceNotFoundException {
         courseClassDTO.setId(id);
         CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
         courseClassService.update(courseClass);

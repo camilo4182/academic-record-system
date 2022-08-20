@@ -3,7 +3,6 @@ package training.path.academicrecordsystem.controllers.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
@@ -13,19 +12,12 @@ import training.path.academicrecordsystem.controllers.interfaces.ICareerControll
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
-import training.path.academicrecordsystem.services.interfaces.ICourseService;
-import training.path.academicrecordsystem.validations.groups.OnCreate;
-import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,7 +34,8 @@ public class CareerController implements ICareerController {
 
     @Override
     @PostMapping("careers")
-    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) throws NullRequestBodyException, BadResourceDataException {
+    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO)
+            throws NullRequestBodyException, BadResourceDataException {
         Career career = CareerMapper.createEntity(careerDTO);
         careerService.save(career);
         return new ResponseEntity<>("Career was registered", HttpStatus.OK);
@@ -50,7 +43,8 @@ public class CareerController implements ICareerController {
 
     @Override
     @PutMapping("careers/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO)
+            throws ResourceNotFoundException {
         careerDTO.setId(id);
         Career career = CareerMapper.toEntity(careerDTO);
         careerService.update(career);
@@ -83,14 +77,16 @@ public class CareerController implements ICareerController {
     }
 
     @PutMapping("careers/{careerId}/courses")
-    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException {
+    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId,
+                                                       @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException {
         careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
         return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("careers/{careerId}/courses")
-    public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId) throws ResourceNotFoundException {
+    public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId)
+            throws ResourceNotFoundException {
         List<Course> courseList = careerService.findCoursesByCareer(careerId);
         return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
     }

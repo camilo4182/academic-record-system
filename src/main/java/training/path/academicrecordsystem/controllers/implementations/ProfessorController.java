@@ -38,7 +38,8 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @PutMapping("professors/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody ProfessorDTO professorDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody ProfessorDTO professorDTO)
+            throws ResourceNotFoundException {
         professorDTO.setId(id);
         Professor professor = ProfessorMapper.toEntity(professorDTO);
         professorService.update(id, professor);

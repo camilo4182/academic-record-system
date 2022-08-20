@@ -43,10 +43,6 @@ public class Enrollment {
         courseClasses.add(courseClass);
     }
 
-    public void remove(CourseClass courseClass) {
-        courseClasses.remove(courseClass);
-    }
-
     public List<CourseClass> getCourseClasses() {
         return courseClasses.stream().toList();
     }

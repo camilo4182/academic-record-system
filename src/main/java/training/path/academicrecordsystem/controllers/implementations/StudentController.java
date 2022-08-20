@@ -47,7 +47,8 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping("students/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO)
+            throws ResourceNotFoundException {
         requestBodyStudentDTO.setId(id);
         Student student = StudentMapper.toEntity(requestBodyStudentDTO);
         studentService.update(id, student);
@@ -81,7 +82,8 @@ public class StudentController implements IStudentController {
     @Override
     @GetMapping("students/{studentId}/enrollment")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId,
-                                                                              @RequestParam(name = "semester", required = false) Integer semester) throws ResourceNotFoundException {
+                                                                              @RequestParam(name = "semester", required = false) Integer semester)
+            throws ResourceNotFoundException {
         if (Objects.isNull(semester)) {
             List<Enrollment> enrollments = studentService.findEnrollmentInfo(studentId);
             return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
@@ -96,7 +98,8 @@ public class StudentController implements IStudentController {
     @PostMapping("students/{studentId}/enrollment/{enrollmentId}")
     public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId,
                                          @PathVariable("enrollmentId") String enrollmentId,
-                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException {
+                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO)
+            throws ResourceNotFoundException, NotMatchEnrollmentStudentException {
         requestBodyEnrollmentDTO.setStudentId(studentId);
         requestBodyEnrollmentDTO.setId(enrollmentId);
         Enrollment enrollment = EnrollmentMapper.toEntity(requestBodyEnrollmentDTO);
