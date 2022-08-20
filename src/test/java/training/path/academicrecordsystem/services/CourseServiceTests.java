@@ -11,6 +11,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
 import training.path.academicrecordsystem.services.implementations.CourseService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -148,7 +149,7 @@ public class CourseServiceTests {
         List<CourseClass> classes = List.of(courseClass1, courseClass2, courseClass3, courseClass4);
 
         when(courseRepository.exists(anyString())).thenReturn(true);
-        when(courseRepository.getClassesByCourse(anyString())).thenReturn(Optional.of(classes));
+        when(courseRepository.getClassesByCourse(anyString())).thenReturn(classes);
 
         List<CourseClass> responseList = courseService.findClassesByCourse(courseId);
 
@@ -162,8 +163,10 @@ public class CourseServiceTests {
     void givenNonExistingCourse_whenFindClassesByCourse_thenItThrowsException() {
         String courseId = UUID.randomUUID().toString();
 
+        List<CourseClass> classes = new ArrayList<>();
+
         when(courseRepository.exists(anyString())).thenReturn(false);
-        when(courseRepository.getClassesByCourse(anyString())).thenReturn(Optional.empty());
+        when(courseRepository.getClassesByCourse(anyString())).thenReturn(classes);
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.findClassesByCourse(courseId));
     }

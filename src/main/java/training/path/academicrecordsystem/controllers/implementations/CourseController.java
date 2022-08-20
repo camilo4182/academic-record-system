@@ -79,11 +79,7 @@ public class CourseController implements ICourseController {
     @GetMapping("courses/{courseId}/classes")
     public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId)
             throws ResourceNotFoundException {
-        try {
-            List<CourseClass> classesList = courseService.findClassesByCourse(courseId);
-            return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
-        } catch (CouldNotPerformOperationException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        List<CourseClass> classesList = courseService.findClassesByCourse(courseId);
+        return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
     }
 }

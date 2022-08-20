@@ -18,5 +18,5 @@ public interface ICourseService {
     Course findById(@UUIDValidator String id) throws ResourceNotFoundException;
     List<Course> findAll();
     List<Course> findAll(@Min(0) int limit, @Min(0) int offset);
-    List<CourseClass> findClassesByCourse(@UUIDValidator String courseId) throws ResourceNotFoundException, CouldNotPerformOperationException;
+    List<CourseClass> findClassesByCourse(@UUIDValidator String courseId) throws ResourceNotFoundException;
 }

@@ -36,17 +36,6 @@ public class JdbcCourseRepository implements CourseRepository {
     }
 
     @Override
-    public Optional<Course> findByName(String name) {
-        String query = "SELECT * FROM courses WHERE name ILIKE ?";
-        try {
-            Course course = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), name);
-            return Optional.ofNullable(course);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public List<Course> findAll() {
         String query = "SELECT * FROM courses ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Course.class));
@@ -88,19 +77,14 @@ public class JdbcCourseRepository implements CourseRepository {
     }
 
     @Override
-    public Optional<List<CourseClass>> getClassesByCourse(String courseId) {
+    public List<CourseClass> getClassesByCourse(String courseId) {
         String query = """
                 SELECT co.id AS course_id, co.name AS course_name, credits, cl.id AS class_id, available, cl.professor_id AS prof_id, u.name AS prof_name, u.email AS prof_email
                 FROM courses co INNER JOIN classes cl ON cl.course_id = co.id
                 INNER JOIN professors p ON cl.professor_id = p.id
                 INNER JOIN users u ON u.id = p.id
                 WHERE co.id = ?""";
-        try {
-            List<CourseClass> classes = jdbcTemplate.query(query, new ClassesByCourseRowMapper(), UUID.fromString(courseId));
-            return Optional.of(classes);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(query, new ClassesByCourseRowMapper(), UUID.fromString(courseId));
     }
 
 }
