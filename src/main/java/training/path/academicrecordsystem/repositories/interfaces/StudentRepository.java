@@ -15,6 +15,7 @@ public interface StudentRepository {
     List<Student> findAll();
     List<Student> findAll(int limit, int offset);
     boolean exists(String id);
+    List<Enrollment> findEnrollmentInfo(String studentId);
     List<Enrollment> findEnrollmentsBySemester(String studentId, int semester);
 
 }

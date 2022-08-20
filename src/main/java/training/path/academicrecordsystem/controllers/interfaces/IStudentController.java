@@ -14,11 +14,21 @@ import java.util.List;
 public interface IStudentController {
 
     ResponseEntity<String> save(@Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException;
+
     ResponseEntity<String> update(String id, @Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException;
+
     ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<ResponseBodyStudentDTO> findById(String id) throws ResourceNotFoundException;
+
     ResponseEntity<List<ResponseBodyStudentDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<String> enroll(@UUIDValidator String studentId, @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException;
+
+    ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@UUIDValidator String studentId) throws ResourceNotFoundException;
+
+    ResponseEntity<String> enroll(@UUIDValidator String studentId,
+                                  @UUIDValidator String enrollmentId,
+                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException;
+
     ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@UUIDValidator String studentId, Integer semester) throws ResourceNotFoundException;
 
 }

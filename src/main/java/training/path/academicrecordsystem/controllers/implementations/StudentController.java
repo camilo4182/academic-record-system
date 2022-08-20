@@ -80,16 +80,26 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @PostMapping("students/{studentId}/courses")
-    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException {
+    @GetMapping("students/{studentId}/enrollment")
+    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
+        List<Enrollment> enrollmentList = studentService.findEnrollmentInfo(studentId);
+        return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("students/{studentId}/enrollment/{enrollmentId}")
+    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId,
+                                         @PathVariable("enrollmentId") String enrollmentId,
+                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException {
         requestBodyEnrollmentDTO.setStudentId(studentId);
-        Enrollment enrollment = EnrollmentMapper.createEntity(requestBodyEnrollmentDTO);
+        requestBodyEnrollmentDTO.setId(enrollmentId);
+        Enrollment enrollment = EnrollmentMapper.toEntity(requestBodyEnrollmentDTO);
         enrollmentService.saveClass(enrollment, enrollment.getCourseClasses());
         return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 
     @Override
-    @GetMapping("students/{studentId}/enrollments")
+    @GetMapping("students/{studentId}/enrollment/{enrollmentId}/classes")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@PathVariable("studentId") String studentId,
                                                                                      @RequestParam(name = "semester") Integer semester) throws ResourceNotFoundException {
         List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);

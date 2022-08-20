@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRowMapper;
 
@@ -102,6 +103,19 @@ public class JdbcStudentRepository implements StudentRepository {
     }
 
     @Override
+    public List<Enrollment> findEnrollmentInfo(String studentId) {
+        String query =
+                """
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                FROM users u INNER JOIN students s ON u.id = s.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN careers c ON c.id = e.career_id
+                WHERE s.id = ?;
+                """;
+        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper(), UUID.fromString(studentId));
+    }
+
+    @Override
     public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) {
         String query =
                 """
@@ -117,7 +131,7 @@ public class JdbcStudentRepository implements StudentRepository {
                            ) AS prof ON cl.professor_id = prof.professor_id
                 WHERE s.id = ? AND semester = ?;
                 """;
-        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper(), UUID.fromString(studentId), semester);
+        return jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId), semester);
     }
 
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
-import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +67,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
                 INNER JOIN users u ON u.id = s.id
                 INNER JOIN professors p ON u.id = p.id;
                 """;
-        return jdbcTemplate.query(query, new EnrollmentInfoRowMapper());
+        return jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper());
     }
 
     @Override

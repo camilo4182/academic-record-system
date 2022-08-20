@@ -8,7 +8,8 @@ import java.util.List;
 public class ResponseBodyEnrollmentDTO {
 
     private String id;
+    private String name;
+    private String career;
     private List<ResponseBodyCourseClassDTO> classes;
-    private int semester;
 
 }
