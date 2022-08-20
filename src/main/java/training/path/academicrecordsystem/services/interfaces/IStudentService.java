@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface IStudentService {
 
-    void save(@Valid Student student);
+    void save(@Valid Student student) throws ResourceNotFoundException;
     void update(@UUIDValidator String id, @Valid Student student) throws ResourceNotFoundException;
     void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;
     Student findById(@UUIDValidator String id) throws ResourceNotFoundException;

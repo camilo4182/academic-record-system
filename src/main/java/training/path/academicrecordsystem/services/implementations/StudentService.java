@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
+import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
 
@@ -16,20 +17,24 @@ import java.util.List;
 public class StudentService implements IStudentService {
 
     private final StudentRepository studentRepository;
+    private final CareerRepository careerRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, CareerRepository careerRepository) {
         this.studentRepository = studentRepository;
+        this.careerRepository = careerRepository;
     }
 
     @Override
-    public void save(Student student) {
+    public void save(Student student) throws ResourceNotFoundException {
+        if (!careerRepository.exists(student.getCareer().getId())) throw new ResourceNotFoundException("Career " + student.getCareer().getId() + " was not found");
         studentRepository.save(student);
     }
 
     @Override
     public void update(String id, Student student) throws ResourceNotFoundException {
         if (!studentRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
+        if (!careerRepository.exists(student.getCareer().getId())) throw new ResourceNotFoundException("Career " + student.getCareer().getId() + " was not found");
         studentRepository.update(id, student);
     }
 

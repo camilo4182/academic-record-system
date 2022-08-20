@@ -47,8 +47,8 @@ CREATE TABLE classes (
 	capacity INTEGER NOT NULL,
 	enrolled_students INTEGER NOT NULL,
 	available BOOLEAN NOT NULL,
-	course_id UUID REFERENCES courses(id),
-	professor_id UUID REFERENCES professors(id)
+	course_id UUID REFERENCES courses(id) ON DELETE CASCADE,
+	professor_id UUID REFERENCES professors(id) ON DELETE CASCADE
 );
 
 CREATE TABLE enrollments (

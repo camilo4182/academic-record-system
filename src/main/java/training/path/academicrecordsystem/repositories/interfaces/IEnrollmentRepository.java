@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public interface IEnrollmentRepository {
 
-    void save(Enrollment enrollment, CourseClass courseClass);
+    void save(Enrollment enrollment);
+    void saveClass(Enrollment enrollment, CourseClass courseClass);
     int update(String id, Enrollment enrollment);
     int deleteById(String id);
     Optional<Enrollment> findById(String id);

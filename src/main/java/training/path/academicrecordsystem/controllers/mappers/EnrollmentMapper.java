@@ -22,7 +22,7 @@ public class EnrollmentMapper {
         return enrollmentDTO;
     }
 
-    public static Enrollment toEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static Enrollment toEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
         //validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();
@@ -42,7 +42,7 @@ public class EnrollmentMapper {
         return enrollment;
     }
 
-    public static Enrollment createEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static Enrollment createEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
         //validateDTO(requestBodyEnrollmentDTO);
 
         Enrollment enrollment = new Enrollment();

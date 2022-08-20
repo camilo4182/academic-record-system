@@ -31,10 +31,17 @@ public class EnrollmentService implements IEnrollmentService {
     @Override
     public void save(Enrollment enrollment, List<CourseClass> courseClasses) throws ResourceNotFoundException {
         if (!studentRepository.exists(enrollment.getStudent().getId())) throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
+        verifyClasses(courseClasses);
+        enrollmentRepository.save(enrollment);
+        for (CourseClass courseClass : courseClasses) {
+            courseClass.setEnrolledStudents(courseClassRepository.findById(courseClass.getId()).orElseThrow().getEnrolledStudents() + 1);
+            enrollmentRepository.saveClass(enrollment, courseClass);
+        }
+    }
+
+    private void verifyClasses(List<CourseClass> courseClasses) throws ResourceNotFoundException {
         for (CourseClass courseClass : courseClasses) {
             if (!courseClassRepository.exists(courseClass.getId())) throw new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found");
-            courseClass.setEnrolledStudents(courseClassRepository.findById(courseClass.getId()).orElseThrow().getEnrolledStudents() + 1);
-            enrollmentRepository.save(enrollment, courseClass);
         }
     }
 

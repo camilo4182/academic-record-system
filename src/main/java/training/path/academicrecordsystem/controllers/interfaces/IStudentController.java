@@ -5,6 +5,7 @@ import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollment
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
 import javax.validation.Valid;
@@ -12,12 +13,12 @@ import java.util.List;
 
 public interface IStudentController {
 
-    ResponseEntity<String> save(@Valid RequestBodyStudentDTO requestBodyStudentDTO);
-    ResponseEntity<String> update(String id, @Valid RequestBodyStudentDTO requestBodyStudentDTO);
-    ResponseEntity<String> deleteById(String id);
-    ResponseEntity<ResponseBodyStudentDTO> findById(String id);
+    ResponseEntity<String> save(@Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException;
+    ResponseEntity<String> update(String id, @Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException;
+    ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
+    ResponseEntity<ResponseBodyStudentDTO> findById(String id) throws ResourceNotFoundException;
     ResponseEntity<List<ResponseBodyStudentDTO>> findAll(Integer limit, Integer offset);
-    ResponseEntity<String> enroll(@UUIDValidator String studentId, @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO);
-    ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@UUIDValidator String studentId, Integer semester);
+    ResponseEntity<String> enroll(@UUIDValidator String studentId, @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException;
+    ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@UUIDValidator String studentId, Integer semester) throws ResourceNotFoundException;
 
 }

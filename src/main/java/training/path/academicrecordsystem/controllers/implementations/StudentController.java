@@ -38,51 +38,33 @@ public class StudentController implements IStudentController {
 
     @Override
     @PostMapping("students")
-    public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) {
-        try {
-            Student student = StudentMapper.createEntity(requestBodyStudentDTO);
-            studentService.save(student);
-            return new ResponseEntity<>("Student registered", HttpStatus.OK);
-        } catch (BadResourceDataException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException {
+        Student student = StudentMapper.createEntity(requestBodyStudentDTO);
+        studentService.save(student);
+        return new ResponseEntity<>("Student registered", HttpStatus.OK);
     }
 
     @Override
     @PutMapping("students/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO) {
-        try {
-            requestBodyStudentDTO.setId(id);
-            Student student = StudentMapper.toEntity(requestBodyStudentDTO);
-            studentService.update(id, student);
-            return new ResponseEntity<>("Student information updated", HttpStatus.OK);
-        } catch (BadResourceDataException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException {
+        requestBodyStudentDTO.setId(id);
+        Student student = StudentMapper.toEntity(requestBodyStudentDTO);
+        studentService.update(id, student);
+        return new ResponseEntity<>("Student information updated", HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("students/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
-        try {
-            studentService.deleteById(id);
-            return new ResponseEntity<>("Student deleted", HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        studentService.deleteById(id);
+        return new ResponseEntity<>("Student deleted", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("students/{id}")
-    public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) {
-        try {
-            ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
-            return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
+        return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
     }
 
     @Override
@@ -90,39 +72,25 @@ public class StudentController implements IStudentController {
     public ResponseEntity<List<ResponseBodyStudentDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
                                                                @RequestParam(name = "offset", required = false) Integer offset) {
         List<Student> studentList;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) {
-            studentList = studentService.findAll();
-        }
-        else {
-            studentList = studentService.findAll(limit, offset);
-        }
+        if (Objects.isNull(limit) && Objects.isNull(offset)) studentList = studentService.findAll();
+        else studentList = studentService.findAll(limit, offset);
         return new ResponseEntity<>(studentList.stream().map(StudentMapper::toDTO).toList(), HttpStatus.OK);
     }
 
     @Override
     @PostMapping("students/{studentId}/courses")
-    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
-        try {
-            requestBodyEnrollmentDTO.setStudentId(studentId);
-            Enrollment enrollment = EnrollmentMapper.createEntity(requestBodyEnrollmentDTO);
-            enrollmentService.save(enrollment, enrollment.getCourseClasses());
-            return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException {
+        requestBodyEnrollmentDTO.setStudentId(studentId);
+        Enrollment enrollment = EnrollmentMapper.createEntity(requestBodyEnrollmentDTO);
+        enrollmentService.save(enrollment, enrollment.getCourseClasses());
+        return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("students/{studentId}/enrollments")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@PathVariable("studentId") String studentId,
-                                                                                     @RequestParam(name = "semester") Integer semester) {
-        try {
-            List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
-            return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+                                                                                     @RequestParam(name = "semester") Integer semester) throws ResourceNotFoundException {
+        List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
+        return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
     }
 }

@@ -23,10 +23,14 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public void save(Enrollment enrollment, CourseClass courseClass) {
+    public void save(Enrollment enrollment) {
         String queryEnrollments = "INSERT INTO enrollments (id, semester, student_id) VALUES (?, ?, ?);";
         jdbcTemplate.update(queryEnrollments, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
                 UUID.fromString(enrollment.getStudent().getId()));
+    }
+
+    @Override
+    public void saveClass(Enrollment enrollment, CourseClass courseClass) {
         String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id) VALUES (?, ?);";
         jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(courseClass.getId()));
         String queryUpdateClass = "UPDATE classes SET enrolled_students = ? WHERE id = ?";
