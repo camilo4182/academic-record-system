@@ -9,11 +9,10 @@ import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRowMapper;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class JdbcStudentRepository implements StudentRepository {
@@ -102,7 +101,7 @@ public class JdbcStudentRepository implements StudentRepository {
     }
 
     @Override
-    public Enrollment findEnrollmentInfo(String studentId) {
+    public List<Enrollment> findEnrollmentInfo(String studentId) {
         String query =
                 """
                 SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, semester, cl.id AS class_id, capacity,
@@ -120,16 +119,36 @@ public class JdbcStudentRepository implements StudentRepository {
                            ) AS prof ON cl.professor_id = prof.professor_id
                 WHERE s.id = ?
                 """;
-        List<Enrollment> enrollmentList = jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId));
-        Enrollment enrollment = new Enrollment();
-        enrollment.setId(enrollmentList.get(0).getId());
-        enrollment.setStudent(enrollmentList.get(0).getStudent());
+        try {
+            List<Enrollment> enrollmentList = jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId));
+            int maxSemester = enrollmentList.stream().max(Comparator.comparing(Enrollment::getSemester)).orElseThrow().getSemester();
+            List<Enrollment> enrollmentsPerSemester = new ArrayList<>();
 
-        for (Enrollment e : enrollmentList) {
-            enrollment.addClass(e.getCourseClasses().get(0));
+            for (int i = 1; i <= maxSemester; i++) {
+                Enrollment enrollment = new Enrollment();
+                enrollment.setId(enrollmentList.get(0).getId());
+                enrollment.setStudent(enrollmentList.get(0).getStudent());
+
+                int finalI = i;
+                List<Enrollment> filteredEnrollments = enrollmentList.stream().filter(e -> e.getSemester() == finalI).toList();
+                enrollment.setSemester(filteredEnrollments.get(0).getSemester());
+                for (Enrollment e : filteredEnrollments) {
+                    enrollment.addClass(e.getCourseClasses().get(0));
+                }
+                enrollmentsPerSemester.add(enrollment);
+            }
+            return enrollmentsPerSemester;
+        } catch (NoSuchElementException e) {
+            String queryForNoClasses =
+                    """
+                    SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                    FROM users u INNER JOIN students s ON u.id = s.id
+                    INNER JOIN enrollments e ON e.student_id = s.id
+                    INNER JOIN careers c ON c.id = e.career_id
+                    WHERE s.id = ?;
+                    """;
+            return jdbcTemplate.query(queryForNoClasses, new EnrollmentInfoRowMapper(), UUID.fromString(studentId));
         }
-
-        return enrollment;
     }
 
     @Override

@@ -3,11 +3,11 @@ package training.path.academicrecordsystem.controllers.mappers;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -19,7 +19,7 @@ public class EnrollmentMapper {
         enrollmentDTO.setName(enrollment.getStudent().getName());
         enrollmentDTO.setCareer(enrollment.getStudent().getCareer().getName());
         enrollmentDTO.setClasses(enrollment.getCourseClasses().stream().map(CourseClassMapper::toDTO).toList());
-        //enrollmentDTO.setSemester(enrollment.getSemester());
+        enrollmentDTO.setSemester(enrollment.getSemester());
 
         return enrollmentDTO;
     }

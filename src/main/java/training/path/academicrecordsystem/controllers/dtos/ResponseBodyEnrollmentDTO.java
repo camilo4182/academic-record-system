@@ -11,5 +11,6 @@ public class ResponseBodyEnrollmentDTO {
     private String name;
     private String career;
     private List<ResponseBodyCourseClassDTO> classes;
+    private int semester;
 
 }

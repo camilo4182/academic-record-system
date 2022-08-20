@@ -12,9 +12,7 @@ import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDT
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
@@ -82,9 +80,9 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students/{studentId}/enrollment")
-    public ResponseEntity<ResponseBodyEnrollmentDTO> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
-        Enrollment enrollment = studentService.findEnrollmentInfo(studentId);
-        return new ResponseEntity<>(EnrollmentMapper.toDTO(enrollment), HttpStatus.OK);
+    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
+        List<Enrollment> enrollments = studentService.findEnrollmentInfo(studentId);
+        return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
     }
 
     @Override
