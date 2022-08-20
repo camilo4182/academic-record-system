@@ -36,50 +36,32 @@ public class CourseController implements ICourseController {
     @Override
     @PostMapping("courses")
     public ResponseEntity<String> save(@RequestBody CourseDTO courseDTO) {
-        try {
-            Course course = CourseMapper.createEntity(courseDTO);
-            courseService.save(course);
-            return new ResponseEntity<>("Course created", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        Course course = CourseMapper.createEntity(courseDTO);
+        courseService.save(course);
+        return new ResponseEntity<>("Course created", HttpStatus.OK);
     }
 
     @Override
     @PutMapping("courses/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseDTO courseDTO) {
-        try {
-            courseDTO.setId(id);
-            Course course = CourseMapper.toEntity(courseDTO);
-            courseService.update(course);
-            return new ResponseEntity<>("Course updated", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseDTO courseDTO) throws ResourceNotFoundException {
+        courseDTO.setId(id);
+        Course course = CourseMapper.toEntity(courseDTO);
+        courseService.update(course);
+        return new ResponseEntity<>("Course updated", HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("courses/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
-        try {
-            courseService.deleteById(id);
-            return new ResponseEntity<>("Course deleted", HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        courseService.deleteById(id);
+        return new ResponseEntity<>("Course deleted", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("courses/{id}")
-    public ResponseEntity<CourseDTO> findById(@PathVariable("id") String id) {
-        try {
-            CourseDTO courseDTO = CourseMapper.toDTO(courseService.findById(id));
-            return new ResponseEntity<>(courseDTO, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<CourseDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        CourseDTO courseDTO = CourseMapper.toDTO(courseService.findById(id));
+        return new ResponseEntity<>(courseDTO, HttpStatus.OK);
     }
 
     @Override
@@ -97,12 +79,10 @@ public class CourseController implements ICourseController {
     }
 
     @GetMapping("courses/{courseId}/classes")
-    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) {
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) throws ResourceNotFoundException {
         try {
             List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
             return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (CouldNotPerformOperationException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -9,8 +9,6 @@ import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClas
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
@@ -32,50 +30,32 @@ public class CourseClassController implements ICourseClassController {
     @Override
     @PostMapping("classes")
     public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) {
-        try {
-            CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
-            courseClassService.save(courseClass);
-            return new ResponseEntity<>("Class registered", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
+        courseClassService.save(courseClass);
+        return new ResponseEntity<>("Class registered", HttpStatus.OK);
     }
 
     @Override
     @PutMapping("classes/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyCourseClassDTO courseClassDTO) {
-        try {
-            courseClassDTO.setId(id);
-            CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
-            courseClassService.update(courseClass);
-            return new ResponseEntity<>("Class updated", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException {
+        courseClassDTO.setId(id);
+        CourseClass courseClass = CourseClassMapper.toEntity(courseClassDTO);
+        courseClassService.update(courseClass);
+        return new ResponseEntity<>("Class updated", HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("classes/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
-        try {
-            courseClassService.deleteById(id);
-            return new ResponseEntity<>("Class deleted", HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        courseClassService.deleteById(id);
+        return new ResponseEntity<>("Class deleted", HttpStatus.OK);
     }
 
     @Override
     @GetMapping("classes/{id}")
-    public ResponseEntity<ResponseBodyCourseClassDTO> findById(@PathVariable("id") String id) {
-        try {
-            ResponseBodyCourseClassDTO responseBodyCourseClassDTO = CourseClassMapper.toDTO(courseClassService.findById(id));
-            return new ResponseEntity<>(responseBodyCourseClassDTO, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<ResponseBodyCourseClassDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        ResponseBodyCourseClassDTO responseBodyCourseClassDTO = CourseClassMapper.toDTO(courseClassService.findById(id));
+        return new ResponseEntity<>(responseBodyCourseClassDTO, HttpStatus.OK);
     }
 
     @Override
@@ -83,12 +63,8 @@ public class CourseClassController implements ICourseClassController {
     public ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
                                                                     @RequestParam(name = "offset", required = false) Integer offset) {
         List<CourseClass> courseClasses;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) {
-            courseClasses = courseClassService.findAll();
-        }
-        else {
-            courseClasses = courseClassService.findAll(limit, offset);
-        }
+        if (Objects.isNull(limit) && Objects.isNull(offset)) courseClasses = courseClassService.findAll();
+        else courseClasses = courseClassService.findAll(limit, offset);
         return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
     }
 

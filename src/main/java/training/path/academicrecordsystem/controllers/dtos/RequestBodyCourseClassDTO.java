@@ -1,8 +1,11 @@
 package training.path.academicrecordsystem.controllers.dtos;
 
+import lombok.Builder;
 import lombok.Data;
 import training.path.academicrecordsystem.config.UUIDRegex;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -19,7 +22,21 @@ public class RequestBodyCourseClassDTO {
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String professorId;
 
+    @Min(value = 1, message = "A class must have at least a capacity of one student")
+    @Max(value = 35, message = "A class can only have a maximum of 35 students")
     private int capacity;
+
     private boolean available;
 
+    public RequestBodyCourseClassDTO() {
+    }
+
+    @Builder
+    public RequestBodyCourseClassDTO(String id, String courseId, String professorId, int capacity, boolean available) {
+        this.id = id;
+        this.courseId = courseId;
+        this.professorId = professorId;
+        this.capacity = capacity;
+        this.available = available;
+    }
 }

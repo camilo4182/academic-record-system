@@ -23,6 +23,7 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.springframework:spring-test'
+	testImplementation 'org.mockito:mockito-inline:4.7.0'
 }
 
 tasks.named('test') {

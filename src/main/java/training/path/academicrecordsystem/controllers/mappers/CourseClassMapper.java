@@ -30,7 +30,7 @@ public class CourseClassMapper {
         return responseBodyCourseClassDTO;
     }
 
-    public static CourseClass toEntity(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static CourseClass toEntity(RequestBodyCourseClassDTO courseClassDTO) {
         //validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(courseClassDTO.getId());
@@ -48,7 +48,7 @@ public class CourseClassMapper {
         return courseClass;
     }
 
-    public static CourseClass createEntity(RequestBodyCourseClassDTO courseClassDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static CourseClass createEntity(RequestBodyCourseClassDTO courseClassDTO) {
         //validateDTO(courseClassDTO);
         CourseClass courseClass = new CourseClass();
         courseClass.setId(UUID.randomUUID().toString());
