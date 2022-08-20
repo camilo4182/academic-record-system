@@ -6,7 +6,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import java.util.List;
 import java.util.Optional;
 
-public interface CourseRepository {
+public interface ICourseRepository {
 
     Optional<Course> findById(String id);
 

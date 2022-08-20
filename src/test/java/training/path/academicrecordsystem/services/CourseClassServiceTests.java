@@ -8,9 +8,9 @@ import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCourseClassRepository;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
-import training.path.academicrecordsystem.repositories.implementations.JdbcProfessorRepository;
+import training.path.academicrecordsystem.repositories.implementations.CourseClassRepository;
+import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
+import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
 import training.path.academicrecordsystem.services.implementations.CourseClassService;
 
 import java.util.List;
@@ -26,13 +26,13 @@ import static org.mockito.Mockito.when;
 public class CourseClassServiceTests {
 
     @Mock
-    JdbcCourseClassRepository courseClassRepository;
+    CourseClassRepository courseClassRepository;
 
     @Mock
-    JdbcProfessorRepository professorRepository;
+    ProfessorRepository professorRepository;
 
     @Mock
-    JdbcCourseRepository courseRepository;
+    CourseRepository courseRepository;
 
     @InjectMocks
     CourseClassService courseClassService;

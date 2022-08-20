@@ -3,14 +3,12 @@ package training.path.academicrecordsystem.services;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCareerRepository;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
+import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
+import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
 
 import java.util.ArrayList;
@@ -28,10 +26,10 @@ import static org.mockito.Mockito.when;
 public class CareerServiceTests {
 
     @Mock
-    JdbcCareerRepository careerRepository;
+    CareerRepository careerRepository;
 
     @Mock
-    JdbcCourseRepository courseRepository;
+    CourseRepository courseRepository;
 
     @InjectMocks
     CareerService careerService;

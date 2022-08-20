@@ -7,19 +7,19 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.rowmappers.CourseClassInfoRowMapper;
-import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcCourseClassRepository implements CourseClassRepository {
+public class CourseClassRepository implements ICourseClassRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcCourseClassRepository(JdbcTemplate jdbcTemplate) {
+    public CourseClassRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

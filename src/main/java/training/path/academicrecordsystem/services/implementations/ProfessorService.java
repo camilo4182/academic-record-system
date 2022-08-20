@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.List;
 @Validated
 public class ProfessorService implements IProfessorService {
 
-    private final ProfessorRepository professorRepository;
+    private final IProfessorRepository professorRepository;
 
     @Autowired
-    public ProfessorService(ProfessorRepository professorRepository) {
+    public ProfessorService(IProfessorRepository professorRepository) {
         this.professorRepository = professorRepository;
     }
 

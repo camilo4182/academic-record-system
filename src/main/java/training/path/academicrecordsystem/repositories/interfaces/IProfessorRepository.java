@@ -5,7 +5,7 @@ import training.path.academicrecordsystem.model.Professor;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProfessorRepository {
+public interface IProfessorRepository {
 
     int save(Professor professor);
 

@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
-import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
-import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
 
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
 @Validated
 public class CourseClassService implements ICourseClassService {
 
-    private final CourseClassRepository courseClassRepository;
-    private final CourseRepository courseRepository;
-    private final ProfessorRepository professorRepository;
+    private final ICourseClassRepository courseClassRepository;
+    private final ICourseRepository courseRepository;
+    private final IProfessorRepository professorRepository;
 
     @Autowired
-    public CourseClassService(CourseClassRepository courseClassRepository, CourseRepository courseRepository, ProfessorRepository professorRepository) {
+    public CourseClassService(ICourseClassRepository courseClassRepository, ICourseRepository courseRepository, IProfessorRepository professorRepository) {
         this.courseClassRepository = courseClassRepository;
         this.courseRepository = courseRepository;
         this.professorRepository = professorRepository;

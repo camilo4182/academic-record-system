@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.repositories.implementations.JdbcProfessorRepository;
+import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
 import training.path.academicrecordsystem.services.implementations.ProfessorService;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 class ProfessorServiceTests {
 
 	@Mock
-	JdbcProfessorRepository jdbcProfessorRepository;
+    ProfessorRepository jdbcProfessorRepository;
 
 	@InjectMocks
 	ProfessorService professorService;

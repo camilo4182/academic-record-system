@@ -6,7 +6,7 @@ import training.path.academicrecordsystem.model.Course;
 import java.util.List;
 import java.util.Optional;
 
-public interface CareerRepository {
+public interface ICareerRepository {
 
     Optional<Career> findById(String id);
 

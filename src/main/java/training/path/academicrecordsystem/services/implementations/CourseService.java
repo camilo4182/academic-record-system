@@ -3,11 +3,10 @@ package training.path.academicrecordsystem.services.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
 import java.util.List;
@@ -16,10 +15,10 @@ import java.util.List;
 @Validated
 public class CourseService implements ICourseService {
 
-    private final CourseRepository jdbcCourseRepository;
+    private final ICourseRepository jdbcCourseRepository;
 
     @Autowired
-    public CourseService(CourseRepository jdbcCourseRepository) {
+    public CourseService(ICourseRepository jdbcCourseRepository) {
         this.jdbcCourseRepository = jdbcCourseRepository;
     }
 

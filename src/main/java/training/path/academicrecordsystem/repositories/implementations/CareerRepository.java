@@ -8,19 +8,19 @@ import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.repositories.rowmappers.CoursesByCareerRowMapper;
-import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcCareerRepository implements CareerRepository {
+public class CareerRepository implements ICareerRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcCareerRepository(JdbcTemplate jdbcTemplate) {
+    public CareerRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

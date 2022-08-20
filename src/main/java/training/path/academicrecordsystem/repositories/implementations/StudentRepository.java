@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
-import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRowMapper;
@@ -15,12 +15,12 @@ import training.path.academicrecordsystem.repositories.rowmappers.StudentInfoRow
 import java.util.*;
 
 @Repository
-public class JdbcStudentRepository implements StudentRepository {
+public class StudentRepository implements IStudentRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcStudentRepository(JdbcTemplate jdbcTemplate) {
+    public StudentRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

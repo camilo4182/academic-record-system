@@ -6,8 +6,8 @@ import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
-import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
-import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
 import training.path.academicrecordsystem.services.interfaces.IStudentService;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
 @Validated
 public class StudentService implements IStudentService {
 
-    private final StudentRepository studentRepository;
-    private final CareerRepository careerRepository;
+    private final IStudentRepository studentRepository;
+    private final ICareerRepository careerRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, CareerRepository careerRepository) {
+    public StudentService(IStudentRepository studentRepository, ICareerRepository careerRepository) {
         this.studentRepository = studentRepository;
         this.careerRepository = careerRepository;
     }

@@ -6,8 +6,8 @@ import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
-import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
 @Validated
 public class CareerService implements ICareerService {
 
-    private final CareerRepository careerRepository;
-    private final CourseRepository courseRepository;
+    private final ICareerRepository careerRepository;
+    private final ICourseRepository courseRepository;
 
     @Autowired
-    public CareerService(CareerRepository careerRepository, CourseRepository courseRepository) {
+    public CareerService(ICareerRepository careerRepository, ICourseRepository courseRepository) {
         this.careerRepository = careerRepository;
         this.courseRepository = courseRepository;
     }

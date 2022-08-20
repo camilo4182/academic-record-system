@@ -1,11 +1,9 @@
 package training.path.academicrecordsystem.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -13,10 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
-import training.path.academicrecordsystem.controllers.implementations.CareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.model.Career;
-import training.path.academicrecordsystem.repositories.implementations.JdbcCareerRepository;
+import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
 
 import java.util.UUID;
@@ -45,7 +42,7 @@ public class CareerControllerTests {
     CareerService careerService;
 
     @MockBean
-    JdbcCareerRepository careerRepository;
+    CareerRepository careerRepository;
 
     @MockBean
     CareerMapper careerMapper;

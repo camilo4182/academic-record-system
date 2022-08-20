@@ -6,19 +6,19 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.repositories.interfaces.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcProfessorRepository implements ProfessorRepository {
+public class ProfessorRepository implements IProfessorRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcProfessorRepository(JdbcTemplate jdbcTemplate) {
+    public ProfessorRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

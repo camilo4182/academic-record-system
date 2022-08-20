@@ -5,7 +5,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import java.util.List;
 import java.util.Optional;
 
-public interface CourseClassRepository {
+public interface ICourseClassRepository {
 
     int save(CourseClass courseClass);
 

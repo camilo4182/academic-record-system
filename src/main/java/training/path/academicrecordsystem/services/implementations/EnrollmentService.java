@@ -1,17 +1,16 @@
 package training.path.academicrecordsystem.services.implementations;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
-import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
-import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
+import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
-import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
 import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
 
 import java.util.List;
@@ -23,9 +22,9 @@ import java.util.Objects;
 public class EnrollmentService implements IEnrollmentService {
 
     private final IEnrollmentRepository enrollmentRepository;
-    private final StudentRepository studentRepository;
-    private final CourseClassRepository courseClassRepository;
-    private final CareerRepository careerRepository;
+    private final IStudentRepository studentRepository;
+    private final ICourseClassRepository courseClassRepository;
+    private final ICareerRepository careerRepository;
 
     @Override
     public void save(Enrollment enrollment) throws ResourceNotFoundException {
