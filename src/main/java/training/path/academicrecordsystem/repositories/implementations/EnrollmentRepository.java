@@ -24,17 +24,21 @@ public class EnrollmentRepository implements IEnrollmentRepository {
 
     @Override
     public void save(Enrollment enrollment) {
-        String queryEnrollments = "INSERT INTO enrollments (id, semester, student_id) VALUES (?, ?, ?);";
-        jdbcTemplate.update(queryEnrollments, UUID.fromString(enrollment.getId()), enrollment.getSemester(),
-                UUID.fromString(enrollment.getStudent().getId()));
+        String queryEnrollments = "INSERT INTO enrollments (id, student_id, career_id) VALUES (?, ?, ?);";
+        jdbcTemplate.update(queryEnrollments,
+                UUID.fromString(enrollment.getId()),
+                UUID.fromString(enrollment.getStudent().getId()),
+                UUID.fromString(enrollment.getStudent().getCareer().getId()));
     }
 
     @Override
     public void saveClass(Enrollment enrollment, CourseClass courseClass) {
-        String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id) VALUES (?, ?);";
-        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()), UUID.fromString(courseClass.getId()));
-        String queryUpdateClass = "UPDATE classes SET enrolled_students = ? WHERE id = ?";
-        jdbcTemplate.update(queryUpdateClass, courseClass.getEnrolledStudents(), UUID.fromString(courseClass.getId()));
+        String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id, semester) VALUES (?, ?, ?);";
+        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()),
+                UUID.fromString(courseClass.getId()),
+                enrollment.getSemester());
+        String queryUpdateClass = "UPDATE classes SET enrolled_students = ?, available = ? WHERE id = ?;";
+        jdbcTemplate.update(queryUpdateClass, courseClass.getEnrolledStudents(), courseClass.isAvailable(), UUID.fromString(courseClass.getId()));
     }
 
     @Override

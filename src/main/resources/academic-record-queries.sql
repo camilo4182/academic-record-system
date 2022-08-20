@@ -8,7 +8,7 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
-DELETE FROM enrollments;
+DELETE FROM users;
 
 /* Get all professors */
 SELECT users.id AS user_id, professors.id AS prof_id, name, email, salary

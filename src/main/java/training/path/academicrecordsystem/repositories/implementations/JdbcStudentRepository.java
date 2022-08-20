@@ -29,8 +29,8 @@ public class JdbcStudentRepository implements StudentRepository {
     public int save(Student student) {
         String queryUser = "INSERT INTO users (id, name, email) VALUES (?, ?, ?);";
         jdbcTemplate.update(queryUser, UUID.fromString(student.getId()), student.getName(), student.getEmail());
-        String queryStudent = "INSERT INTO students (id, average_grade, career_id) VALUES (?, ?, ?);";
-        return jdbcTemplate.update(queryStudent, UUID.fromString(student.getId()), student.getAverageGrade(), UUID.fromString(student.getCareer().getId()));
+        String queryStudent = "INSERT INTO students (id, average_grade) VALUES (?, ?);";
+        return jdbcTemplate.update(queryStudent, UUID.fromString(student.getId()), student.getAverageGrade());
     }
 
     @Override
@@ -70,7 +70,8 @@ public class JdbcStudentRepository implements StudentRepository {
                 """
                 SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
-                INNER JOIN careers c ON s.career_id = c.id
+                INNER JOIN enrollments e ON s.id = e.student_id
+                INNER JOIN careers c ON e.career_id = c.id
                 ORDER BY u.name;
                 """;
         return jdbcTemplate.query(query, new StudentInfoRowMapper());
@@ -91,7 +92,7 @@ public class JdbcStudentRepository implements StudentRepository {
 
     @Override
     public boolean exists(String id) {
-        String query = "SELECT * FROM students WHERE id = ?";
+        String query = "SELECT * FROM students WHERE id = ?;";
         try {
             jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), UUID.fromString(id));
             return true;

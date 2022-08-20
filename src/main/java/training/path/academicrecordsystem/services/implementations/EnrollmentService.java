@@ -1,11 +1,13 @@
 package training.path.academicrecordsystem.services.implementations;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
+import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.repositories.interfaces.CourseClassRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
 import training.path.academicrecordsystem.repositories.interfaces.StudentRepository;
@@ -15,24 +17,27 @@ import java.util.List;
 
 @Service
 @Validated
+@AllArgsConstructor
 public class EnrollmentService implements IEnrollmentService {
 
     private final IEnrollmentRepository enrollmentRepository;
     private final StudentRepository studentRepository;
     private final CourseClassRepository courseClassRepository;
+    private final CareerRepository careerRepository;
 
-    @Autowired
-    public EnrollmentService(IEnrollmentRepository enrollmentRepository, StudentRepository studentRepository, CourseClassRepository courseClassRepository) {
-        this.enrollmentRepository = enrollmentRepository;
-        this.studentRepository = studentRepository;
-        this.courseClassRepository = courseClassRepository;
+    @Override
+    public void save(Enrollment enrollment) throws ResourceNotFoundException {
+        if (!studentRepository.exists(enrollment.getStudent().getId()))
+            throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
+        if (!careerRepository.exists(enrollment.getStudent().getCareer().getId()))
+            throw new ResourceNotFoundException("Career with id" + enrollment.getStudent().getId() + " was not found");
+        enrollmentRepository.save(enrollment);
     }
 
     @Override
-    public void save(Enrollment enrollment, List<CourseClass> courseClasses) throws ResourceNotFoundException {
-        if (!studentRepository.exists(enrollment.getStudent().getId())) throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
+    public void saveClass(Enrollment enrollment, List<CourseClass> courseClasses) throws ResourceNotFoundException {
+
         verifyClasses(courseClasses);
-        enrollmentRepository.save(enrollment);
         for (CourseClass courseClass : courseClasses) {
             courseClass.setEnrolledStudents(courseClassRepository.findById(courseClass.getId()).orElseThrow().getEnrolledStudents() + 1);
             enrollmentRepository.saveClass(enrollment, courseClass);

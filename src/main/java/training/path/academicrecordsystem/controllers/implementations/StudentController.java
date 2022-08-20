@@ -41,6 +41,8 @@ public class StudentController implements IStudentController {
     public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException {
         Student student = StudentMapper.createEntity(requestBodyStudentDTO);
         studentService.save(student);
+        Enrollment enrollment = EnrollmentMapper.createEntityFromStudent(student);
+        enrollmentService.save(enrollment);
         return new ResponseEntity<>("Student registered", HttpStatus.OK);
     }
 
@@ -82,7 +84,7 @@ public class StudentController implements IStudentController {
     public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId, @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException {
         requestBodyEnrollmentDTO.setStudentId(studentId);
         Enrollment enrollment = EnrollmentMapper.createEntity(requestBodyEnrollmentDTO);
-        enrollmentService.save(enrollment, enrollment.getCourseClasses());
+        enrollmentService.saveClass(enrollment, enrollment.getCourseClasses());
         return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 

@@ -38,8 +38,7 @@ CREATE TABLE professors (
 
 CREATE TABLE students (
 	id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-	average_grade DECIMAL NOT NULL,
-	career_id UUID REFERENCES careers(id) ON DELETE CASCADE
+	average_grade DECIMAL NOT NULL
 );
 
 CREATE TABLE classes (
@@ -53,12 +52,13 @@ CREATE TABLE classes (
 
 CREATE TABLE enrollments (
 	id UUID PRIMARY KEY,
-	semester SMALLINT NOT NULL,
-	student_id UUID REFERENCES students(id) ON DELETE CASCADE
+	student_id UUID UNIQUE REFERENCES students(id) ON DELETE CASCADE,
+	career_id UUID REFERENCES careers(id) ON DELETE CASCADE
 );
 
 CREATE TABLE enrollment_classes (
 	enrollment_id UUID REFERENCES enrollments(id) ON DELETE CASCADE,
 	class_id UUID REFERENCES classes(id) ON DELETE CASCADE,
+	semester SMALLINT NOT NULL,
 	PRIMARY KEY (enrollment_id, class_id)
 );

@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.model;
 import lombok.Builder;
 import lombok.Data;
 import training.path.academicrecordsystem.config.UUIDRegex;
+import training.path.academicrecordsystem.validations.groups.OnEnrollClasses;
 
 import javax.validation.constraints.*;
 import java.util.HashSet;
@@ -16,14 +17,14 @@ public class Enrollment {
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
-    @Min(value = 1, message = "Semester must be between 1 and 12")
-    @Max(value = 12, message = "Semester must be between 1 and 12")
+    @Min(value = 1, message = "Semester must be between 1 and 12", groups = OnEnrollClasses.class)
+    @Max(value = 12, message = "Semester must be between 1 and 12", groups = OnEnrollClasses.class)
     private int semester;
 
     @NotNull(message = "Enrollment must be associated to a student")
     private Student student;
 
-    @NotEmpty(message = "Enrollments must have at least one class registered")
+    @NotEmpty(message = "Enrollments must have at least one class registered", groups = OnEnrollClasses.class)
     private Set<CourseClass> courseClasses;
 
     public Enrollment() {

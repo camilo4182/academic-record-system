@@ -62,6 +62,14 @@ public class EnrollmentMapper {
         return enrollment;
     }
 
+    public static Enrollment createEntityFromStudent(Student student) {
+        Enrollment enrollment = new Enrollment();
+        enrollment.setId(UUID.randomUUID().toString());
+        enrollment.setStudent(student);
+
+        return enrollment;
+    }
+
     private static void validateDTO(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws BadResourceDataException {
         if (Objects.isNull(requestBodyEnrollmentDTO.getStudentId())) throw new BadResourceDataException("This enrollment has to be assigned to a student");
         if (Objects.isNull(requestBodyEnrollmentDTO.getClassIds())) throw new BadResourceDataException("You must enroll to a class");
