@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
+import training.path.academicrecordsystem.controllers.dtos.CourseOnlyIdDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
@@ -108,9 +109,9 @@ public class CareerController implements ICareerController {
     }
 
     @PutMapping("careers/{careerId}/courses")
-    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId, @RequestBody CourseOnlyIdDTO courseId) {
         try {
-            careerService.assignCourseToCareer(courseDTO.getId(), careerId);
+            careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
             return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

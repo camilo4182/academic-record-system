@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
 import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
+import training.path.academicrecordsystem.controllers.dtos.CourseOnlyIdDTO;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 import training.path.academicrecordsystem.validations.groups.OnAssignToCareer;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
@@ -24,7 +25,7 @@ public interface ICareerController {
     ResponseEntity<CareerDTO> findById(String id);
     ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
     @Validated(OnAssignToCareer.class)
-    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseDTO courseDTO);
+    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId);
     ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId);
 
 }
