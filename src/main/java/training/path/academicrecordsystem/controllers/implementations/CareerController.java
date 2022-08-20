@@ -42,29 +42,19 @@ public class CareerController implements ICareerController {
 
     @Override
     @PostMapping("careers")
-    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) {
-        try {
-            Career career = CareerMapper.createEntity(careerDTO);
-            careerService.save(career);
-            return new ResponseEntity<>("Career was registered", HttpStatus.OK);
-        } catch (BadResourceDataException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage() + " register the career", HttpStatus.NO_CONTENT);
-        }
+    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) throws NullRequestBodyException, BadResourceDataException {
+        Career career = CareerMapper.createEntity(careerDTO);
+        careerService.save(career);
+        return new ResponseEntity<>("Career was registered", HttpStatus.OK);
     }
 
     @Override
     @PutMapping("careers/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO) throws ResourceNotFoundException {
-        try {
-            careerDTO.setId(id);
-            Career career = CareerMapper.toEntity(careerDTO);
-            careerService.update(career);
-            return new ResponseEntity<>("Career was updated", HttpStatus.OK);
-        } catch (BadResourceDataException | NullRequestBodyException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
+        careerDTO.setId(id);
+        Career career = CareerMapper.toEntity(careerDTO);
+        careerService.update(career);
+        return new ResponseEntity<>("Career was updated", HttpStatus.OK);
     }
 
     @Override
@@ -87,12 +77,8 @@ public class CareerController implements ICareerController {
     public ResponseEntity<List<CareerDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
                                                    @RequestParam(name = "offset", required = false) Integer offset) {
         List<Career> careerList;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) {
-            careerList = careerService.findAll();
-        }
-        else {
-            careerList = careerService.findAll(limit, offset);
-        }
+        if (Objects.isNull(limit) && Objects.isNull(offset)) careerList = careerService.findAll();
+        else careerList = careerService.findAll(limit, offset);
         return new ResponseEntity<>(careerList.stream().map(CareerMapper::toDTO).toList(), HttpStatus.OK);
     }
 

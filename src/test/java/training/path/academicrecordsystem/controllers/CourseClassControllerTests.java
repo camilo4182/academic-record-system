@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,7 +29,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,7 +42,7 @@ public class CourseClassControllerTests {
     WebApplicationContext context;
 
     @Autowired
-    ObjectMapper mapper;
+    ObjectMapper objectMapper;
 
     @Autowired
     MockMvc mockMvc;
@@ -146,7 +146,9 @@ public class CourseClassControllerTests {
 
             doNothing().when(service).save(any());
 
-            ResultActions response = mockMvc.perform(post("/classes/", courseClassDTO));
+            ResultActions response = mockMvc.perform(post("/classes/")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(courseClassDTO)));
             response.andExpect(status().isOk())
                     .andDo(print());
         }

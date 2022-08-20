@@ -17,7 +17,7 @@ public class CareerMapper {
         return careerDTO;
     }
 
-    public static Career toEntity(CareerDTO careerDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static Career toEntity(CareerDTO careerDTO) {
         //validateDTO(careerDTO);
         Career careerEntity = new Career();
         careerEntity.setId(careerDTO.getId());
@@ -25,7 +25,7 @@ public class CareerMapper {
         return careerEntity;
     }
 
-    public static Career createEntity(CareerDTO careerDTO) throws BadResourceDataException, NullRequestBodyException {
+    public static Career createEntity(CareerDTO careerDTO) {
         //validateDTO(careerDTO);
         Career careerEntity = new Career();
         careerEntity.setId(UUID.randomUUID().toString());
