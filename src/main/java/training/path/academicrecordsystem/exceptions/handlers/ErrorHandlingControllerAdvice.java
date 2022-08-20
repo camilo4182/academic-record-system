@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.response.ExceptionResponse;
 import training.path.academicrecordsystem.exceptions.response.ValidationExceptionResponse;
@@ -58,6 +59,16 @@ public class ErrorHandlingControllerAdvice {
         response.setHttpStatus(HttpStatus.NOT_FOUND);
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotMatchEnrollmentStudentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ResponseEntity<ExceptionResponse> handleNotMatchEnrollmentStudentException(NotMatchEnrollmentStudentException e) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setHttpStatus(HttpStatus.BAD_REQUEST);
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }

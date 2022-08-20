@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.services.interfaces;
 
 import org.springframework.validation.annotation.Validated;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
@@ -17,7 +18,7 @@ public interface IEnrollmentService {
     void save(@Valid Enrollment enrollment) throws ResourceNotFoundException;
 
     @Validated(OnEnrollClasses.class)
-    void saveClass(@Valid Enrollment enrollment, @NotEmpty List<CourseClass> courseClasses) throws ResourceNotFoundException;
+    void saveClass(@Valid Enrollment enrollment, @NotEmpty List<CourseClass> courseClasses) throws ResourceNotFoundException, NotMatchEnrollmentStudentException;
 
     void update(@UUIDValidator String id, @Valid Enrollment enrollment);
     void deleteById(@UUIDValidator String id);

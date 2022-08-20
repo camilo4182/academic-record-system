@@ -13,6 +13,7 @@ import training.path.academicrecordsystem.controllers.interfaces.IStudentControl
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
 import training.path.academicrecordsystem.exceptions.BadResourceDataException;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Enrollment;
@@ -90,7 +91,7 @@ public class StudentController implements IStudentController {
     @PostMapping("students/{studentId}/enrollment/{enrollmentId}")
     public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId,
                                          @PathVariable("enrollmentId") String enrollmentId,
-                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException {
+                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException {
         requestBodyEnrollmentDTO.setStudentId(studentId);
         requestBodyEnrollmentDTO.setId(enrollmentId);
         Enrollment enrollment = EnrollmentMapper.toEntity(requestBodyEnrollmentDTO);

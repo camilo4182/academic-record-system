@@ -1,12 +1,15 @@
 package training.path.academicrecordsystem.repositories.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
 import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentFullInfoRowMapper;
+import training.path.academicrecordsystem.repositories.rowmappers.EnrollmentInfoRowMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +56,14 @@ public class EnrollmentRepository implements IEnrollmentRepository {
 
     @Override
     public Optional<Enrollment> findById(String id) {
-        return Optional.empty();
+        String query = """
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                FROM users u INNER JOIN students s ON u.id = s.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN careers c ON c.id = e.career_id
+                WHERE e.id = ?;
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new EnrollmentInfoRowMapper(), UUID.fromString(id)));
     }
 
     @Override
@@ -77,6 +87,12 @@ public class EnrollmentRepository implements IEnrollmentRepository {
 
     @Override
     public boolean exists(String id) {
-        return false;
+        String query = "SELECT * FROM enrollments WHERE id = ?;";
+        try {
+            jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(id));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
     }
 }

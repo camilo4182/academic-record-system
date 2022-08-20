@@ -5,6 +5,7 @@ import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollment
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
@@ -27,7 +28,7 @@ public interface IStudentController {
 
     ResponseEntity<String> enroll(@UUIDValidator String studentId,
                                   @UUIDValidator String enrollmentId,
-                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException;
+                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException;
 
     ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@UUIDValidator String studentId, Integer semester) throws ResourceNotFoundException;
 
