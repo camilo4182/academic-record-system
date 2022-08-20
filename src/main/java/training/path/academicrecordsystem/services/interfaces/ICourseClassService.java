@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ICourseClassService {
 
-    void save(@Valid CourseClass courseClass);
+    void save(@Valid CourseClass courseClass) throws ResourceNotFoundException;
     void update(@Valid CourseClass courseClass) throws ResourceNotFoundException;
     void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;
     CourseClass findById(@UUIDValidator String id) throws ResourceNotFoundException;

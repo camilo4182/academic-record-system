@@ -28,7 +28,9 @@ public class CourseClassService implements ICourseClassService {
     }
 
     @Override
-    public void save(CourseClass courseClass) {
+    public void save(CourseClass courseClass) throws ResourceNotFoundException {
+        if (!courseRepository.exists(courseClass.getCourse().getId())) throw new ResourceNotFoundException("Course " + courseClass.getCourse().getId() + " was not found");
+        if (!professorRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
         courseClassRepository.save(courseClass);
     }
 

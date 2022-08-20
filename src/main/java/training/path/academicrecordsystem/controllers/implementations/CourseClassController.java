@@ -29,7 +29,7 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @PostMapping("classes")
-    public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) {
+    public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException {
         CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
         courseClassService.save(courseClass);
         return new ResponseEntity<>("Class registered", HttpStatus.OK);
