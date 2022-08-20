@@ -6,13 +6,10 @@ import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
-import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.CareerRepository;
 import training.path.academicrecordsystem.repositories.interfaces.CourseRepository;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
-import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -48,11 +45,6 @@ public class CareerService implements ICareerService {
     @Override
     public Career findById(String id) throws ResourceNotFoundException {
         return careerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Career with id " + id + " does not exist"));
-    }
-
-    @Override
-    public Career findByName(String name) throws ResourceNotFoundException {
-        return careerRepository.findByName(name).orElseThrow(() -> new ResourceNotFoundException("Career with  " + name + " does not exist"));
     }
 
     @Override

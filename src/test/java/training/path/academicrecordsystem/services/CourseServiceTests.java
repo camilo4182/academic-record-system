@@ -4,11 +4,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.implementations.JdbcCourseRepository;
 import training.path.academicrecordsystem.services.implementations.CourseService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,7 +24,7 @@ import static org.mockito.Mockito.when;
 public class CourseServiceTests {
 
     @Mock
-    JdbcCourseRepository jdbcCourseRepository;
+    JdbcCourseRepository courseRepository;
 
     @InjectMocks
     CourseService courseService;
@@ -30,7 +33,7 @@ public class CourseServiceTests {
     void givenValidCourseDTO_whenSave_thenItDoesNotThrowException() {
         Course course = Course.builder().id(UUID.randomUUID().toString()).name("Data Bases").credits(3).build();
 
-        when(jdbcCourseRepository.save(course)).thenReturn(1);
+        when(courseRepository.save(course)).thenReturn(1);
 
         assertDoesNotThrow(() -> courseService.save(course));
     }
@@ -39,8 +42,8 @@ public class CourseServiceTests {
     void givenExistingCourse_whenUpdate_thenItDoesNotThrowException() {
         Course course = Course.builder().id(UUID.randomUUID().toString()).name("Anatomy").credits(4).build();
 
-        when(jdbcCourseRepository.exists(anyString())).thenReturn(true);
-        when(jdbcCourseRepository.update(anyString(), any())).thenReturn(1);
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(courseRepository.update(anyString(), any())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseService.update(course));
     }
@@ -49,18 +52,18 @@ public class CourseServiceTests {
     void givenNonExistingCourse_whenUpdate_thenItThrowsException() {
         Course course = Course.builder().id(UUID.randomUUID().toString()).name("afjakvc").credits(100).build();
 
-        when(jdbcCourseRepository.exists(anyString())).thenReturn(false);
-        when(jdbcCourseRepository.update(anyString(), any())).thenReturn(1);
+        when(courseRepository.exists(anyString())).thenReturn(false);
+        when(courseRepository.update(anyString(), any())).thenReturn(1);
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.update(course));
     }
 
     @Test
     void givenExistingCourse_whenDeleteById_thenItDoesNotThrowException() {
-        String id = "cd967193-b0e9-423c-8452-8dc52c17a218";
+        String id = UUID.randomUUID().toString();
 
-        when(jdbcCourseRepository.exists(anyString())).thenReturn(true);
-        when(jdbcCourseRepository.deleteById(anyString())).thenReturn(1);
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(courseRepository.deleteById(anyString())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseService.deleteById(id));
     }
@@ -69,20 +72,23 @@ public class CourseServiceTests {
     void givenNonExistingCourse_whenDeleteById_thenItThrowsException() {
         String id = "1111";
 
-        when(jdbcCourseRepository.exists(anyString())).thenReturn(false);
-        when(jdbcCourseRepository.deleteById(anyString())).thenReturn(0);
+        when(courseRepository.exists(anyString())).thenReturn(false);
+        when(courseRepository.deleteById(anyString())).thenReturn(0);
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.deleteById(id));
     }
 
     @Test
     void givenValidId_whenFindById_thenItReturnsTheCourse() throws ResourceNotFoundException {
-        Course course = Course.builder().id("1").name("Algebra I").credits(4).build();
+        String courseId = UUID.randomUUID().toString();
+        Course course = Course.builder().id(courseId).name("Algebra I").credits(4).build();
 
-        when(jdbcCourseRepository.findById(anyString())).thenReturn(Optional.of(course));
+        when(courseRepository.findById(anyString())).thenReturn(Optional.of(course));
 
-        assertDoesNotThrow(() -> courseService.findById("1"));
-        Course foundCourse = courseService.findById("1");
+        assertDoesNotThrow(() -> courseService.findById(courseId));
+
+        Course foundCourse = courseService.findById(courseId);
+
         assertEquals("Algebra I", foundCourse.getName());
         assertEquals(4, foundCourse.getCredits());
     }
@@ -91,9 +97,75 @@ public class CourseServiceTests {
     void givenInvalidId_whenFindById_thenItThrowsException() {
         String id = "0000";
 
-        when(jdbcCourseRepository.findById(anyString())).thenReturn(Optional.empty());
+        when(courseRepository.findById(anyString())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.findById(id));
+    }
+
+    @Test
+    void givenExistingCourses_whenFindAll_thenItReturnsListOfCourses() {
+        String courseId1 = UUID.randomUUID().toString();
+        String courseId2 = UUID.randomUUID().toString();
+        String courseId3 = UUID.randomUUID().toString();
+        String courseId4 = UUID.randomUUID().toString();
+
+        Course course1 = Course.builder().id(courseId1).name("Course 1").credits(0).build();
+        Course course2 = Course.builder().id(courseId2).name("Course 2").credits(4).build();
+        Course course3 = Course.builder().id(courseId3).name("Course 3").credits(3).build();
+        Course course4 = Course.builder().id(courseId4).name("Course 4").credits(2).build();
+
+        List<Course> courses = List.of(course1, course2, course3, course4);
+
+        when(courseRepository.findAll()).thenReturn(courses);
+
+        List<Course> responseList = courseService.findAll();
+
+        assertEquals(courseId1, responseList.get(0).getId());
+        assertEquals(courseId2, responseList.get(1).getId());
+        assertEquals(courseId3, responseList.get(2).getId());
+        assertEquals(courseId4, responseList.get(3).getId());
+
+        assertEquals("Course 1", responseList.get(0).getName());
+        assertEquals("Course 2", responseList.get(1).getName());
+        assertEquals("Course 3", responseList.get(2).getName());
+        assertEquals("Course 4", responseList.get(3).getName());
+    }
+
+    @Test
+    void givenExistingClasses_whenFindClassesByCourse_thenItReturnsListOfClasses() throws CouldNotPerformOperationException, ResourceNotFoundException {
+        String courseId = UUID.randomUUID().toString();
+
+        String classId1 = UUID.randomUUID().toString();
+        String classId2 = UUID.randomUUID().toString();
+        String classId3 = UUID.randomUUID().toString();
+        String classId4 = UUID.randomUUID().toString();
+
+        CourseClass courseClass1 = CourseClass.builder().id(classId1).build();
+        CourseClass courseClass2 = CourseClass.builder().id(classId2).build();
+        CourseClass courseClass3 = CourseClass.builder().id(classId3).build();
+        CourseClass courseClass4 = CourseClass.builder().id(classId4).build();
+
+        List<CourseClass> classes = List.of(courseClass1, courseClass2, courseClass3, courseClass4);
+
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(courseRepository.getClassesByCourse(anyString())).thenReturn(Optional.of(classes));
+
+        List<CourseClass> responseList = courseService.findClassesByCourse(courseId);
+
+        assertEquals(classId1, responseList.get(0).getId());
+        assertEquals(classId2, responseList.get(1).getId());
+        assertEquals(classId3, responseList.get(2).getId());
+        assertEquals(classId4, responseList.get(3).getId());
+    }
+
+    @Test
+    void givenNonExistingCourse_whenFindClassesByCourse_thenItThrowsException() {
+        String courseId = UUID.randomUUID().toString();
+
+        when(courseRepository.exists(anyString())).thenReturn(false);
+        when(courseRepository.getClassesByCourse(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> courseService.findClassesByCourse(courseId));
     }
 
 }

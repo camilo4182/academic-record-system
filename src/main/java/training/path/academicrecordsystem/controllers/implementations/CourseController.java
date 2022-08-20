@@ -10,15 +10,12 @@ import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -81,7 +78,7 @@ public class CourseController implements ICourseController {
     @GetMapping("courses/{courseId}/classes")
     public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId) throws ResourceNotFoundException {
         try {
-            List<CourseClass> classesList = courseService.getClassesByCourse(courseId);
+            List<CourseClass> classesList = courseService.findClassesByCourse(courseId);
             return new ResponseEntity<>(classesList.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
         } catch (CouldNotPerformOperationException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
