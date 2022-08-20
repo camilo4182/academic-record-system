@@ -80,9 +80,16 @@ public class StudentController implements IStudentController {
 
     @Override
     @GetMapping("students/{studentId}/enrollment")
-    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId) throws ResourceNotFoundException {
-        List<Enrollment> enrollments = studentService.findEnrollmentInfo(studentId);
-        return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
+    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId,
+                                                                              @RequestParam(name = "semester", required = false) Integer semester) throws ResourceNotFoundException {
+        if (Objects.isNull(semester)) {
+            List<Enrollment> enrollments = studentService.findEnrollmentInfo(studentId);
+            return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
+        }
+        else {
+            List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
+            return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
+        }
     }
 
     @Override
@@ -97,11 +104,4 @@ public class StudentController implements IStudentController {
         return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 
-    @Override
-    @GetMapping("students/{studentId}/enrollment/{enrollmentId}/classes")
-    public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentsBySemester(@PathVariable("studentId") String studentId,
-                                                                                     @RequestParam(name = "semester") Integer semester) throws ResourceNotFoundException {
-        List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
-        return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
-    }
 }
