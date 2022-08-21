@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.services.interfaces;
 
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
@@ -11,9 +12,9 @@ import java.util.List;
 
 public interface ICareerService {
 
-    void save(@Valid Career career);
+    void save(@Valid Career career) throws UniqueColumnViolationException;
 
-    void update(@Valid Career career) throws ResourceNotFoundException;
+    void update(@Valid Career career) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;
 

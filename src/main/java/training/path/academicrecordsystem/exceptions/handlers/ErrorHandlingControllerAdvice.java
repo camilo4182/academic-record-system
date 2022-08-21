@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.exceptions.response.ExceptionResponse;
 import training.path.academicrecordsystem.exceptions.response.ValidationExceptionResponse;
 
@@ -69,6 +70,16 @@ public class ErrorHandlingControllerAdvice {
         response.setHttpStatus(HttpStatus.BAD_REQUEST);
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UniqueColumnViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    ResponseEntity<ExceptionResponse> handleUniqueColumnViolationException(UniqueColumnViolationException e) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setHttpStatus(HttpStatus.CONFLICT);
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
 }

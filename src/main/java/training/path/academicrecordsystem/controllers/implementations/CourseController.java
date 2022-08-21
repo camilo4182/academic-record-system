@@ -11,6 +11,7 @@ import training.path.academicrecordsystem.controllers.interfaces.ICourseControll
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.services.interfaces.ICourseService;
@@ -31,7 +32,7 @@ public class CourseController implements ICourseController {
 
     @Override
     @PostMapping("courses")
-    public ResponseEntity<String> save(@RequestBody CourseDTO courseDTO) {
+    public ResponseEntity<String> save(@RequestBody CourseDTO courseDTO) throws UniqueColumnViolationException {
         Course course = CourseMapper.createEntity(courseDTO);
         courseService.save(course);
         return new ResponseEntity<>("Course created", HttpStatus.OK);
@@ -40,7 +41,7 @@ public class CourseController implements ICourseController {
     @Override
     @PutMapping("courses/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CourseDTO courseDTO)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, UniqueColumnViolationException {
         courseDTO.setId(id);
         Course course = CourseMapper.toEntity(courseDTO);
         courseService.update(course);

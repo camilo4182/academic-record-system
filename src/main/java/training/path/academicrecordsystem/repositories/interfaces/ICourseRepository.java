@@ -10,6 +10,8 @@ public interface ICourseRepository {
 
     Optional<Course> findById(String id);
 
+    Optional<Course> findByName(String name);
+
     List<Course> findAll();
 
     List<Course> findAll(int limit, int offset);

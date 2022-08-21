@@ -9,6 +9,7 @@ import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IProfessorController;
 import training.path.academicrecordsystem.controllers.mappers.ProfessorMapper;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
@@ -28,7 +29,7 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @PostMapping("professors")
-    public ResponseEntity<String> save(@RequestBody ProfessorDTO professorDTO) {
+    public ResponseEntity<String> save(@RequestBody ProfessorDTO professorDTO) throws UniqueColumnViolationException {
         Professor professor = ProfessorMapper.createEntity(professorDTO);
         professorService.save(professor);
         return new ResponseEntity<>("Professor registered", HttpStatus.OK);
@@ -37,7 +38,7 @@ public class ProfessorController implements IProfessorController {
     @Override
     @PutMapping("professors/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody ProfessorDTO professorDTO)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, UniqueColumnViolationException {
         professorDTO.setId(id);
         Professor professor = ProfessorMapper.toEntity(professorDTO);
         professorService.update(id, professor);

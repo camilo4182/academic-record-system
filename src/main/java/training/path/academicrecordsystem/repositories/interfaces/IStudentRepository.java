@@ -16,6 +16,10 @@ public interface IStudentRepository {
 
     Optional<Student> findById(String id);
 
+    Optional<Student> findByName(String name);
+
+    Optional<Student> findByEmail(String email);
+
     List<Student> findAll();
 
     List<Student> findAll(int limit, int offset);

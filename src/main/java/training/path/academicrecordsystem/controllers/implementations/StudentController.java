@@ -14,6 +14,7 @@ import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
@@ -37,7 +38,7 @@ public class StudentController implements IStudentController {
 
     @Override
     @PostMapping("students")
-    public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException, UniqueColumnViolationException {
         Student student = StudentMapper.createEntity(requestBodyStudentDTO);
         studentService.save(student);
         Enrollment enrollment = EnrollmentMapper.createEntityFromStudent(student);
@@ -48,7 +49,7 @@ public class StudentController implements IStudentController {
     @Override
     @PutMapping("students/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, UniqueColumnViolationException {
         requestBodyStudentDTO.setId(id);
         Student student = StudentMapper.toEntity(requestBodyStudentDTO);
         studentService.update(id, student);

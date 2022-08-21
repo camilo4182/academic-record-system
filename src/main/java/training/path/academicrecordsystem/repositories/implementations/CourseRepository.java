@@ -36,6 +36,16 @@ public class CourseRepository implements ICourseRepository {
     }
 
     @Override
+    public Optional<Course> findByName(String name) {
+        String query = "SELECT * FROM courses WHERE name ILIKE ?;";
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Course.class), name));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Course> findAll() {
         String query = "SELECT * FROM courses ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Course.class));

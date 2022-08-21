@@ -56,6 +56,37 @@ public class ProfessorRepository implements IProfessorRepository {
     }
 
     @Override
+    public Optional<Professor> findByName(String name) {
+        String query =
+                """
+                SELECT *
+                FROM professors p INNER JOIN users u ON p.id = u.id
+                WHERE u.name ILIKE ?;
+                """;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), name));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Professor> findByEmail(String email) {
+        String query =
+                """
+                SELECT *
+                FROM professors p INNER JOIN users u ON p.id = u.id
+                WHERE u.email ILIKE ?;
+                """;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), email));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+
+    @Override
     public List<Professor> findAll() {
         String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY name";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class));

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
@@ -11,6 +12,7 @@ import training.path.academicrecordsystem.repositories.interfaces.ICourseReposit
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -26,13 +28,17 @@ public class CareerService implements ICareerService {
     }
 
     @Override
-    public void save(Career career) {
+    public void save(Career career) throws UniqueColumnViolationException {
+        Optional<Career> foundCareer = careerRepository.findByName(career.getName());
+        if (foundCareer.isPresent()) throw new UniqueColumnViolationException("There is already a career with the name " + career.getName() + ". Enter another one.");
         careerRepository.save(career);
     }
 
     @Override
-    public void update(Career career) throws ResourceNotFoundException {
+    public void update(Career career) throws ResourceNotFoundException, UniqueColumnViolationException {
         if (!careerRepository.exists(career.getId())) throw new ResourceNotFoundException("Career " + career.getId() + " was not found");
+        Optional<Career> foundCareer = careerRepository.findByName(career.getName());
+        if (foundCareer.isPresent()) throw new UniqueColumnViolationException("There is already a career with the name " + career.getName() + ". Enter another one.");
         careerRepository.update(career.getId(), career);
     }
 

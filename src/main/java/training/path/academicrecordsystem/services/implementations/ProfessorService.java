@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Validated
@@ -22,14 +25,26 @@ public class ProfessorService implements IProfessorService {
     }
 
     @Override
-    public void save(Professor professor) {
+    public void save(Professor professor) throws UniqueColumnViolationException {
+        verifyUniqueness(professor);
         professorRepository.save(professor);
     }
 
     @Override
-    public void update(String id, Professor professor) throws ResourceNotFoundException {
+    public void update(String id, Professor professor) throws ResourceNotFoundException, UniqueColumnViolationException {
         if (!professorRepository.exists(professor.getId())) throw new ResourceNotFoundException("Professor " + professor.getId() + " was not found");
+        verifyUniqueness(professor);
         professorRepository.update(id, professor);
+    }
+
+    private void verifyUniqueness(Professor professor) throws UniqueColumnViolationException {
+        Optional<Professor> foundProfessorWithName = professorRepository.findByName(professor.getName());
+        if (foundProfessorWithName.isPresent() && !Objects.equals(foundProfessorWithName.orElseThrow().getId(), professor.getId()))
+            throw new UniqueColumnViolationException("There is already a professor with the name " + professor.getName() + ". Enter another one.");
+
+        Optional<Professor> foundProfessorWithEmail = professorRepository.findByEmail(professor.getEmail());
+        if (foundProfessorWithEmail.isPresent() && !Objects.equals(foundProfessorWithEmail.orElseThrow().getId(), professor.getId()))
+            throw new UniqueColumnViolationException("There is already a professor with the email " + professor.getEmail() + ". Enter another one.");
     }
 
     @Override

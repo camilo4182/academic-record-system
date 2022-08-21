@@ -35,9 +35,7 @@ public class StudentRepository implements IStudentRepository {
     @Override
     public int update(String id, Student student) {
         String queryUser = "UPDATE users SET name = ?, email = ? WHERE id = ?;";
-        jdbcTemplate.update(queryUser, student.getName(), student.getEmail(), UUID.fromString(id));
-        String queryStudent = "UPDATE students SET average_grade = ?, career_id = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryStudent, student.getAverageGrade(), UUID.fromString(student.getCareer().getId()), UUID.fromString(id));
+        return jdbcTemplate.update(queryUser, student.getName(), student.getEmail(), UUID.fromString(id));
     }
 
     @Override
@@ -58,6 +56,36 @@ public class StudentRepository implements IStudentRepository {
         try {
             Student student = jdbcTemplate.queryForObject(query, new StudentInfoRowMapper(), UUID.fromString(id));
             return Optional.ofNullable(student);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Student> findByName(String name) {
+        String query =
+                """
+                SELECT *
+                FROM students s INNER JOIN users u ON s.id = u.id
+                WHERE u.name ILIKE ?;
+                """;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), name));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Student> findByEmail(String email) {
+        String query =
+                """
+                SELECT *
+                FROM students s INNER JOIN users u ON s.id = u.id
+                WHERE u.email ILIKE ?;
+                """;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), email));
         } catch (DataAccessException e) {
             return Optional.empty();
         }

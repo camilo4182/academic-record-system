@@ -12,6 +12,7 @@ import training.path.academicrecordsystem.controllers.interfaces.ICareerControll
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.services.interfaces.ICareerService;
@@ -32,7 +33,7 @@ public class CareerController implements ICareerController {
 
     @Override
     @PostMapping("careers")
-    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) {
+    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) throws UniqueColumnViolationException {
         Career career = CareerMapper.createEntity(careerDTO);
         careerService.save(career);
         return new ResponseEntity<>("Career was registered", HttpStatus.OK);
@@ -41,7 +42,7 @@ public class CareerController implements ICareerController {
     @Override
     @PutMapping("careers/{id}")
     public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody CareerDTO careerDTO)
-            throws ResourceNotFoundException {
+            throws ResourceNotFoundException, UniqueColumnViolationException {
         careerDTO.setId(id);
         Career career = CareerMapper.toEntity(careerDTO);
         careerService.update(career);
