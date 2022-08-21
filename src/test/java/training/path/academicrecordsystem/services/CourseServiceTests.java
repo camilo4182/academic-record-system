@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import training.path.academicrecordsystem.exceptions.CouldNotPerformOperationException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
@@ -133,7 +132,7 @@ public class CourseServiceTests {
     }
 
     @Test
-    void givenExistingClasses_whenFindClassesByCourse_thenItReturnsListOfClasses() throws CouldNotPerformOperationException, ResourceNotFoundException {
+    void givenExistingClasses_whenFindClassesByCourse_thenItReturnsListOfClasses() throws ResourceNotFoundException {
         String courseId = UUID.randomUUID().toString();
 
         String classId1 = UUID.randomUUID().toString();

@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IProfessorController;
 import training.path.academicrecordsystem.controllers.mappers.ProfessorMapper;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 

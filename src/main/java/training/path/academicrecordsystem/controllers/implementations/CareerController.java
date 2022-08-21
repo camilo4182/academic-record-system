@@ -11,8 +11,6 @@ import training.path.academicrecordsystem.controllers.dtos.CourseOnlyIdDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICareerController;
 import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.controllers.mappers.CourseMapper;
-import training.path.academicrecordsystem.exceptions.BadResourceDataException;
-import training.path.academicrecordsystem.exceptions.NullRequestBodyException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
@@ -34,8 +32,7 @@ public class CareerController implements ICareerController {
 
     @Override
     @PostMapping("careers")
-    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO)
-            throws NullRequestBodyException, BadResourceDataException {
+    public ResponseEntity<String> save(@RequestBody CareerDTO careerDTO) {
         Career career = CareerMapper.createEntity(careerDTO);
         careerService.save(career);
         return new ResponseEntity<>("Career was registered", HttpStatus.OK);
