@@ -13,6 +13,7 @@ import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRep
 import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
 import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -44,9 +45,12 @@ public class EnrollmentService implements IEnrollmentService {
         Enrollment foundEnrollment = enrollmentRepository.findById(enrollment.getId()).orElseThrow(() -> new ResourceNotFoundException(""));
         if (!Objects.equals(enrollment.getStudent().getId(), foundEnrollment.getStudent().getId()))
             throw new NotMatchEnrollmentStudentException("This enrollment does not belong to the selected student");
-        verifyClasses(courseClasses);
+        List<CourseClass> foundClasses = new ArrayList<>();
         for (CourseClass courseClass : courseClasses) {
-            courseClass.setEnrolledStudents(courseClassRepository.findById(courseClass.getId()).orElseThrow().getEnrolledStudents() + 1);
+            foundClasses.add(courseClassRepository.findById(courseClass.getId()).orElseThrow(() -> new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found")));
+        }
+        for (CourseClass courseClass : foundClasses) {
+            courseClass.increaseEnrolledStudents();
             enrollmentRepository.saveClass(enrollment, courseClass);
         }
     }

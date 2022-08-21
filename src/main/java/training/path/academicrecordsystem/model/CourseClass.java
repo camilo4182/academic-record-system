@@ -47,4 +47,9 @@ public class CourseClass {
         if (enrolledStudents == capacity) available = false;
     }
 
+    public void decreaseEnrolledStudents() {
+        enrolledStudents--;
+        if (!available) available = true;
+    }
+
 }

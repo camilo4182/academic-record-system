@@ -16,6 +16,7 @@ public class CourseClassMapper {
         ResponseBodyCourseClassDTO responseBodyCourseClassDTO = new ResponseBodyCourseClassDTO();
         responseBodyCourseClassDTO.setId(courseClass.getId());
         responseBodyCourseClassDTO.setAvailable(courseClass.isAvailable());
+        responseBodyCourseClassDTO.setEnrolledStudents(courseClass.getEnrolledStudents());
         responseBodyCourseClassDTO.setCapacity(courseClass.getCapacity());
 
         CourseDTO courseDTO = CourseMapper.toDTO(courseClass.getCourse());
