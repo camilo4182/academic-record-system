@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
 import training.path.academicrecordsystem.services.implementations.ProfessorService;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 class ProfessorServiceTests {
 
 	@Mock
-    ProfessorRepository jdbcProfessorRepository;
+    ProfessorRepository professorRepository;
 
 	@InjectMocks
 	ProfessorService professorService;
@@ -31,9 +32,43 @@ class ProfessorServiceTests {
 	void givenValidProfessorData_whenSave_thenItDoesNotThrowException() {
 		Professor professor = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").salary(35000).build();
 
-		when(jdbcProfessorRepository.save(any())).thenReturn(1);
+		when(professorRepository.save(any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.save(professor));
+	}
+
+	@Test
+	void givenTwoProfessorsWithSameData_whenSave_thenItThrowsException() {
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").salary(35000).build();
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").salary(35000).build();
+
+		when(professorRepository.save(any())).thenReturn(0);
+		when(professorRepository.findByName(anyString())).thenReturn(Optional.of(professor2));
+		when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor2));
+
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
+	}
+
+	@Test
+	void givenTwoProfessorsWithSameName_whenSave_thenItThrowsException() {
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("other@email.com").salary(35000).build();
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("another@email.com").salary(35000).build();
+
+		when(professorRepository.save(any())).thenReturn(0);
+		when(professorRepository.findByName(anyString())).thenReturn(Optional.of(professor2));
+
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
+	}
+
+	@Test
+	void givenTwoProfessorsWithSameEmail_whenSave_thenItThrowsException() {
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).name("Juan").email("same@email.com").salary(35000).build();
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).name("Andres").email("same@email.com").salary(35000).build();
+
+		when(professorRepository.save(any())).thenReturn(0);
+		when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor2));
+
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
 	}
 
 	@Test
@@ -41,8 +76,8 @@ class ProfessorServiceTests {
 		String id = UUID.randomUUID().toString();
 		Professor professor = Professor.builder().id(id).name("Maria").email("maria@email.com").salary(35000).build();
 
-		when(jdbcProfessorRepository.exists(anyString())).thenReturn(true);
-		when(jdbcProfessorRepository.update(anyString(), any())).thenReturn(1);
+		when(professorRepository.exists(anyString())).thenReturn(true);
+		when(professorRepository.update(anyString(), any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.update(id, professor));
 	}
@@ -52,8 +87,8 @@ class ProfessorServiceTests {
 		String id = UUID.randomUUID().toString();
 		Professor professor = Professor.builder().id(id).name("Null").email("null@email.com").salary(0).build();
 
-		when(jdbcProfessorRepository.exists(anyString())).thenReturn(false);
-		when(jdbcProfessorRepository.update(anyString(), any())).thenReturn(0);
+		when(professorRepository.exists(anyString())).thenReturn(false);
+		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.update(id, professor));
 	}
@@ -62,8 +97,8 @@ class ProfessorServiceTests {
 	void givenValidId_whenDeleteById_thenItDoesNotThrowException() {
 		String id = UUID.randomUUID().toString();
 
-		when(jdbcProfessorRepository.exists(anyString())).thenReturn(true);
-		when(jdbcProfessorRepository.deleteById(anyString())).thenReturn(1);
+		when(professorRepository.exists(anyString())).thenReturn(true);
+		when(professorRepository.deleteById(anyString())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.deleteById(id));
 	}
@@ -72,8 +107,8 @@ class ProfessorServiceTests {
 	void givenNonExistingId_whenDeleteById_thenThrowException() {
 		String id = UUID.randomUUID().toString();
 
-		when(jdbcProfessorRepository.exists(anyString())).thenReturn(false);
-		when(jdbcProfessorRepository.deleteById(anyString())).thenReturn(0);
+		when(professorRepository.exists(anyString())).thenReturn(false);
+		when(professorRepository.deleteById(anyString())).thenReturn(0);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.deleteById(id));
 	}
@@ -83,7 +118,7 @@ class ProfessorServiceTests {
 		String id = UUID.randomUUID().toString();
 		Professor professor = Professor.builder().id(id).name("Juan").email("juan@email.co").salary(35000).build();
 
-		when(jdbcProfessorRepository.findById(anyString())).thenReturn(Optional.of(professor));
+		when(professorRepository.findById(anyString())).thenReturn(Optional.of(professor));
 
 		assertDoesNotThrow(() -> professorService.findById(id));
 	}
@@ -92,7 +127,7 @@ class ProfessorServiceTests {
 	void givenInvalidId_whenFindById_thenThrowException() {
 		String id = "000-123";
 
-		when(jdbcProfessorRepository.findById(anyString())).thenReturn(Optional.empty());
+		when(professorRepository.findById(anyString())).thenReturn(Optional.empty());
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.findById(id));
 	}
@@ -109,7 +144,7 @@ class ProfessorServiceTests {
 
 		List<Professor> professors = List.of(professor1, professor2, professor3);
 
-		when(jdbcProfessorRepository.findAll()).thenReturn(professors);
+		when(professorRepository.findAll()).thenReturn(professors);
 
 		List<Professor> responseList = professorService.findAll();
 
