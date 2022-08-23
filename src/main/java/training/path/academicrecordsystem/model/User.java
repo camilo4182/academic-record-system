@@ -19,9 +19,15 @@ public abstract class User {
     @Size(min = 4, message = "User name must have at least 4 characters")
     private String name;
 
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password must have at least 8 characters")
+    private String password;
+
     @NotBlank(message = "User email is mandatory")
     @Email(message = "User email must be a well-formed email address")
     private String email;
+
+    private String role;
 
     public User() {
     }

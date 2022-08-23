@@ -26,8 +26,8 @@ public class StudentRepository implements IStudentRepository {
 
     @Override
     public int save(Student student) {
-        String queryUser = "INSERT INTO users (id, name, email) VALUES (?, ?, ?);";
-        jdbcTemplate.update(queryUser, UUID.fromString(student.getId()), student.getName(), student.getEmail());
+        String queryUser = "INSERT INTO users (id, name, password, email) VALUES (?, ?, ?, ?);";
+        jdbcTemplate.update(queryUser, UUID.fromString(student.getId()), student.getName(), student.getPassword(), student.getEmail());
         String queryStudent = "INSERT INTO students (id, average_grade) VALUES (?, ?);";
         return jdbcTemplate.update(queryStudent, UUID.fromString(student.getId()), student.getAverageGrade());
     }
@@ -145,7 +145,7 @@ public class StudentRepository implements IStudentRepository {
                             SELECT p.id AS professor_id, u.name AS professor_name
                             FROM professors p INNER JOIN users u ON u.id = p.id
                            ) AS prof ON cl.professor_id = prof.professor_id
-                WHERE s.id = ?
+                WHERE s.id = ?;
                 """;
         try {
             List<Enrollment> enrollmentList = jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId));

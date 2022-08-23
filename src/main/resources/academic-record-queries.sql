@@ -4,6 +4,8 @@ SELECT * FROM career_courses;
 SELECT * FROM users;
 SELECT * FROM professors;
 SELECT * FROM students;
+SELECT * FROM administrators;
+SELECT * FROM roles;
 SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
