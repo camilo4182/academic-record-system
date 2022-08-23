@@ -1,27 +1,20 @@
 package training.path.academicrecordsystem.controllers.implementations;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequest;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationResponse;
 import training.path.academicrecordsystem.controllers.interfaces.IMainController;
-import training.path.academicrecordsystem.security.JwtService;
-import training.path.academicrecordsystem.security.MyUserDetailsService;
+import training.path.academicrecordsystem.security.AcademicUserDetailsService;
 
 @RestController
 @RequiredArgsConstructor
 public class MainController implements IMainController {
 
     //private final AuthenticationManager authenticationManager;
-    private final MyUserDetailsService myUserDetailsService;
+    private final AcademicUserDetailsService myUserDetailsService;
     //private final JwtService jwtService;
 
     @Override

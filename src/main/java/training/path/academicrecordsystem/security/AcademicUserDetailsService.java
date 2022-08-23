@@ -10,14 +10,14 @@ import training.path.academicrecordsystem.repositories.implementations.UserRepos
 
 @Service
 @AllArgsConstructor
-public class MyUserDetailsService implements UserDetailsService {
+public class AcademicUserDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username).orElseThrow(() -> new UsernameNotFoundException("Username does not exist"));
-        return new MyUserDetails(user);
+        return new AcademicUserDetails(user);
     }
 
 }

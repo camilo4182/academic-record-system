@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyUserDetails implements UserDetails {
+public class AcademicUserDetails implements UserDetails {
 
     private User user;
 
