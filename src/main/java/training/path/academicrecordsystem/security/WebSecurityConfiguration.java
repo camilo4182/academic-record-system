@@ -18,7 +18,8 @@ public class WebSecurityConfiguration {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .antMatchers("/students", "/classes", "/enrollments").authenticated()
+                .antMatchers("/students").hasAnyRole(IRoles.STUDENT, IRoles.ADMIN)
+                .antMatchers("/classes").hasRole(IRoles.ADMIN)
                 .anyRequest().permitAll()
         ).httpBasic(Customizer.withDefaults());
         return http.build();

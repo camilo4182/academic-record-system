@@ -11,9 +11,9 @@ INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Metabolism',
 INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Data Bases', 3);
 INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Microeconomics', 4);
 
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ADMIN');
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'STUDENT');
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'PROFESSOR');
+INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_ADMIN');
+INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_STUDENT');
+INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
 
 
 INSERT INTO users (id, name, password, email, role_id) VALUES (
@@ -21,7 +21,7 @@ INSERT INTO users (id, name, password, email, role_id) VALUES (
 	'admin1',
 	'1234',
 	'test_admin1@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'admin')
+	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
 	(SELECT id FROM users WHERE name ILIKE 'admin1')
@@ -34,8 +34,34 @@ INSERT INTO users (id, name, password, email, role_id) VALUES (
 	'admin2',
 	'$2a$12$v5BCniWLT724a4TUXwRreumxKz9duqIdnjRFfS8jSeS3BsClgCQte',
 	'test_admin2@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'admin')
+	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
 	(SELECT id FROM users WHERE name ILIKE 'admin2')
+);
+
+
+INSERT INTO users (id, name, password, email, role_id) VALUES (
+	gen_random_uuid(),
+	'student1',
+	'$2a$12$kkMzXQx6f6ZA5xXYwe.kHOHBNyusS8ZKBlkafINFp.0LmEArlM/WG',
+	'student1@email.com',
+	(SELECT id FROM roles WHERE name ILIKE 'ROLE_STUDENT') /* ROLE */
+);
+INSERT INTO students (id, average_grade) VALUES (
+	(SELECT id FROM users WHERE name ILIKE 'student1'),
+	0
+);
+
+
+INSERT INTO users (id, name, password, email, role_id) VALUES (
+	gen_random_uuid(),
+	'professor1',
+	'$2a$12$1zmW2FVKfyx1fNGP4HlJpOs9Ki4.x2FG4YhKZsjLiwNNBiAERF9JO',
+	'professor1@email.com',
+	(SELECT id FROM roles WHERE name ILIKE 'ROLE_PROFESSOR') /* ROLE */
+);
+INSERT INTO professors (id, salary) VALUES (
+	(SELECT id FROM users WHERE name ILIKE 'professor1'),
+	40000
 );

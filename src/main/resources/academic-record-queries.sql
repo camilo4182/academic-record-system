@@ -10,6 +10,10 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
+/* Get users and their roles */
+SELECT u.id AS id, u.name AS name, u.password AS password, u.email AS email, r.name AS role
+FROM users u INNER JOIN roles r ON u.role_id = r.id;
+
 /* Get all professors */
 SELECT users.id AS user_id, professors.id AS prof_id, name, email, salary
 FROM users INNER JOIN professors
@@ -42,12 +46,7 @@ GROUP BY ca.id, ca.name, co.id, co.name, credits
 ORDER BY career;
 
 /* Get careers with their courses and professors */
-SELECT ca.id AS career_id, ca.name AS career_name, co.id AS course_id, co.name AS course_name, p.id AS prof_id, u.name AS prof_name
-FROM careers ca INNER JOIN career_classes cc ON ca.id = cc.career_id 
-INNER JOIN classes cl ON cc.class_id = cl.id 
-INNER JOIN professors p ON p.id = cl.professor_id 
-INNER JOIN users u ON u.id = p.id 
-INNER JOIN courses co ON co.id = cl.course_id;
+
 
 /* Get careers and their courses */
 SELECT ca.name AS career_name, co.name AS course_name
