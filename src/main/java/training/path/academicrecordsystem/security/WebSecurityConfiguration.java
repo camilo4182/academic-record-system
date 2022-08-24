@@ -1,6 +1,8 @@
 package training.path.academicrecordsystem.security;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,6 +27,10 @@ import java.util.List;
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
+    @Autowired
+    @Qualifier("restAuthenticationEntryPoint")
+    AuthenticationEntryPoint authenticationEntryPoint;
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -34,7 +41,7 @@ public class WebSecurityConfiguration {
                 .mvcMatchers("/classes").hasRole(IRoles.ADMIN)
                 .mvcMatchers("/login").permitAll()
                 .anyRequest().permitAll()
-        ).httpBasic(Customizer.withDefaults());
+        ).httpBasic(Customizer.withDefaults()).exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 

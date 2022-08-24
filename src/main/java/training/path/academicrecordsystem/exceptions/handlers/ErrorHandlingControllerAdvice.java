@@ -14,6 +14,7 @@ import training.path.academicrecordsystem.exceptions.UniqueColumnViolationExcept
 import training.path.academicrecordsystem.exceptions.response.ExceptionResponse;
 import training.path.academicrecordsystem.exceptions.response.ValidationExceptionResponse;
 
+import javax.security.sasl.AuthenticationException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;

@@ -3,9 +3,9 @@ package training.path.academicrecordsystem.controllers.implementations;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,16 +27,12 @@ public class MainController implements IMainController {
 
     @Override
     @PostMapping("login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) throws Exception {
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-            Authentication responseToken = authenticationProvider.authenticate(authenticationToken);
-            UserDetails userDetails = service.loadUserByUsername(responseToken.getName());
-            String token = jwtService.generateJWT(userDetails);
-            return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.OK);
-        } catch (BadCredentialsException e) {
-            throw new Exception("Invalid username or password", e);
-        }
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) throws AuthenticationException {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+        Authentication responseToken = authenticationProvider.authenticate(authenticationToken);
+        UserDetails userDetails = service.loadUserByUsername(responseToken.getName());
+        String token = jwtService.generateJWT(userDetails);
+        return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.OK);
     }
 
 }
