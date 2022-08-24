@@ -21,7 +21,9 @@ public class CourseClassInfoRowMapper implements RowMapper<CourseClass> {
 
         Professor professor = new Professor();
         professor.setId(rs.getObject("prof_id", UUID.class).toString());
-        professor.setFirstName(rs.getString("prof_name"));
+        professor.setFirstName(rs.getString("prof_first_name"));
+        professor.setLastName(rs.getString("prof_last_name"));
+        professor.setUserName(rs.getString("prof_username"));
         professor.setEmail(rs.getString("prof_email"));
         professor.setSalary(rs.getFloat("salary"));
         courseClass.setProfessor(professor);

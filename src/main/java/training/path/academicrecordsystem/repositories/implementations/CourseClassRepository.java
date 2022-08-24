@@ -66,7 +66,9 @@ public class CourseClassRepository implements ICourseClassRepository {
     public Optional<CourseClass> findById(String id) {
         String query =
                 """
-                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name,
+                credits, p.id AS prof_id, u.first_name AS prof_first_name, u.last_name AS prof_last_name,
+                u.username AS prof_username, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id
@@ -84,7 +86,9 @@ public class CourseClassRepository implements ICourseClassRepository {
     public List<CourseClass> findAll() {
         String query =
                 """
-                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id,
+                co.name AS course_name, credits, p.id AS prof_id, u.first_name AS prof_first_name, u.last_name AS prof_last_name,
+                u.username AS prof_username, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id;
@@ -96,7 +100,9 @@ public class CourseClassRepository implements ICourseClassRepository {
     public List<CourseClass> findAll(int limit, int offset) {
         String query =
                 """
-                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id, co.name AS course_name, credits, p.id AS prof_id, u.name AS prof_name, u.email AS prof_email, salary
+                SELECT cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id,
+                co.name AS course_name, credits, p.id AS prof_id, u.first_name AS prof_first_name, u.last_name AS prof_last_name,
+                u.username AS prof_username, u.email AS prof_email, salary
                 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN professors p ON p.id = cl.professor_id
                 INNER JOIN users u ON p.id = u.id

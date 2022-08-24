@@ -60,12 +60,20 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     public List<Enrollment> findAll() {
         String query =
                 """
-                SELECT e.id AS enroll_id, cl.id AS class_id, co.id AS course_id, co.name AS course_name, semester, s.id AS student_id, u.name AS student_name, u.email AS student_email, available, p.id AS prof_id
-                FROM enrollments e INNER JOIN classes cl ON e.class_id = cl.id
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name,
+                u.username AS username, semester, cl.id AS class_id, capacity, enrolled_students, available,
+                co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name,
+                e.career_id AS career_id, c.name AS career
+                FROM users u INNER JOIN students s ON u.id = s.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN careers c ON c.id = e.career_id
+                INNER JOIN enrollment_classes ec ON e.id = ec.enrollment_id
+                INNER JOIN classes cl ON cl.id = ec.class_id
                 INNER JOIN courses co ON co.id = cl.course_id
-                INNER JOIN students s ON s.id = e.student_id
-                INNER JOIN users u ON u.id = s.id
-                INNER JOIN professors p ON u.id = p.id;
+                INNER JOIN (
+                            SELECT p.id AS professor_id, u.first_name AS professor_first_name, u.last_name AS professor_last_name
+                            FROM professors p INNER JOIN users u ON u.id = p.id
+                           ) AS prof ON cl.professor_id = prof.professor_id
                 """;
         return jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper());
     }
