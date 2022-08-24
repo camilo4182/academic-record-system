@@ -38,7 +38,7 @@ public class StudentServiceTests {
     @Test
     void givenValidStudentData_whenSave_thenItDoesNotThrowException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").career(career).build();
+        Student student = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.save(any())).thenReturn(1);
@@ -49,12 +49,12 @@ public class StudentServiceTests {
     @Test
     void givenTwoStudentsWithSameData_whenSave_thenItThrowsException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").career(career).build();
-        Student student2 = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").career(career).build();
+        Student student1 = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").career(career).build();
+        Student student2 = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.save(any())).thenReturn(0);
-        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(student2));
+        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student2));
         when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student2));
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.save(student1));
@@ -63,12 +63,12 @@ public class StudentServiceTests {
     @Test
     void givenTwoStudentsWithSameName_whenSave_thenItThrowsException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("other@email.com").career(career).build();
-        Student student2 = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("another@email.com").career(career).build();
+        Student student1 = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("other@email.com").career(career).build();
+        Student student2 = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("another@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.save(any())).thenReturn(0);
-        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(student2));
+        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student2));
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.save(student1));
     }
@@ -76,8 +76,8 @@ public class StudentServiceTests {
     @Test
     void givenTwoStudentsWithSameEmail_whenSave_thenItThrowsException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString()).name("Juan").email("same@email.com").career(career).build();
-        Student student2 = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("same@email.com").career(career).build();
+        Student student1 = Student.builder().id(UUID.randomUUID().toString()).firstName("Juan").email("same@email.com").career(career).build();
+        Student student2 = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("same@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.save(any())).thenReturn(0);
@@ -89,7 +89,7 @@ public class StudentServiceTests {
     @Test
     void givenNonExistingCareer_whenSave_thenItThrowsException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student = Student.builder().id(UUID.randomUUID().toString()).name("Andres").email("andres@email.com").career(career).build();
+        Student student = Student.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(false);
         when(studentRepository.save(any())).thenReturn(1);
@@ -101,7 +101,7 @@ public class StudentServiceTests {
     void givenExistingStudent_whenUpdate_thenItDoesNotThrowException() {
         String id = UUID.randomUUID().toString();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student = Student.builder().id(id).name("Maria").email("maria@email.com").career(career).build();
+        Student student = Student.builder().id(id).firstName("Maria").email("maria@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.exists(anyString())).thenReturn(true);
@@ -114,7 +114,7 @@ public class StudentServiceTests {
     void givenNonExistingStudent_whenUpdate_thenItThrowsException() {
         String id = UUID.randomUUID().toString();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student = Student.builder().id(id).name("Null").email("null@email.com").build();
+        Student student = Student.builder().id(id).firstName("Null").email("null@email.com").build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.exists(anyString())).thenReturn(false);
@@ -127,7 +127,7 @@ public class StudentServiceTests {
     void givenNonExistingCareer_whenUpdate_thenItThrowsException() {
         String id = UUID.randomUUID().toString();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("").build();
-        Student student = Student.builder().id(id).name("Juan").email("juan@email.com").career(career).build();
+        Student student = Student.builder().id(id).firstName("Juan").email("juan@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(false);
         when(studentRepository.exists(anyString())).thenReturn(true);
@@ -139,11 +139,11 @@ public class StudentServiceTests {
     @Test
     void givenExistingStudent_whenUpdateBasicInfo_thenItDoesNotThrowException() {
         String id = UUID.randomUUID().toString();
-        Student student = Student.builder().id(id).name("New Name").email("new_email@email.com").build();
+        Student student = Student.builder().id(id).firstName("New Name").email("new_email@email.com").build();
 
         when(studentRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.update(anyString(), any())).thenReturn(1);
-        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(student));
+        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student));
         when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student));
 
         assertDoesNotThrow(() -> studentService.updateBasicInfo(id, student));
@@ -152,11 +152,11 @@ public class StudentServiceTests {
     @Test
     void givenTwoStudentsWithSameNameAndEmail_whenUpdateBasicInfo_thenItThrowsException() {
         String id = UUID.randomUUID().toString();
-        Student studentToUpdate = Student.builder().id(id).name("Juan").email("same@email.com").build();
-        Student existingStudent = Student.builder().id(UUID.randomUUID().toString()).name("Juan").email("same@email.com").build();
+        Student studentToUpdate = Student.builder().id(id).firstName("Juan").email("same@email.com").build();
+        Student existingStudent = Student.builder().id(UUID.randomUUID().toString()).firstName("Juan").email("same@email.com").build();
 
         when(studentRepository.exists(anyString())).thenReturn(true);
-        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(existingStudent));
         when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(existingStudent));
         when(studentRepository.update(anyString(), any())).thenReturn(0);
 
@@ -186,7 +186,7 @@ public class StudentServiceTests {
     @Test
     void givenValidId_whenFindById_thenReturnStudent() {
         String id = UUID.randomUUID().toString();
-        Student student = Student.builder().id(id).name("Juan").email("juan@email.co").build();
+        Student student = Student.builder().id(id).firstName("Juan").email("juan@email.co").build();
 
         when(studentRepository.findById(anyString())).thenReturn(Optional.of(student));
 
@@ -208,9 +208,9 @@ public class StudentServiceTests {
         String studentId2 = UUID.randomUUID().toString();
         String studentId3 = UUID.randomUUID().toString();
 
-        Student student1 = Student.builder().id(studentId1).name("Student 1").build();
-        Student student2 = Student.builder().id(studentId2).name("Student 2").build();
-        Student student3 = Student.builder().id(studentId3).name("Student 3").build();
+        Student student1 = Student.builder().id(studentId1).firstName("Student 1").build();
+        Student student2 = Student.builder().id(studentId2).firstName("Student 2").build();
+        Student student3 = Student.builder().id(studentId3).firstName("Student 3").build();
 
         List<Student> students = List.of(student1, student2, student3);
 
@@ -222,9 +222,9 @@ public class StudentServiceTests {
         assertEquals(studentId2, responseList.get(1).getId());
         assertEquals(studentId3, responseList.get(2).getId());
 
-        assertEquals("Student 1", responseList.get(0).getName());
-        assertEquals("Student 2", responseList.get(1).getName());
-        assertEquals("Student 3", responseList.get(2).getName());
+        assertEquals("Student 1", responseList.get(0).getFirstName());
+        assertEquals("Student 2", responseList.get(1).getFirstName());
+        assertEquals("Student 3", responseList.get(2).getFirstName());
 
     }
 
@@ -234,7 +234,7 @@ public class StudentServiceTests {
         Career career = Career.builder().id(careerId).name("Medicine").build();
 
         String studentId = UUID.randomUUID().toString();
-        Student student = Student.builder().id(studentId).name("Juan").email("juan@email.ocm").career(career).build();
+        Student student = Student.builder().id(studentId).firstName("Juan").email("juan@email.ocm").career(career).build();
 
         String enrollmentId = UUID.randomUUID().toString();
         Enrollment enrollment = Enrollment.builder().id(enrollmentId).student(student).semester(1).build();
@@ -247,7 +247,7 @@ public class StudentServiceTests {
         List<Enrollment> enrollments = studentService.findEnrollmentInfo(studentId);
         Enrollment studentEnrollment = enrollments.get(0);
         assertEquals(enrollmentId, studentEnrollment.getId());
-        assertEquals("Juan", studentEnrollment.getStudent().getName());
+        assertEquals("Juan", studentEnrollment.getStudent().getFirstName());
 
     }
     

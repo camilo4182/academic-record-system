@@ -89,7 +89,9 @@ public class CourseRepository implements ICourseRepository {
     @Override
     public List<CourseClass> getClassesByCourse(String courseId) {
         String query = """
-                SELECT co.id AS course_id, co.name AS course_name, enrolled_students, available, capacity, credits, cl.id AS class_id, available, cl.professor_id AS prof_id, u.name AS prof_name, u.email AS prof_email
+                SELECT co.id AS course_id, co.name AS course_name, enrolled_students, available, capacity, credits, 
+                cl.id AS class_id, available, cl.professor_id AS prof_id, u.first_name AS prof_first_name, u.last_name AS prof_last_name, 
+                u.username AS prof_username, u.email AS prof_email
                 FROM courses co INNER JOIN classes cl ON cl.course_id = co.id
                 INNER JOIN professors p ON cl.professor_id = p.id
                 INNER JOIN users u ON u.id = p.id

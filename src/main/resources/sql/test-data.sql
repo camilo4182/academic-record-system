@@ -68,59 +68,67 @@ INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_STUDENT');
 INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
 
 
-INSERT INTO users (id, name, password, email, role_id) VALUES (
+INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
-	'admin1',
+	'Admin1',
+	'Test1',
+	'admin1.test1',
 	'1234',
 	'test_admin1@email.com',
 	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
-	(SELECT id FROM users WHERE name ILIKE 'admin1')
+	(SELECT id FROM users WHERE username ILIKE 'admin1.test1')
 );
 
 
 
-INSERT INTO users (id, name, password, email, role_id) VALUES (
+INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
-	'admin2',
+	'Admin2',
+	'Test2',
+	'admin2.test2',
 	'$2a$12$v5BCniWLT724a4TUXwRreumxKz9duqIdnjRFfS8jSeS3BsClgCQte',
 	'test_admin2@email.com',
 	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
-	(SELECT id FROM users WHERE name ILIKE 'admin2')
+	(SELECT id FROM users WHERE username ILIKE 'admin2.test2')
 );
 
 
-INSERT INTO users (id, name, password, email, role_id) VALUES (
+INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
-	'student1',
+	'Student1',
+	'Test1',
+	'student1.test1',
 	'$2a$12$kkMzXQx6f6ZA5xXYwe.kHOHBNyusS8ZKBlkafINFp.0LmEArlM/WG',
 	'student1@email.com',
 	(SELECT id FROM roles WHERE name ILIKE 'ROLE_STUDENT') /* ROLE */
 );
 INSERT INTO students (id, average_grade) VALUES (
-	(SELECT id FROM users WHERE name ILIKE 'student1'),
+	(SELECT id FROM users WHERE username ILIKE 'student1.test1'),
 	0
 );
 
 
 INSERT INTO enrollments (id, student_id, career_id) VALUES (
 	gen_random_uuid(),
-	(SELECT u.id FROM students s INNER JOIN users u ON s.id = u.id WHERE u.name ILIKE 'student1'),
+	(SELECT u.id FROM students s INNER JOIN users u ON s.id = u.id WHERE u.username ILIKE 'student1.test1'),
 	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering')
 );
 
 
-INSERT INTO users (id, name, password, email, role_id) VALUES (
+INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
-	'professor1',
+	'Professor1',
+	'Test1',
+	'professor1.test1',
 	'$2a$12$1zmW2FVKfyx1fNGP4HlJpOs9Ki4.x2FG4YhKZsjLiwNNBiAERF9JO',
 	'professor1@email.com',
 	(SELECT id FROM roles WHERE name ILIKE 'ROLE_PROFESSOR') /* ROLE */
 );
 INSERT INTO professors (id, salary) VALUES (
-	(SELECT id FROM users WHERE name ILIKE 'professor1'),
+	(SELECT id FROM users WHERE username ILIKE 'professor1.test1'),
 	40000
 );

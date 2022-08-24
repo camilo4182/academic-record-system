@@ -13,7 +13,7 @@ public class EnrollmentMapper {
     public static ResponseBodyEnrollmentDTO toDTO(Enrollment enrollment) {
         ResponseBodyEnrollmentDTO enrollmentDTO = new ResponseBodyEnrollmentDTO();
         enrollmentDTO.setId(enrollment.getId());
-        enrollmentDTO.setName(enrollment.getStudent().getName());
+        enrollmentDTO.setName(enrollment.getStudent().getFirstName());
         enrollmentDTO.setCareer(enrollment.getStudent().getCareer().getName());
         enrollmentDTO.setClasses(enrollment.getCourseClasses().stream().map(CourseClassMapper::toDTO).toList());
         enrollmentDTO.setSemester(enrollment.getSemester());

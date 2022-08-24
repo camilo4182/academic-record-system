@@ -26,8 +26,14 @@ public class StudentRepository implements IStudentRepository {
 
     @Override
     public int save(Student student) {
-        String queryUser = "INSERT INTO users (id, name, password, email) VALUES (?, ?, ?, ?);";
-        jdbcTemplate.update(queryUser, UUID.fromString(student.getId()), student.getName(), student.getPassword(), student.getEmail());
+        String queryUser = "INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        jdbcTemplate.update(queryUser, UUID.fromString(student.getId()),
+                student.getFirstName(),
+                student.getLastName(),
+                student.getUserName(),
+                student.getPassword(),
+                student.getEmail(),
+                UUID.fromString(student.getRole().getId()));
         String queryStudent = "INSERT INTO students (id, average_grade) VALUES (?, ?);";
         return jdbcTemplate.update(queryStudent, UUID.fromString(student.getId()), student.getAverageGrade());
     }
@@ -42,8 +48,13 @@ public class StudentRepository implements IStudentRepository {
 
     @Override
     public int updateBasicInfo(String id, Student student) {
-        String queryUser = "UPDATE users SET name = ?, password = ?, email = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, student.getName(), student.getPassword(), student.getEmail(), UUID.fromString(id));
+        String queryUser = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ?, email = ? WHERE id = ?;";
+        return jdbcTemplate.update(queryUser, student.getFirstName(),
+                student.getLastName(),
+                student.getUserName(),
+                student.getPassword(),
+                student.getEmail(),
+                UUID.fromString(id));
     }
 
     @Override
@@ -56,7 +67,7 @@ public class StudentRepository implements IStudentRepository {
     public Optional<Student> findById(String id) {
         String query =
                 """
-                SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN careers c ON e.career_id = c.id
@@ -71,12 +82,27 @@ public class StudentRepository implements IStudentRepository {
     }
 
     @Override
-    public Optional<Student> findByName(String name) {
+    public Optional<Student> findByFirstName(String firstName) {
         String query =
                 """
                 SELECT *
                 FROM students s INNER JOIN users u ON s.id = u.id
-                WHERE u.name ILIKE ?;
+                WHERE u.first_name ILIKE ?;
+                """;
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), firstName));
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Student> findByUserName(String name) {
+        String query =
+                """
+                SELECT *
+                FROM students s INNER JOIN users u ON s.id = u.id
+                WHERE u.username ILIKE ?;
                 """;
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), name));
@@ -104,11 +130,11 @@ public class StudentRepository implements IStudentRepository {
     public List<Student> findAll() {
         String query =
                 """
-                SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN enrollments e ON s.id = e.student_id
                 INNER JOIN careers c ON e.career_id = c.id
-                ORDER BY u.name;
+                ORDER BY u.first_name;
                 """;
         return jdbcTemplate.query(query, new StudentInfoRowMapper());
     }
@@ -117,10 +143,10 @@ public class StudentRepository implements IStudentRepository {
     public List<Student> findAll(int limit, int offset) {
         String query =
                 """
-                SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN careers c ON s.career_id = c.id
-                ORDER BY u.name
+                ORDER BY u.first_name
                 LIMIT ? OFFSET ?;
                 """;
         return jdbcTemplate.query(query, new StudentInfoRowMapper(), limit, offset);
@@ -141,8 +167,8 @@ public class StudentRepository implements IStudentRepository {
     public List<Enrollment> findEnrollmentInfo(String studentId) {
         String query =
                 """
-                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, semester, cl.id AS class_id, capacity,
-                    enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_name,
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, semester, cl.id AS class_id, capacity,
+                    enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name,
                     e.career_id AS career_id, c.name AS career
                 FROM users u INNER JOIN students s ON u.id = s.id
                 INNER JOIN enrollments e ON e.student_id = s.id
@@ -151,13 +177,14 @@ public class StudentRepository implements IStudentRepository {
                 INNER JOIN classes cl ON cl.id = ec.class_id
                 INNER JOIN courses co ON co.id = cl.course_id
                 INNER JOIN (
-                            SELECT p.id AS professor_id, u.name AS professor_name
+                            SELECT p.id AS professor_id, u.first_name AS professor_first_name, u.last_name AS professor_last_name
                             FROM professors p INNER JOIN users u ON u.id = p.id
                            ) AS prof ON cl.professor_id = prof.professor_id
                 WHERE s.id = ?;
                 """;
         try {
             List<Enrollment> enrollmentList = jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper(), UUID.fromString(studentId));
+
             int maxSemester = enrollmentList.stream().max(Comparator.comparing(Enrollment::getSemester)).orElseThrow().getSemester();
             List<Enrollment> enrollmentsPerSemester = new ArrayList<>();
 
@@ -178,7 +205,7 @@ public class StudentRepository implements IStudentRepository {
         } catch (NoSuchElementException e) {
             String queryForNoClasses =
                     """
-                    SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                    SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, e.career_id AS career_id, c.name AS career
                     FROM users u INNER JOIN students s ON u.id = s.id
                     INNER JOIN enrollments e ON e.student_id = s.id
                     INNER JOIN careers c ON c.id = e.career_id

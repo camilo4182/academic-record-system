@@ -18,7 +18,9 @@ public interface IStudentRepository {
 
     Optional<Student> findById(String id);
 
-    Optional<Student> findByName(String name);
+    Optional<Student> findByFirstName(String firstName);
+
+    Optional<Student> findByUserName(String userName);
 
     Optional<Student> findByEmail(String email);
 

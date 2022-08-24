@@ -21,7 +21,9 @@ public class EnrollmentFullInfoRowMapper implements RowMapper<Enrollment> {
 
         Student student = new Student();
         student.setId(rs.getObject("student_id", UUID.class).toString());
-        student.setName(rs.getString("student"));
+        student.setFirstName(rs.getString("first_name"));
+        student.setLastName(rs.getString("last_name"));
+        student.setUserName(rs.getString("username"));
         student.setCareer(career);
         enrollment.setStudent(student);
 
@@ -32,7 +34,8 @@ public class EnrollmentFullInfoRowMapper implements RowMapper<Enrollment> {
 
         Professor professor = new Professor();
         professor.setId(rs.getObject("professor_id", UUID.class).toString());
-        professor.setName(rs.getString("professor_name"));
+        professor.setFirstName(rs.getString("professor_first_name"));
+        professor.setLastName(rs.getString("professor_last_name"));
 
         CourseClass courseClass = new CourseClass();
         courseClass.setId(rs.getObject("class_id", UUID.class).toString());

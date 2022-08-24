@@ -25,7 +25,7 @@ public class EnrollmentByStudentRowMapper implements RowMapper<Enrollment> {
 
             Professor professor = new Professor();
             professor.setId(rs.getObject("professor_id", UUID.class).toString());
-            professor.setName(rs.getString("professor_name"));
+            professor.setFirstName(rs.getString("professor_name"));
 
             CourseClass courseClass = new CourseClass();
             courseClass.setId(rs.getObject("class_id", UUID.class).toString());

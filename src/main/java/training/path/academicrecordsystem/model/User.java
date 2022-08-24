@@ -15,9 +15,17 @@ public abstract class User {
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format", groups = {OnCreate.class, OnUpdate.class, OnUpdateByStudent.class})
     private String id;
 
-    @NotBlank(message = "User name is mandatory", groups = {OnCreate.class, OnUpdateByStudent.class})
-    @Size(min = 4, message = "User name must have at least 4 characters", groups = {OnCreate.class, OnUpdateByStudent.class})
-    private String name;
+    @NotBlank(message = "User first name is mandatory", groups = {OnCreate.class, OnUpdateByStudent.class})
+    @Size(min = 3, message = "User first name must have at least 3 characters", groups = {OnCreate.class, OnUpdateByStudent.class})
+    private String firstName;
+
+    @NotBlank(message = "User last name is mandatory", groups = {OnCreate.class, OnUpdateByStudent.class})
+    @Size(min = 3, message = "User last name must have at least 3 characters", groups = {OnCreate.class, OnUpdateByStudent.class})
+    private String lastName;
+
+    @NotBlank(message = "Username is mandatory", groups = {OnCreate.class, OnUpdateByStudent.class})
+    @Size(min = 6, message = "Username must have at least 6 characters", groups = {OnCreate.class, OnUpdateByStudent.class})
+    private String userName;
 
     @NotBlank(message = "Password is mandatory", groups = {OnCreate.class, OnUpdateByStudent.class})
     @Size(min = 8, message = "Password must have at least 8 characters", groups = {OnCreate.class, OnUpdateByStudent.class})
@@ -27,15 +35,18 @@ public abstract class User {
     @Email(message = "User email must be a well-formed email address", groups = {OnCreate.class, OnUpdateByStudent.class})
     private String email;
 
-    private String role;
+    private Role role;
 
     public User() {
     }
 
-    public User(String id, String name, String email) {
+    public User(String id, String firstName, String lastName, String userName, String password, String email, Role role) {
         this.id = id;
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userName = userName;
+        this.password = password;
         this.email = email;
+        this.role = role;
     }
-
 }

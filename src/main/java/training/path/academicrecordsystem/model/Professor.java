@@ -19,9 +19,8 @@ public class Professor extends User {
     }
 
     @Builder
-    public Professor(String id, String name, String email, float salary) {
-        super(id, name, email);
+    public Professor(String id, String firstName, String lastName, String userName, String password, String email, Role role, float salary) {
+        super(id, firstName, lastName, userName, password, email, role);
         this.salary = salary;
     }
-
 }

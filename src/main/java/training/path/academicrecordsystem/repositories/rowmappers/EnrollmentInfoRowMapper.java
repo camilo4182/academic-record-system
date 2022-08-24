@@ -20,7 +20,9 @@ public class EnrollmentInfoRowMapper implements RowMapper<Enrollment> {
 
         Student student = new Student();
         student.setId(rs.getObject("student_id", UUID.class).toString());
-        student.setName(rs.getString("student"));
+        student.setFirstName(rs.getString("first_name"));
+        student.setLastName(rs.getString("last_name"));
+        student.setUserName(rs.getString("username"));
         student.setCareer(career);
         enrollment.setStudent(student);
 

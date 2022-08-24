@@ -14,7 +14,7 @@ public class StudentsInnerJoinCareersRowMapper implements RowMapper<Student> {
     public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
         Student student = new Student();
         student.setId(rs.getObject("student_id", UUID.class).toString());
-        student.setName(rs.getString("student_name"));
+        student.setFirstName(rs.getString("student_name"));
         student.setEmail(rs.getString("student_email"));
 
         Career career = new Career();

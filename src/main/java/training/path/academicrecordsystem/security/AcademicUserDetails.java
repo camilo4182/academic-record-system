@@ -20,7 +20,7 @@ public class AcademicUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().getRole()));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class AcademicUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getName();
+        return user.getFirstName();
     }
 
     @Override

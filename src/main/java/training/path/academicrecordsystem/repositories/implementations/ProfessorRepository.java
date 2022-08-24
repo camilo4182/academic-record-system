@@ -24,16 +24,27 @@ public class ProfessorRepository implements IProfessorRepository {
 
     @Override
     public int save(Professor professor) {
-        String queryUser = "INSERT INTO users (id, name, password, email) VALUES (?, ?, ?, ?);";
-        jdbcTemplate.update(queryUser, UUID.fromString(professor.getId()), professor.getName(), professor.getPassword(), professor.getEmail());
+        String queryUser = "INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        jdbcTemplate.update(queryUser, UUID.fromString(professor.getId()),
+                professor.getFirstName(),
+                professor.getLastName(),
+                professor.getUserName(),
+                professor.getPassword(),
+                professor.getEmail(),
+                UUID.fromString(professor.getRole().getId()));
         String queryProfessor = "INSERT INTO professors (id, salary) VALUES (?, ?)";
         return jdbcTemplate.update(queryProfessor, UUID.fromString(professor.getId()), professor.getSalary());
     }
 
     @Override
     public int update(String id, Professor professor) {
-        String queryUser = "UPDATE users SET name = ?, email = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, professor.getName(), professor.getEmail(), UUID.fromString(professor.getId()));
+        String queryUser = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ?, email = ? WHERE id = ?;";
+        return jdbcTemplate.update(queryUser, professor.getFirstName(),
+                professor.getLastName(),
+                professor.getUserName(),
+                professor.getPassword(),
+                professor.getEmail(),
+                UUID.fromString(id));
     }
 
     @Override
@@ -54,12 +65,12 @@ public class ProfessorRepository implements IProfessorRepository {
     }
 
     @Override
-    public Optional<Professor> findByName(String name) {
+    public Optional<Professor> findByUserName(String name) {
         String query =
                 """
                 SELECT *
                 FROM professors p INNER JOIN users u ON p.id = u.id
-                WHERE u.name ILIKE ?;
+                WHERE u.username ILIKE ?;
                 """;
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), name));
@@ -86,13 +97,13 @@ public class ProfessorRepository implements IProfessorRepository {
 
     @Override
     public List<Professor> findAll() {
-        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY name;";
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY first_name;";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class));
     }
 
     @Override
     public List<Professor> findAll(int limit, int offset) {
-        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY name LIMIT ? OFFSET ?;";
+        String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id ORDER BY first_name LIMIT ? OFFSET ?;";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Professor.class), limit, offset);
     }
 

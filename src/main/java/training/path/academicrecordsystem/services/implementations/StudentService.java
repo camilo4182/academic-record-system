@@ -51,9 +51,9 @@ public class StudentService implements IStudentService {
     }
 
     private void verifyUniqueness(Student student) throws UniqueColumnViolationException {
-        Optional<Student> foundStudentWithName = studentRepository.findByName(student.getName());
+        Optional<Student> foundStudentWithName = studentRepository.findByUserName(student.getUserName());
         if (foundStudentWithName.isPresent() && !Objects.equals(foundStudentWithName.orElseThrow().getId(), student.getId()))
-            throw new UniqueColumnViolationException("There is already a student with the name " + student.getName() + ". Enter another one.");
+            throw new UniqueColumnViolationException("There is already a student named " + student.getFirstName() + " " + student.getLastName() + ". Enter another one.");
 
         Optional<Student> foundStudentWithEmail = studentRepository.findByEmail(student.getEmail());
         if (foundStudentWithEmail.isPresent() && !Objects.equals(foundStudentWithEmail.orElseThrow().getId(), student.getId()))

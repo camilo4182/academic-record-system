@@ -15,7 +15,7 @@ public interface IProfessorRepository {
 
     Optional<Professor> findById(String id);
 
-    Optional<Professor> findByName(String name);
+    Optional<Professor> findByUserName(String name);
 
     Optional<Professor> findByEmail(String email);
 

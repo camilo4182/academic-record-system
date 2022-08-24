@@ -33,12 +33,12 @@ public class AcademicUserPwdAuthenticationProvider implements AuthenticationProv
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        Optional<User> foundUserOptional = userRepository.findByName(username);
+        Optional<User> foundUserOptional = userRepository.findByUserName(username);
         if (foundUserOptional.isPresent()) {
             User foundUser = foundUserOptional.orElseThrow();
             if (passwordEncoder.matches(password, foundUser.getPassword())) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(foundUser.getRole()));
+                authorities.add(new SimpleGrantedAuthority(foundUser.getRole().getRole()));
                 return new UsernamePasswordAuthenticationToken(username, password, authorities);
             } else {
                 throw new BadCredentialsException("Invalid password!");

@@ -44,7 +44,7 @@ public class CourseClassServiceTests {
         String professorId = UUID.randomUUID().toString();
 
         Course course = Course.builder().id(courseId).name("Course 1").credits(0).build();
-        Professor professor = Professor.builder().id(professorId).name("Professor 1").salary(30000).build();
+        Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
 
         CourseClass courseClass = CourseClass.builder()
                 .id(UUID.randomUUID().toString())
@@ -68,7 +68,7 @@ public class CourseClassServiceTests {
         String professorId = UUID.randomUUID().toString();
 
         Course course = Course.builder().id(courseId).name("Course 1").credits(0).build();
-        Professor professor = Professor.builder().id(professorId).name("Professor 1").salary(30000).build();
+        Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
 
         CourseClass courseClass = CourseClass.builder()
                 .id(classId)

@@ -70,8 +70,9 @@ public class CourseClassControllerTests {
 
         Professor professor = Professor.builder()
                 .id(UUID.randomUUID().toString())
-                .name("Carlos")
-                .email("carlos@email.com")
+                .firstName("Carlos")
+                .lastName("Rodriguez")
+                .email("carlos.rodriguez@email.com")
                 .salary(30000)
                 .build();
 
@@ -126,8 +127,9 @@ public class CourseClassControllerTests {
 
         Professor professor = Professor.builder()
                 .id(professorId)
-                .name("Carlos")
-                .email("carlos@email.com")
+                .firstName("Carlos")
+                .lastName("Rodriguez")
+                .email("carlos.rodriguez@email.com")
                 .salary(30000)
                 .build();
 

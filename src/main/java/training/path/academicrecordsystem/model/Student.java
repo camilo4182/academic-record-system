@@ -27,8 +27,8 @@ public class Student extends User {
     }
 
     @Builder
-    public Student(String id, String name, String email, float averageGrade, Career career) {
-        super(id, name, email);
+    public Student(String id, String firstName, String lastName, String userName, String password, String email, Role role, float averageGrade, Career career) {
+        super(id, firstName, lastName, userName, password, email, role);
         this.averageGrade = averageGrade;
         this.career = career;
     }

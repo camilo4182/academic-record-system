@@ -1,5 +1,6 @@
 package training.path.academicrecordsystem.controllers.dtos;
 
+import lombok.Builder;
 import lombok.Data;
 import training.path.academicrecordsystem.config.UUIDRegex;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
@@ -12,15 +13,20 @@ import javax.validation.constraints.*;
  */
 
 @Data
+@Builder
 public class RequestBodyStudentDTO {
 
     @Null(message = "Don't provide id for student", groups = OnCreate.class)
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
-    @NotBlank(message = "Student name is mandatory")
-    @Size(min = 4, message = "Student name must have at least 4 characters")
-    private String name;
+    @NotBlank(message = "User first name is mandatory")
+    @Size(min = 3, message = "User first name must have at least 3 characters")
+    private String firstName;
+
+    @NotBlank(message = "User last name is mandatory")
+    @Size(min = 3, message = "User last name must have at least 3 characters")
+    private String lastName;
 
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must have at least 8 characters")
