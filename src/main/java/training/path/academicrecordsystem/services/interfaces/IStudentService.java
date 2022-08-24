@@ -8,7 +8,7 @@ import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
 import training.path.academicrecordsystem.validations.groups.OnUpdate;
-import training.path.academicrecordsystem.validations.groups.OnUpdateByStudent;
+import training.path.academicrecordsystem.validations.groups.OnUpdateByUser;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -23,7 +23,7 @@ public interface IStudentService {
     @Validated(OnUpdate.class)
     void update(@UUIDValidator String id, @Valid Student student) throws ResourceNotFoundException, UniqueColumnViolationException;
 
-    @Validated(OnUpdateByStudent.class)
+    @Validated(OnUpdateByUser.class)
     void updateBasicInfo(@UUIDValidator String id, @Valid Student student) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     void deleteById(@UUIDValidator String id) throws ResourceNotFoundException;

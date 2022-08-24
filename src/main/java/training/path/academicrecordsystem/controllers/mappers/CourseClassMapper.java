@@ -1,9 +1,6 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
-import training.path.academicrecordsystem.controllers.dtos.CourseDTO;
-import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
@@ -22,7 +19,7 @@ public class CourseClassMapper {
         CourseDTO courseDTO = CourseMapper.toDTO(courseClass.getCourse());
         responseBodyCourseClassDTO.setCourse(courseDTO);
 
-        ProfessorDTO professorDTO = ProfessorMapper.toDTO(courseClass.getProfessor());
+        ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(courseClass.getProfessor());
         responseBodyCourseClassDTO.setProfessor(professorDTO);
 
         return responseBodyCourseClassDTO;

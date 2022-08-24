@@ -15,9 +15,9 @@ public interface IStudentController {
 
     ResponseEntity<String> save(@Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException, UniqueColumnViolationException;
 
-    ResponseEntity<String> update(String id, @Valid UpdateStudentByAdminDTO updateByAdmin) throws ResourceNotFoundException, UniqueColumnViolationException;
+    ResponseEntity<String> updateByAdmin(String id, @Valid UpdateStudentByAdminDTO updateByAdmin) throws ResourceNotFoundException, UniqueColumnViolationException;
 
-    ResponseEntity<String> updateBasicInfo(String id, @Valid UpdateStudentByStudentDTO updateByStudent) throws ResourceNotFoundException, UniqueColumnViolationException;
+    ResponseEntity<String> updateProfile(String id, @Valid UpdateUserByUserDTO updateByStudent) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
 

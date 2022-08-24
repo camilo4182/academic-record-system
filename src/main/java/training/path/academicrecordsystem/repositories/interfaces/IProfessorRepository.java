@@ -11,11 +11,13 @@ public interface IProfessorRepository {
 
     int update(String id, Professor professor);
 
+    int updateBasicInfo(String id, Professor professor);
+
     int deleteById(String id);
 
     Optional<Professor> findById(String id);
 
-    Optional<Professor> findByUserName(String name);
+    Optional<Professor> findByUserName(String userName);
 
     Optional<Professor> findByEmail(String email);
 

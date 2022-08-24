@@ -45,7 +45,7 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping("students/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody UpdateStudentByAdminDTO updateByAdmin)
+    public ResponseEntity<String> updateByAdmin(@PathVariable("id") String id, @RequestBody UpdateStudentByAdminDTO updateByAdmin)
             throws ResourceNotFoundException, UniqueColumnViolationException {
         updateByAdmin.setId(id);
         Student student = StudentMapper.toEntity(updateByAdmin);
@@ -55,7 +55,7 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping("students/profile/{id}")
-    public ResponseEntity<String> updateBasicInfo(@PathVariable("id") String id, @RequestBody UpdateStudentByStudentDTO updateByStudent)
+    public ResponseEntity<String> updateProfile(@PathVariable("id") String id, @RequestBody UpdateUserByUserDTO updateByStudent)
             throws ResourceNotFoundException, UniqueColumnViolationException {
         updateByStudent.setId(id);
         Student student = StudentMapper.toEntity(updateByStudent);

@@ -3,23 +3,19 @@ package training.path.academicrecordsystem.controllers.dtos;
 import lombok.Data;
 import training.path.academicrecordsystem.config.UUIDRegex;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
+import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
 
 @Data
-public class ProfessorDTO {
+public class UpdateProfessorByAdminDTO {
 
-    @Null(message = "Don't provide id for professor", groups = OnCreate.class)
+    @Null(message = "Don't provide id for student", groups = OnCreate.class)
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
-
-    @NotBlank(message = "Professor name is mandatory")
-    @Size(min = 4, message = "Professor name must have at least 4 characters")
-    private String name;
-
-    @NotBlank(message = "Professor email is mandatory")
-    @Email(message = "Professor email must be a well-formed email address")
-    private String email;
 
     @Min(value = 1000, message = "Professor salary must be greater than 1000")
     @Max(value = 100000, message = "Professor salary cannot exceed 100000")

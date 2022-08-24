@@ -3,6 +3,8 @@ package training.path.academicrecordsystem.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import training.path.academicrecordsystem.validations.groups.OnCreate;
+import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -11,8 +13,8 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(callSuper=true)
 public class Professor extends User {
 
-    @Min(value = 1000, message = "Professor salary must be greater than 1000")
-    @Max(value = 100000, message = "Professor salary cannot exceed 100000")
+    @Min(value = 1000, message = "Professor salary must be greater than 1000", groups = {OnCreate.class, OnUpdate.class})
+    @Max(value = 100000, message = "Professor salary cannot exceed 100000", groups = {OnCreate.class, OnUpdate.class})
     private float salary;
 
     public Professor() {

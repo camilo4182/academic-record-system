@@ -38,6 +38,12 @@ public class ProfessorRepository implements IProfessorRepository {
 
     @Override
     public int update(String id, Professor professor) {
+        String queryUser = "UPDATE professors SET salary = ? WHERE id = ?;";
+        return jdbcTemplate.update(queryUser, professor.getSalary(), UUID.fromString(professor.getId()));
+    }
+
+    @Override
+    public int updateBasicInfo(String id, Professor professor) {
         String queryUser = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ?, email = ? WHERE id = ?;";
         return jdbcTemplate.update(queryUser, professor.getFirstName(),
                 professor.getLastName(),
@@ -65,7 +71,7 @@ public class ProfessorRepository implements IProfessorRepository {
     }
 
     @Override
-    public Optional<Professor> findByUserName(String name) {
+    public Optional<Professor> findByUserName(String userName) {
         String query =
                 """
                 SELECT *
@@ -73,7 +79,7 @@ public class ProfessorRepository implements IProfessorRepository {
                 WHERE u.username ILIKE ?;
                 """;
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), name));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), userName));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -93,7 +99,6 @@ public class ProfessorRepository implements IProfessorRepository {
             return Optional.empty();
         }
     }
-
 
     @Override
     public List<Professor> findAll() {

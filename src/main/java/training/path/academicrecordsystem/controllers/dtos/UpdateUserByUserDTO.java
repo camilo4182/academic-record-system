@@ -1,21 +1,18 @@
 package training.path.academicrecordsystem.controllers.dtos;
 
-import lombok.Builder;
 import lombok.Data;
 import training.path.academicrecordsystem.config.UUIDRegex;
-import training.path.academicrecordsystem.validations.groups.OnCreate;
 
 import javax.validation.constraints.*;
 
 /**
- * DTO for student creation
+ * DTO for student update by student
  */
 
 @Data
-@Builder
-public class RequestBodyStudentDTO {
+public class UpdateUserByUserDTO {
 
-    @Null(message = "Don't provide id for student", groups = OnCreate.class)
+    @Null(message = "Don't provide id for student")
     @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
     private String id;
 
@@ -35,8 +32,5 @@ public class RequestBodyStudentDTO {
     @Email(message = "Student email must be a well-formed email address")
     private String email;
 
-    @NotBlank(message = "A student must be associated to a career")
-    @Pattern(regexp = UUIDRegex.UUIRegex, message = "Invalid id format")
-    private String careerId;
 
 }

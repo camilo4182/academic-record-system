@@ -1,34 +1,50 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
-import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.UpdateProfessorByAdminDTO;
+import training.path.academicrecordsystem.controllers.dtos.UpdateUserByUserDTO;
 import training.path.academicrecordsystem.model.Professor;
 
 import java.util.UUID;
 
 public class ProfessorMapper {
 
-    public static ProfessorDTO toDTO(Professor professor) {
-        ProfessorDTO professorDTO = new ProfessorDTO();
+    public static ResponseBodyProfessorDTO toDTO(Professor professor) {
+        ResponseBodyProfessorDTO professorDTO = new ResponseBodyProfessorDTO();
         professorDTO.setId(professor.getId());
-        professorDTO.setName(professor.getFirstName());
+        professorDTO.setFirstName(professor.getFirstName());
+        professorDTO.setLastName(professor.getLastName());
+        professorDTO.setUserName(professor.getUserName());
         professorDTO.setEmail(professor.getEmail());
-        professorDTO.setSalary(professor.getSalary());
         return professorDTO;
     }
 
-    public static Professor toEntity(ProfessorDTO professorDTO) {
+    public static Professor toEntity(UpdateProfessorByAdminDTO professorDTO) {
         Professor professor = new Professor();
         professor.setId(professorDTO.getId());
-        professor.setFirstName(professorDTO.getName());
-        professor.setEmail(professorDTO.getEmail());
         professor.setSalary(professorDTO.getSalary());
         return professor;
     }
 
-    public static Professor createEntity(ProfessorDTO professorDTO) {
+    public static Professor toEntity(UpdateUserByUserDTO professorDTO) {
+        Professor professor = new Professor();
+        professor.setId(professorDTO.getId());
+        professor.setFirstName(professorDTO.getFirstName());
+        professor.setLastName(professorDTO.getLastName());
+        professor.setUserName(professorDTO.getFirstName().toLowerCase() + "." + professorDTO.getLastName());
+        professor.setPassword(professorDTO.getPassword());
+        professor.setEmail(professorDTO.getEmail());
+        return professor;
+    }
+
+    public static Professor createEntity(RequestBodyProfessorDTO professorDTO) {
         Professor professor = new Professor();
         professor.setId(UUID.randomUUID().toString());
-        professor.setFirstName(professorDTO.getName());
+        professor.setFirstName(professorDTO.getFirstName());
+        professor.setLastName(professorDTO.getLastName());
+        professor.setUserName(professorDTO.getFirstName().toLowerCase() + "." + professorDTO.getLastName());
+        professor.setPassword(professorDTO.getPassword());
         professor.setEmail(professorDTO.getEmail());
         professor.setSalary(professorDTO.getSalary());
         return professor;

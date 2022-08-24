@@ -37,10 +37,17 @@ public class ProfessorService implements IProfessorService {
         professorRepository.update(id, professor);
     }
 
+    @Override
+    public void updateBasicInfo(String id, Professor professor) throws ResourceNotFoundException, UniqueColumnViolationException {
+        if (!professorRepository.exists(professor.getId())) throw new ResourceNotFoundException("Professor " + professor.getId() + " was not found");
+        verifyUniqueness(professor);
+        professorRepository.updateBasicInfo(id, professor);
+    }
+
     private void verifyUniqueness(Professor professor) throws UniqueColumnViolationException {
-        Optional<Professor> foundProfessorWithName = professorRepository.findByUserName(professor.getFirstName());
+        Optional<Professor> foundProfessorWithName = professorRepository.findByUserName(professor.getUserName());
         if (foundProfessorWithName.isPresent() && !Objects.equals(foundProfessorWithName.orElseThrow().getId(), professor.getId()))
-            throw new UniqueColumnViolationException("There is already a professor with the name " + professor.getFirstName() + ". Enter another one.");
+            throw new UniqueColumnViolationException("There is already a professor named " + professor.getFirstName() + " " + professor.getLastName() + ". Enter another one.");
 
         Optional<Professor> foundProfessorWithEmail = professorRepository.findByEmail(professor.getEmail());
         if (foundProfessorWithEmail.isPresent() && !Objects.equals(foundProfessorWithEmail.orElseThrow().getId(), professor.getId()))

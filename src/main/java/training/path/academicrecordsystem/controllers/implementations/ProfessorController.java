@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.ProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.ResponseBodyProfessorDTO;
+import training.path.academicrecordsystem.controllers.dtos.UpdateProfessorByAdminDTO;
+import training.path.academicrecordsystem.controllers.dtos.UpdateUserByUserDTO;
 import training.path.academicrecordsystem.controllers.interfaces.IProfessorController;
 import training.path.academicrecordsystem.controllers.mappers.ProfessorMapper;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
@@ -29,7 +32,7 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @PostMapping("professors")
-    public ResponseEntity<String> save(@RequestBody ProfessorDTO professorDTO) throws UniqueColumnViolationException {
+    public ResponseEntity<String> save(@RequestBody RequestBodyProfessorDTO professorDTO) throws UniqueColumnViolationException {
         Professor professor = ProfessorMapper.createEntity(professorDTO);
         professorService.save(professor);
         return new ResponseEntity<>("Professor registered", HttpStatus.OK);
@@ -37,12 +40,22 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @PutMapping("professors/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody ProfessorDTO professorDTO)
+    public ResponseEntity<String> updateByAdmin(@PathVariable("id") String id, @RequestBody UpdateProfessorByAdminDTO professorDTO)
             throws ResourceNotFoundException, UniqueColumnViolationException {
         professorDTO.setId(id);
         Professor professor = ProfessorMapper.toEntity(professorDTO);
         professorService.update(id, professor);
         return new ResponseEntity<>("Professor information updated", HttpStatus.OK);
+    }
+
+    @Override
+    @PutMapping("professors/profile/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable("id") String id, @RequestBody UpdateUserByUserDTO professorDTO)
+            throws ResourceNotFoundException, UniqueColumnViolationException {
+        professorDTO.setId(id);
+        Professor professor = ProfessorMapper.toEntity(professorDTO);
+        professorService.updateBasicInfo(id, professor);
+        return new ResponseEntity<>("Profile information updated", HttpStatus.OK);
     }
 
     @Override
@@ -54,18 +67,20 @@ public class ProfessorController implements IProfessorController {
 
     @Override
     @GetMapping("professors/{id}")
-    public ResponseEntity<ProfessorDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
-        ProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
+    public ResponseEntity<ResponseBodyProfessorDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
         return new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("professors")
-    public ResponseEntity<List<ProfessorDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
-                                                      @RequestParam(name = "offset", required = false) Integer offset) {
+    public ResponseEntity<List<ResponseBodyProfessorDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+                                                                 @RequestParam(name = "offset", required = false) Integer offset) {
         List<Professor> professorList;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) professorList = professorService.findAll();
-        else professorList = professorService.findAll(limit, offset);
+        if (Objects.isNull(limit) && Objects.isNull(offset))
+            professorList = professorService.findAll();
+        else
+            professorList = professorService.findAll(limit, offset);
         return new ResponseEntity<>(professorList.stream().map(ProfessorMapper::toDTO).toList(), HttpStatus.OK);
     }
 }

@@ -35,7 +35,7 @@ public class StudentMapper {
         return student;
     }
 
-    public static Student toEntity(UpdateStudentByStudentDTO update) {
+    public static Student toEntity(UpdateUserByUserDTO update) {
         Student student = new Student();
         student.setId(update.getId());
         student.setFirstName(update.getFirstName());
