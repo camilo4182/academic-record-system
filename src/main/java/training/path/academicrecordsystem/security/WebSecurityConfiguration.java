@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,11 +38,17 @@ public class WebSecurityConfiguration {
                 .cors().and().csrf().disable()
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                .mvcMatchers("/students").hasAnyRole(IRoles.STUDENT, IRoles.ADMIN)
-                .mvcMatchers("/classes").hasRole(IRoles.ADMIN)
-                .mvcMatchers("/login").permitAll()
-                .anyRequest().permitAll()
-        ).httpBasic(Customizer.withDefaults()).exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+                        .mvcMatchers(HttpMethod.POST,"/login").permitAll()
+                        .mvcMatchers(HttpMethod.POST, "/**").authenticated()
+                        .mvcMatchers(HttpMethod.PUT, "/**").authenticated()
+                        .mvcMatchers(HttpMethod.DELETE, "/**").authenticated()
+                        .mvcMatchers(HttpMethod.GET, "/students/**").hasRole(IRoles.STUDENT)
+                        .mvcMatchers("/students/**").hasAnyRole(IRoles.ADMIN)
+                        .mvcMatchers("/classes").hasRole(IRoles.ADMIN)
+                        .anyRequest().permitAll()
+        ).httpBasic(Customizer.withDefaults())
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 
