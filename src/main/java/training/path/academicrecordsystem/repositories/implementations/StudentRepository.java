@@ -58,7 +58,8 @@ public class StudentRepository implements IStudentRepository {
                 """
                 SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
-                INNER JOIN careers c ON s.career_id = c.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN careers c ON e.career_id = c.id
                 WHERE u.id = ?;
                 """;
         try {

@@ -71,7 +71,7 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @GetMapping("students/{id}")
+    @GetMapping("students/profile/{id}")
     public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
         ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
         return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
