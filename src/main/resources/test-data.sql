@@ -54,6 +54,13 @@ INSERT INTO students (id, average_grade) VALUES (
 );
 
 
+INSERT INTO enrollments (id, student_id, career_id) VALUES (
+	gen_random_uuid(),
+	(SELECT u.id FROM students s INNER JOIN users u ON s.id = u.id WHERE u.name ILIKE 'student1'),
+	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering')
+);
+
+
 INSERT INTO users (id, name, password, email, role_id) VALUES (
 	gen_random_uuid(),
 	'professor1',

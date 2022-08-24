@@ -75,8 +75,10 @@ public class StudentController implements IStudentController {
     public ResponseEntity<List<ResponseBodyStudentDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
                                                                @RequestParam(name = "offset", required = false) Integer offset) {
         List<Student> studentList;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) studentList = studentService.findAll();
-        else studentList = studentService.findAll(limit, offset);
+        if (Objects.isNull(limit) && Objects.isNull(offset))
+            studentList = studentService.findAll();
+        else
+            studentList = studentService.findAll(limit, offset);
         return new ResponseEntity<>(studentList.stream().map(StudentMapper::toDTO).toList(), HttpStatus.OK);
     }
 

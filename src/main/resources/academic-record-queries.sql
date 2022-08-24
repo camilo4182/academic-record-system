@@ -10,6 +10,21 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
+
+
+SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade
+FROM students s INNER JOIN users u ON s.id = u.id
+
+SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade
+FROM students s INNER JOIN users u ON s.id = u.id
+INNER JOIN enrollments e ON s.id = e.student_id
+
+SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+FROM students s INNER JOIN users u ON s.id = u.id
+INNER JOIN enrollments e ON s.id = e.student_id
+INNER JOIN careers c ON e.career_id = c.id
+ORDER BY u.name;
+
 /* Get users and their roles */
 SELECT u.id AS id, u.name AS name, u.password AS password, u.email AS email, r.name AS role
 FROM users u INNER JOIN roles r ON u.role_id = r.id;
