@@ -3,11 +3,15 @@ package training.path.academicrecordsystem.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@Profile("dev")
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -43,6 +48,7 @@ public class WebSecurityConfiguration {
                         .mvcMatchers(HttpMethod.PUT, "/**").authenticated()
                         .mvcMatchers(HttpMethod.DELETE, "/**").authenticated()
                         .mvcMatchers(HttpMethod.GET, "/students/**").hasRole(IRoles.STUDENT)
+                        .mvcMatchers(HttpMethod.PUT, "/students/profile/**").hasRole(IRoles.STUDENT)
                         .mvcMatchers("/students/**").hasAnyRole(IRoles.ADMIN)
                         .mvcMatchers("/classes").hasRole(IRoles.ADMIN)
                         .anyRequest().permitAll()

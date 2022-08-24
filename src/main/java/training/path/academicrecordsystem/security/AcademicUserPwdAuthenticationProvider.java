@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Profile("dev")
 @Component
 public class AcademicUserPwdAuthenticationProvider implements AuthenticationProvider {
 

@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.controllers.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import training.path.academicrecordsystem.security.AcademicUserDetailsService;
 import training.path.academicrecordsystem.security.AcademicUserPwdAuthenticationProvider;
 import training.path.academicrecordsystem.security.JWTTokenGeneratorService;
 
+@Profile("dev")
 @RestController
 @RequiredArgsConstructor
 public class MainController implements IMainController {
