@@ -11,19 +11,11 @@ SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
 
-
-SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade
-FROM students s INNER JOIN users u ON s.id = u.id
-
-SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade
-FROM students s INNER JOIN users u ON s.id = u.id
-INNER JOIN enrollments e ON s.id = e.student_id
-
 SELECT s.id AS student_id, u.name AS student_name, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
 FROM students s INNER JOIN users u ON s.id = u.id
-INNER JOIN enrollments e ON s.id = e.student_id
+INNER JOIN enrollments e ON e.student_id = s.id
 INNER JOIN careers c ON e.career_id = c.id
-ORDER BY u.name;
+WHERE u.id = '4444bfbf-e220-4ae5-8b28-eeec5046206a';
 
 /* Get users and their roles */
 SELECT u.id AS id, u.name AS name, u.password AS password, u.email AS email, r.name AS role

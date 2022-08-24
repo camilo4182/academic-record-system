@@ -11,6 +11,58 @@ INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Metabolism',
 INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Data Bases', 3);
 INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Microeconomics', 4);
 
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM courses WHERE name ILIKE 'Algorithms I')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM courses WHERE name ILIKE 'Algebra')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM courses WHERE name ILIKE 'Calculus I')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM courses WHERE name ILIKE 'Data Bases')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Medicine'),
+	(SELECT id FROM courses WHERE name ILIKE 'Metabolism')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Medicine'),
+	(SELECT id FROM courses WHERE name ILIKE 'Cellular Biology')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Economics'),
+	(SELECT id FROM courses WHERE name ILIKE 'Algebra')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Economics'),
+	(SELECT id FROM courses WHERE name ILIKE 'Calculus I')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Economics'),
+	(SELECT id FROM courses WHERE name ILIKE 'Microeconomics')
+);
+
+INSERT INTO career_courses (career_id, course_id) VALUES (
+	(SELECT id FROM careers WHERE name ILIKE 'Chemistry'),
+	(SELECT id FROM courses WHERE name ILIKE 'Cellular Biology')
+);
+
+
 INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_ADMIN');
 INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_STUDENT');
 INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
