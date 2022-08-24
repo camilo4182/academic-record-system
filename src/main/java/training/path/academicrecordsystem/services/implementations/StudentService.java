@@ -43,6 +43,13 @@ public class StudentService implements IStudentService {
         studentRepository.update(id, student);
     }
 
+    @Override
+    public void updateBasicInfo(String id, Student student) throws ResourceNotFoundException, UniqueColumnViolationException {
+        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
+        verifyUniqueness(student);
+        studentRepository.updateBasicInfo(id, student);
+    }
+
     private void verifyUniqueness(Student student) throws UniqueColumnViolationException {
         Optional<Student> foundStudentWithName = studentRepository.findByName(student.getName());
         if (foundStudentWithName.isPresent() && !Objects.equals(foundStudentWithName.orElseThrow().getId(), student.getId()))

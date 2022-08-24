@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
@@ -48,12 +45,22 @@ public class StudentController implements IStudentController {
 
     @Override
     @PutMapping("students/{id}")
-    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody RequestBodyStudentDTO requestBodyStudentDTO)
+    public ResponseEntity<String> update(@PathVariable("id") String id, @RequestBody UpdateStudentByAdminDTO updateByAdmin)
             throws ResourceNotFoundException, UniqueColumnViolationException {
-        requestBodyStudentDTO.setId(id);
-        Student student = StudentMapper.toEntity(requestBodyStudentDTO);
+        updateByAdmin.setId(id);
+        Student student = StudentMapper.toEntity(updateByAdmin);
         studentService.update(id, student);
         return new ResponseEntity<>("Student information updated", HttpStatus.OK);
+    }
+
+    @Override
+    @PutMapping("students/profile/{id}")
+    public ResponseEntity<String> updateBasicInfo(@PathVariable("id") String id, @RequestBody UpdateStudentByStudentDTO updateByStudent)
+            throws ResourceNotFoundException, UniqueColumnViolationException {
+        updateByStudent.setId(id);
+        Student student = StudentMapper.toEntity(updateByStudent);
+        studentService.updateBasicInfo(id, student);
+        return new ResponseEntity<>("Profile information updated", HttpStatus.OK);
     }
 
     @Override

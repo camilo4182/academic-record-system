@@ -1,10 +1,7 @@
 package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyEnrollmentDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
@@ -18,7 +15,9 @@ public interface IStudentController {
 
     ResponseEntity<String> save(@Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException, UniqueColumnViolationException;
 
-    ResponseEntity<String> update(String id, @Valid RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException, UniqueColumnViolationException;
+    ResponseEntity<String> update(String id, @Valid UpdateStudentByAdminDTO updateByAdmin) throws ResourceNotFoundException, UniqueColumnViolationException;
+
+    ResponseEntity<String> updateBasicInfo(String id, @Valid UpdateStudentByStudentDTO updateByStudent) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     ResponseEntity<String> deleteById(String id) throws ResourceNotFoundException;
 

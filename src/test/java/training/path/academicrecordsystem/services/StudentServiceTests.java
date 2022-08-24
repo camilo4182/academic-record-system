@@ -137,6 +137,33 @@ public class StudentServiceTests {
     }
 
     @Test
+    void givenExistingStudent_whenUpdateBasicInfo_thenItDoesNotThrowException() {
+        String id = UUID.randomUUID().toString();
+        Student student = Student.builder().id(id).name("New Name").email("new_email@email.com").build();
+
+        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(studentRepository.update(anyString(), any())).thenReturn(1);
+        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(student));
+        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student));
+
+        assertDoesNotThrow(() -> studentService.updateBasicInfo(id, student));
+    }
+
+    @Test
+    void givenTwoStudentsWithSameNameAndEmail_whenUpdateBasicInfo_thenItThrowsException() {
+        String id = UUID.randomUUID().toString();
+        Student studentToUpdate = Student.builder().id(id).name("Juan").email("same@email.com").build();
+        Student existingStudent = Student.builder().id(UUID.randomUUID().toString()).name("Juan").email("same@email.com").build();
+
+        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(studentRepository.findByName(anyString())).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(existingStudent));
+        when(studentRepository.update(anyString(), any())).thenReturn(0);
+
+        assertThrows(UniqueColumnViolationException.class, () -> studentService.updateBasicInfo(id, studentToUpdate));
+    }
+
+    @Test
     void givenValidId_whenDeleteById_thenItDoesNotThrowException() {
         String id = UUID.randomUUID().toString();
 

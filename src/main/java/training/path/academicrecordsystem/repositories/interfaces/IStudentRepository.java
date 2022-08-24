@@ -12,6 +12,8 @@ public interface IStudentRepository {
 
     int update(String id, Student student);
 
+    int updateBasicInfo(String id, Student student);
+
     int deleteById(String id);
 
     Optional<Student> findById(String id);

@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
-import training.path.academicrecordsystem.controllers.mappers.CareerMapper;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
 import training.path.academicrecordsystem.services.implementations.CareerService;
@@ -43,9 +42,6 @@ public class CareerControllerTests {
 
     @MockBean
     CareerRepository careerRepository;
-
-    @MockBean
-    CareerMapper careerMapper;
 
     @Test
     void givenCareerDTO_whenSave_thenItReturnsOk() throws Exception {
@@ -115,7 +111,7 @@ public class CareerControllerTests {
                 .andExpect(status().isBadRequest());
     }
 
-
+    @Test
     void givenNonExistingCareerDTO_whenUpdate_thenItThrowsException() throws Exception {
         String careerId = UUID.randomUUID().toString();
 

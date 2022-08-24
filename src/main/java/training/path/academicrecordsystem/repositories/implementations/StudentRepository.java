@@ -34,8 +34,16 @@ public class StudentRepository implements IStudentRepository {
 
     @Override
     public int update(String id, Student student) {
-        String queryUser = "UPDATE users SET name = ?, email = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, student.getName(), student.getEmail(), UUID.fromString(id));
+        String queryStudent = "UPDATE students SET average_grade = ? WHERE id = ?;";
+        jdbcTemplate.update(queryStudent, student.getAverageGrade(), UUID.fromString(id));
+        String queryUser = "UPDATE enrollments SET career_id = ? WHERE student_id = ?;";
+        return jdbcTemplate.update(queryUser, UUID.fromString(student.getCareer().getId()), UUID.fromString(id));
+    }
+
+    @Override
+    public int updateBasicInfo(String id, Student student) {
+        String queryUser = "UPDATE users SET name = ?, password = ?, email = ? WHERE id = ?;";
+        return jdbcTemplate.update(queryUser, student.getName(), student.getPassword(), student.getEmail(), UUID.fromString(id));
     }
 
     @Override

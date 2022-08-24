@@ -1,8 +1,6 @@
 package training.path.academicrecordsystem.controllers.mappers;
 
-import training.path.academicrecordsystem.controllers.dtos.CareerDTO;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyStudentDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyStudentDTO;
+import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Student;
 
@@ -23,11 +21,9 @@ public class StudentMapper {
         return requestBodyStudentDTO;
     }
 
-    public static Student toEntity(RequestBodyStudentDTO requestBodyStudentDTO) {
+    public static Student toEntity(UpdateStudentByAdminDTO requestBodyStudentDTO) {
         Student student = new Student();
         student.setId(requestBodyStudentDTO.getId());
-        student.setName(requestBodyStudentDTO.getName());
-        student.setEmail(requestBodyStudentDTO.getEmail());
         student.setAverageGrade(requestBodyStudentDTO.getAverageGrade());
 
         Career career = new Career();
@@ -37,12 +33,23 @@ public class StudentMapper {
         return student;
     }
 
+    public static Student toEntity(UpdateStudentByStudentDTO update) {
+        Student student = new Student();
+        student.setId(update.getId());
+        student.setName(update.getName());
+        student.setPassword(update.getPassword());
+        student.setEmail(update.getEmail());
+
+        return student;
+    }
+
     public static Student createEntity(RequestBodyStudentDTO requestBodyStudentDTO) {
         Student student = new Student();
         student.setId(UUID.randomUUID().toString());
         student.setName(requestBodyStudentDTO.getName());
+        student.setPassword(requestBodyStudentDTO.getPassword());
         student.setEmail(requestBodyStudentDTO.getEmail());
-        student.setAverageGrade(requestBodyStudentDTO.getAverageGrade());
+        student.setAverageGrade(0.0f);
 
         Career career = new Career();
         career.setId(requestBodyStudentDTO.getCareerId());
