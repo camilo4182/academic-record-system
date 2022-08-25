@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.FilterType;
 import training.path.academicrecordsystem.config.ExcludeSecurityAutoConfigurationFilter;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication
 /*@ComponentScan(excludeFilters = @ComponentScan.Filter(
 		type = FilterType.CUSTOM, classes = {ExcludeSecurityAutoConfigurationFilter.class}
 ))*/

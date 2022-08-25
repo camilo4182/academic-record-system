@@ -40,10 +40,12 @@ public class AcademicUserPwdAuthenticationProvider implements AuthenticationProv
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(foundUser.getRole().getRole()));
                 return new UsernamePasswordAuthenticationToken(username, password, authorities);
-            } else {
+            }
+            else {
                 throw new BadCredentialsException("Invalid password!");
             }
-        } else {
+        }
+        else {
             throw new BadCredentialsException("Username is not registered");
         }
     }
