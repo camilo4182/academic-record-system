@@ -2,10 +2,7 @@ package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.controllers.dtos.*;
-import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
-import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.exceptions.*;
 import training.path.academicrecordsystem.validations.custom.SemesterValidator;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
@@ -31,6 +28,6 @@ public interface IStudentController {
 
     ResponseEntity<String> enroll(@UUIDValidator String studentId,
                                   @UUIDValidator String enrollmentId,
-                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException;
+                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException;
 
 }

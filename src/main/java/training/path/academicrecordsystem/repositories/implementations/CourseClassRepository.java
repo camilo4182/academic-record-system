@@ -121,4 +121,13 @@ public class CourseClassRepository implements ICourseClassRepository {
             return false;
         }
     }
+
+    @Override
+    public boolean isAvailable(String id) {
+        String query = "SELECT available FROM classes WHERE id = ?";
+        CourseClass courseClass = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(id));
+        assert courseClass != null;
+        return courseClass.isAvailable();
+    }
+
 }

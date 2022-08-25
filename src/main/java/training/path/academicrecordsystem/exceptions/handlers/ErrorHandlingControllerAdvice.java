@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
-import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.exceptions.*;
 import training.path.academicrecordsystem.exceptions.response.ExceptionResponse;
 import training.path.academicrecordsystem.exceptions.response.ValidationExceptionResponse;
 
@@ -92,6 +89,16 @@ public class ErrorHandlingControllerAdvice {
         response.setHttpStatus(HttpStatus.CONFLICT);
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ClassNotAvailableException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    ResponseEntity<ExceptionResponse> handleClassNotAvailableException(ClassNotAvailableException e) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setHttpStatus(HttpStatus.FORBIDDEN);
+        response.setMessage(e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
 }

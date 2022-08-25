@@ -9,10 +9,7 @@ import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.controllers.interfaces.IStudentController;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
 import training.path.academicrecordsystem.controllers.mappers.StudentMapper;
-import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
-import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.exceptions.*;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
@@ -110,7 +107,7 @@ public class StudentController implements IStudentController {
     public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId,
                                          @PathVariable("enrollmentId") String enrollmentId,
                                          @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO)
-            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException {
+            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException {
         requestBodyEnrollmentDTO.setStudentId(studentId);
         requestBodyEnrollmentDTO.setId(enrollmentId);
         Enrollment enrollment = EnrollmentMapper.toEntity(requestBodyEnrollmentDTO);
