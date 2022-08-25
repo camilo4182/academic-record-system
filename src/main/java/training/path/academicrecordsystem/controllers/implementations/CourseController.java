@@ -76,7 +76,7 @@ public class CourseController implements ICourseController {
         return new ResponseEntity<>(courseList.stream().map(CourseMapper::toDTO).toList(), HttpStatus.OK);
     }
 
-    @GetMapping("courses/{courseId}/classes")
+    @GetMapping("courses/classes/{courseId}")
     public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByCourse(@PathVariable("courseId") String courseId)
             throws ResourceNotFoundException {
         List<CourseClass> classesList = courseService.findClassesByCourse(courseId);

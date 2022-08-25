@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @Service
 public class JWTTokenGeneratorService {
 
-    private static final int EXPIRATION_TIME = 150000;
+    private static final int EXPIRATION_TIME = 200000;
     private final Logger log = Logger.getLogger(JWTTokenGeneratorService.class.getName());
 
     public String generateJWT(UserDetails authentication) {

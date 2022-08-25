@@ -35,7 +35,7 @@ public class AcademicUserPwdAuthenticationProvider implements AuthenticationProv
         String password = authentication.getCredentials().toString();
         Optional<User> foundUserOptional = userRepository.findByUserName(username);
         if (foundUserOptional.isPresent()) {
-            User foundUser = foundUserOptional.orElseThrow();
+            User foundUser = foundUserOptional.get();
             if (passwordEncoder.matches(password, foundUser.getPassword())) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(foundUser.getRole().getRoleName()));
