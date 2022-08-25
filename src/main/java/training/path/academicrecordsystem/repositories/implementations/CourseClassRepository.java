@@ -112,6 +112,30 @@ public class CourseClassRepository implements ICourseClassRepository {
     }
 
     @Override
+    public List<CourseClass> findAllAvailable() {
+        List<CourseClass> allClasses = findAll();
+        return allClasses.stream().filter(CourseClass::isAvailable).toList();
+    }
+
+    @Override
+    public List<CourseClass> findAllAvailable(int limit, int offset) {
+        List<CourseClass> allClasses = findAll(limit, offset);
+        return allClasses.stream().filter(CourseClass::isAvailable).toList();
+    }
+
+    @Override
+    public List<CourseClass> findAllUnavailable() {
+        List<CourseClass> allClasses = findAll();
+        return allClasses.stream().filter(courseClass -> !courseClass.isAvailable()).toList();
+    }
+
+    @Override
+    public List<CourseClass> findAllUnavailable(int limit, int offset) {
+        List<CourseClass> allClasses = findAll(limit, offset);
+        return allClasses.stream().filter(courseClass -> !courseClass.isAvailable()).toList();
+    }
+
+    @Override
     public boolean exists(String id) {
         String query = "SELECT * FROM classes WHERE id = ?";
         try {

@@ -6,6 +6,7 @@ import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseCla
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public interface ICourseClassController {
@@ -18,6 +19,8 @@ public interface ICourseClassController {
 
     ResponseEntity<ResponseBodyCourseClassDTO> findById(String id) throws ResourceNotFoundException;
 
-    ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(Integer limit, Integer offset);
+    ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@Pattern(regexp = "^true$|^false$",
+                                                                message = "Invalid request param value: only accepted 'true' or 'false'") String available,
+                                                             Integer limit, Integer offset);
     
 }

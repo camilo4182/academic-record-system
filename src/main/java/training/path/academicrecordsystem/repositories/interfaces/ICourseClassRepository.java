@@ -19,6 +19,14 @@ public interface ICourseClassRepository {
 
     List<CourseClass> findAll(int limit, int offset);
 
+    List<CourseClass> findAllAvailable();
+
+    List<CourseClass> findAllAvailable(int limit, int offset);
+
+    List<CourseClass> findAllUnavailable();
+
+    List<CourseClass> findAllUnavailable(int limit, int offset);
+
     boolean exists(String id);
 
     boolean isAvailable(String id);

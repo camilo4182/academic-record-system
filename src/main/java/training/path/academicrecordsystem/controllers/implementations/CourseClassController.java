@@ -61,11 +61,32 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @GetMapping("classes")
-    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@RequestParam(name = "limit", required = false) Integer limit,
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@RequestParam(name = "available", required = false) String available,
+                                                                    @RequestParam(name = "limit", required = false) Integer limit,
                                                                     @RequestParam(name = "offset", required = false) Integer offset) {
         List<CourseClass> courseClasses;
-        if (Objects.isNull(limit) && Objects.isNull(offset)) courseClasses = courseClassService.findAll();
-        else courseClasses = courseClassService.findAll(limit, offset);
+        boolean pagination = !Objects.isNull(limit) && !Objects.isNull(offset);
+
+        if (Objects.isNull(available)) {
+            if (pagination)
+                courseClasses = courseClassService.findAll(limit, offset);
+            else
+                courseClasses = courseClassService.findAll();
+        }
+        else {
+            if (Boolean.parseBoolean(available)) {
+                if (pagination)
+                    courseClasses = courseClassService.findAllAvailable(limit, offset);
+                else
+                    courseClasses = courseClassService.findAllAvailable();
+            }
+            else {
+                if (pagination)
+                    courseClasses = courseClassService.findAllUnavailable(limit, offset);
+                else
+                    courseClasses = courseClassService.findAllUnavailable();
+            }
+        }
         return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
     }
 

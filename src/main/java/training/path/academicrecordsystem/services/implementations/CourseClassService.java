@@ -62,4 +62,25 @@ public class CourseClassService implements ICourseClassService {
     public List<CourseClass> findAll(int limit, int offset) {
         return courseClassRepository.findAll(limit, offset);
     }
+
+    @Override
+    public List<CourseClass> findAllAvailable() {
+        return courseClassRepository.findAllAvailable();
+    }
+
+    @Override
+    public List<CourseClass> findAllAvailable(int limit, int offset) {
+        return courseClassRepository.findAllAvailable(limit, offset);
+    }
+
+    @Override
+    public List<CourseClass> findAllUnavailable() {
+        return courseClassRepository.findAllUnavailable();
+    }
+
+    @Override
+    public List<CourseClass> findAllUnavailable(int limit, int offset) {
+        return courseClassRepository.findAllUnavailable(limit, offset);
+    }
+
 }

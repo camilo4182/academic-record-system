@@ -22,4 +22,12 @@ public interface ICourseClassService {
 
     List<CourseClass> findAll(@Min(0) int limit, @Min(0) int offset);
 
+    List<CourseClass> findAllAvailable();
+
+    List<CourseClass> findAllAvailable(@Min(0) int limit, @Min(0) int offset);
+
+    List<CourseClass> findAllUnavailable();
+
+    List<CourseClass> findAllUnavailable(@Min(0) int limit, @Min(0) int offset);
+
 }
