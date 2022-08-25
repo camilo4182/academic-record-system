@@ -8,6 +8,8 @@ import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
@@ -17,6 +19,8 @@ public class Professor extends User {
     @Max(value = 100000, message = "Professor salary cannot exceed 100000", groups = {OnCreate.class, OnUpdate.class})
     private float salary;
 
+    private Set<CourseClass> classes;
+
     public Professor() {
     }
 
@@ -25,4 +29,13 @@ public class Professor extends User {
         super(id, firstName, lastName, userName, password, email, role);
         this.salary = salary;
     }
+
+    public void addClass(CourseClass courseClass) {
+        classes.add(courseClass);
+    }
+
+    public List<CourseClass> getCourseClass() {
+        return classes.stream().toList();
+    }
+
 }

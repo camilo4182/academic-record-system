@@ -25,6 +25,8 @@ public interface IProfessorRepository {
 
     List<Professor> findAll(int limit, int offset);
 
+    List<Professor> findClasses(String id);
+
     boolean exists(String id);
 
 }
