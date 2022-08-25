@@ -47,7 +47,8 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     @Override
     public Optional<Enrollment> findById(String id) {
         String query = """
-                SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, e.career_id AS career_id, c.name AS career
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name , u.last_name AS last_name,
+                u.username AS username, e.career_id AS career_id, c.name AS career
                 FROM users u INNER JOIN students s ON u.id = s.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN careers c ON c.id = e.career_id
