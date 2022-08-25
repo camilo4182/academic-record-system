@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
@@ -74,4 +75,11 @@ public class ProfessorService implements IProfessorService {
     public List<Professor> findAll(int limit, int offset) {
         return professorRepository.findAll(limit, offset);
     }
+
+    @Override
+    public List<CourseClass> findClassesByProfessor(String id) throws ResourceNotFoundException {
+        if (!professorRepository.exists(id)) throw new ResourceNotFoundException("Professor " + id + " was not found");
+        return professorRepository.findClasses(id);
+    }
+
 }

@@ -5,10 +5,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
 import training.path.academicrecordsystem.repositories.rowmappers.ProfessorClassesRowMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -114,24 +116,24 @@ public class ProfessorRepository implements IProfessorRepository {
     }
 
     @Override
-    public List<Professor> findClasses(String id) {
+    public List<CourseClass> findClasses(String id) {
         String query =
                 """
-                SELECT u.id AS prof_id, cl.id AS class_id, capacity, enrolled_students, available
+                SELECT u.id AS prof_id, cl.id AS class_id, capacity, enrolled_students, available,
                 co.id AS course_id, co.name AS course, credits
                 FROM professors p INNER JOIN users u ON u.id = p.id
-                INNER JOIN classes cl ON cl.professors_id = p.id
+                INNER JOIN classes cl ON cl.professor_id = p.id
                 INNER JOIN courses co ON cl.course_id = co.id
                 WHERE u.id = ?;
                 """;
         List<Professor> professorList = jdbcTemplate.query(query, new ProfessorClassesRowMapper(), UUID.fromString(id));
-        Professor professor = new Professor();
-        professor.setId(professorList.get(0).getId());
+        List<CourseClass> classes = new ArrayList<>();
 
-        for (int i = 0; i < professorList.size(); i++) {
-            professor.getCourseClass().add(professorList.get(i).getCourseClass().get(0));
+        for (Professor value : professorList) {
+            classes.add(value.getClassesAsList().get(0));
         }
-        return null;
+
+        return classes;
     }
 
     @Override

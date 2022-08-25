@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.services.interfaces;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 import training.path.academicrecordsystem.validations.groups.OnCreate;
@@ -31,5 +32,7 @@ public interface IProfessorService {
     List<Professor> findAll();
 
     List<Professor> findAll(@Min(0) int limit, @Min(0) int offset);
+
+    List<CourseClass> findClassesByProfessor(@UUIDValidator String id) throws ResourceNotFoundException;
 
 }

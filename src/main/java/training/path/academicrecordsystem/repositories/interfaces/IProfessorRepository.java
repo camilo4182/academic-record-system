@@ -1,5 +1,6 @@
 package training.path.academicrecordsystem.repositories.interfaces;
 
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface IProfessorRepository {
 
     List<Professor> findAll(int limit, int offset);
 
-    List<Professor> findClasses(String id);
+    List<CourseClass> findClasses(String id);
 
     boolean exists(String id);
 

@@ -5,6 +5,7 @@ import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CourseClassMapper {
@@ -19,8 +20,10 @@ public class CourseClassMapper {
         CourseDTO courseDTO = CourseMapper.toDTO(courseClass.getCourse());
         responseBodyCourseClassDTO.setCourse(courseDTO);
 
-        ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(courseClass.getProfessor());
-        responseBodyCourseClassDTO.setProfessor(professorDTO);
+        if (!Objects.isNull(courseClass.getProfessor())) {
+            ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(courseClass.getProfessor());
+            responseBodyCourseClassDTO.setProfessor(professorDTO);
+        }
 
         return responseBodyCourseClassDTO;
     }

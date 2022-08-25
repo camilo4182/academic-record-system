@@ -8,6 +8,7 @@ import training.path.academicrecordsystem.validations.groups.OnUpdate;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,19 +23,21 @@ public class Professor extends User {
     private Set<CourseClass> classes;
 
     public Professor() {
+        classes = new HashSet<>();
     }
 
     @Builder
     public Professor(String id, String firstName, String lastName, String userName, String password, String email, Role role, float salary) {
         super(id, firstName, lastName, userName, password, email, role);
         this.salary = salary;
+        this.classes = new HashSet<>();
     }
 
     public void addClass(CourseClass courseClass) {
         classes.add(courseClass);
     }
 
-    public List<CourseClass> getCourseClass() {
+    public List<CourseClass> getClassesAsList() {
         return classes.stream().toList();
     }
 

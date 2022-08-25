@@ -5,14 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import training.path.academicrecordsystem.controllers.dtos.RequestBodyProfessorDTO;
-import training.path.academicrecordsystem.controllers.dtos.ResponseBodyProfessorDTO;
-import training.path.academicrecordsystem.controllers.dtos.UpdateProfessorByAdminDTO;
-import training.path.academicrecordsystem.controllers.dtos.UpdateUserByUserDTO;
+import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.controllers.interfaces.IProfessorController;
+import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.ProfessorMapper;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
+import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
@@ -90,4 +89,12 @@ public class ProfessorController implements IProfessorController {
             professorList = professorService.findAll(limit, offset);
         return new ResponseEntity<>(professorList.stream().map(ProfessorMapper::toDTO).toList(), HttpStatus.OK);
     }
+
+    @Override
+    @GetMapping("professors/classes/{professorId}")
+    public ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByProfessor(@PathVariable("professorId") String professorId) throws ResourceNotFoundException {
+        List<CourseClass> classes = professorService.findClassesByProfessor(professorId);
+        return new ResponseEntity<>(classes.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
+    }
+
 }
