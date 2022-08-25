@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
@@ -37,7 +38,9 @@ public class EnrollmentService implements IEnrollmentService {
     }
 
     @Override
-    public void saveClass(Enrollment enrollment, List<CourseClass> courseClasses) throws ResourceNotFoundException, NotMatchEnrollmentStudentException {
+    public void saveClass(Enrollment enrollment, List<CourseClass> courseClasses)
+            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException {
+
         if (!studentRepository.exists(enrollment.getStudent().getId()))
             throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
         if (!enrollmentRepository.exists(enrollment.getId()))
@@ -48,6 +51,8 @@ public class EnrollmentService implements IEnrollmentService {
         List<CourseClass> foundClasses = new ArrayList<>();
         for (CourseClass courseClass : courseClasses) {
             foundClasses.add(courseClassRepository.findById(courseClass.getId()).orElseThrow(() -> new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found")));
+            if (enrollmentRepository.studentAlreadyEnrolled(enrollment.getId(), courseClass.getId()))
+                throw new StudentAlreadyEnrolledException("This student is already enrolled in this class");
         }
         for (CourseClass courseClass : foundClasses) {
             courseClass.increaseEnrolledStudents();

@@ -89,4 +89,16 @@ public class EnrollmentRepository implements IEnrollmentRepository {
             return false;
         }
     }
+
+    @Override
+    public boolean studentAlreadyEnrolled(String enrollmentId, String classId) {
+        String query = "SELECT * FROM enrollment_classes WHERE enrollment_id = ? AND class_id = ?;";
+        try {
+            jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(enrollmentId), UUID.fromString(classId));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
+
 }

@@ -18,4 +18,6 @@ public interface IEnrollmentRepository {
 
     boolean exists(String id);
 
+    boolean studentAlreadyEnrolled(String enrollmentId, String classId);
+
 }
