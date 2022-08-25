@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.jwtauth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import training.path.academicrecordsystem.security.interfaces.SecurityConstants;
 
 import javax.crypto.SecretKey;
 import javax.servlet.FilterChain;

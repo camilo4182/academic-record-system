@@ -21,7 +21,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public Optional<User> findByUserName(String userName) {
         String query = """
-                SELECT u.id AS user_id, u.username AS username, u.password AS password, u.email AS email, r.name AS role
+                SELECT u.id AS user_id, u.username AS username, u.password AS password, u.email AS email, r.role AS role
                 FROM users u INNER JOIN roles r ON u.role_id = r.id
                 WHERE u.username ILIKE ?;
                 """;
@@ -35,7 +35,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public Optional<Role> findRoleByName(String name) {
-        String query = "SELECT * FROM roles WHERE name ILIKE ?;";
+        String query = "SELECT * FROM roles WHERE role ILIKE ?;";
         Role role = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Role.class), name);
         return Optional.ofNullable(role);
     }

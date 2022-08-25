@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.interfaces;
 
 public interface IRoles {
 

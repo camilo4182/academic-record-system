@@ -14,9 +14,9 @@ public class UserWithRolRowMapper implements RowMapper<User> {
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         Role role = new Role();
-        role.setRole(rs.getString("role"));
+        role.setRoleName(rs.getString("role"));
 
-        User user = UserFactory.create(role.getRole());
+        User user = UserFactory.create(role.getRoleName());
         user.setId(rs.getObject("user_id", UUID.class).toString());
         user.setUserName(rs.getString("username"));
         user.setPassword(rs.getString("password"));

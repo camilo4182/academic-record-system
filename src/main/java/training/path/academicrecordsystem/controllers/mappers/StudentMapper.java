@@ -2,7 +2,9 @@ package training.path.academicrecordsystem.controllers.mappers;
 
 import training.path.academicrecordsystem.controllers.dtos.*;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.Role;
 import training.path.academicrecordsystem.model.Student;
+import training.path.academicrecordsystem.security.interfaces.IRoles;
 
 import java.util.UUID;
 
@@ -60,6 +62,10 @@ public class StudentMapper {
         Career career = new Career();
         career.setId(requestBodyStudentDTO.getCareerId());
         student.setCareer(career);
+
+        Role role = new Role();
+        role.setRoleName("ROLE_" + IRoles.STUDENT);
+        student.setRole(role);
 
         return student;
     }

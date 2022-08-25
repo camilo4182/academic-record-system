@@ -4,9 +4,8 @@ import training.path.academicrecordsystem.model.Administrator;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.model.Student;
 import training.path.academicrecordsystem.model.User;
-import training.path.academicrecordsystem.security.IRoles;
 
-import static training.path.academicrecordsystem.security.IRoles.*;
+import static training.path.academicrecordsystem.security.interfaces.IRoles.*;
 
 public class UserFactory {
 

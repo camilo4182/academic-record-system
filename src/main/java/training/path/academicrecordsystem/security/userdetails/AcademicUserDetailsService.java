@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.userdetails;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

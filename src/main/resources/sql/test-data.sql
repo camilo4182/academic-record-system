@@ -63,9 +63,9 @@ INSERT INTO career_courses (career_id, course_id) VALUES (
 );
 
 
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_ADMIN');
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_STUDENT');
-INSERT INTO roles (id, name) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
+INSERT INTO roles (id, role) VALUES (gen_random_uuid(), 'ROLE_ADMIN');
+INSERT INTO roles (id, role) VALUES (gen_random_uuid(), 'ROLE_STUDENT');
+INSERT INTO roles (id, role) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
 
 
 
@@ -76,9 +76,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Admin1',
 	'Test1',
 	'admin1.test1',
-	'1234',
+	'$2a$12$U2hGz5E74FQJ98uj.Fj1leeM/hnZTwa9YFd439J/VdFYHiE1hTHxS',
 	'test_admin1@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'admin1.test1')
@@ -90,9 +90,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Admin2',
 	'Test2',
 	'admin2.test2',
-	'$2a$12$v5BCniWLT724a4TUXwRreumxKz9duqIdnjRFfS8jSeS3BsClgCQte',
+	'$2a$12$sI24YXpBPKJnTAcZdsknHuflJJVueZ.ktWtVq0QI/88zzvTHhebvO',
 	'test_admin2@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_ADMIN') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_ADMIN') /* ROLE */
 );
 INSERT INTO administrators (id) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'admin2.test2')
@@ -107,9 +107,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Student1',
 	'Test1',
 	'student1.test1',
-	'$2a$12$kkMzXQx6f6ZA5xXYwe.kHOHBNyusS8ZKBlkafINFp.0LmEArlM/WG',
+	'$2a$12$yxjoQChKhxmYXUwXeS46e.l.7K9Dty60U776TCrT98JM1tVmjvdSi',
 	'student1@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_STUDENT') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_STUDENT') /* ROLE */
 );
 INSERT INTO students (id, average_grade) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'student1.test1'),
@@ -127,9 +127,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Student2',
 	'Test2',
 	'student2.test2',
-	'$2a$12$kkMzXQx6f6ZA5xXYwe.kHOHBNyusS8ZKBlkafINFp.0LmEArlM/WG',
+	'$2a$12$agsoFw93pNWKw8gNuh1HEu/GlVSXCg0ALu6zygc7ybKD1Hx53lRzG',
 	'student2@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_STUDENT') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_STUDENT') /* ROLE */
 );
 INSERT INTO students (id, average_grade) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'student2.test2'),
@@ -147,9 +147,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Student3',
 	'Test3',
 	'student3.test3',
-	'$2a$12$kkMzXQx6f6ZA5xXYwe.kHOHBNyusS8ZKBlkafINFp.0LmEArlM/WG',
+	'$2a$12$QOXLegMgAnSRVroG25lEfu8xSQfuqsJbdHDjcEcab2Su/FNPHwxEC',
 	'student3@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_STUDENT') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_STUDENT') /* ROLE */
 );
 INSERT INTO students (id, average_grade) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'student3.test3'),
@@ -170,9 +170,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Professor1',
 	'Test1',
 	'professor1.test1',
-	'$2a$12$1zmW2FVKfyx1fNGP4HlJpOs9Ki4.x2FG4YhKZsjLiwNNBiAERF9JO',
+	'$2a$12$trL46RMiKiVgYdAesYLzxeuEHi1otJzJViiAvZMAbbzQSOzMVnp6K',
 	'professor1@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_PROFESSOR') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_PROFESSOR') /* ROLE */
 );
 INSERT INTO professors (id, salary) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'professor1.test1'),
@@ -184,9 +184,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Professor2',
 	'Test2',
 	'professor2.test2',
-	'$2a$12$1zmW2FVKfyx1fNGP4HlJpOs9Ki4.x2FG4YhKZsjLiwNNBiAERF9JO',
+	'$2a$12$JYJ4rp9qUCQ8HXTHtFYIQOZdkyT0rzcVgkYPAmUTpdSsVXuuc8eBK',
 	'professor2@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_PROFESSOR') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_PROFESSOR') /* ROLE */
 );
 INSERT INTO professors (id, salary) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'professor2.test2'),
@@ -198,9 +198,9 @@ INSERT INTO users (id, first_name, last_name, username, password, email, role_id
 	'Professor3',
 	'Test3',
 	'professor3.test3',
-	'$2a$12$1zmW2FVKfyx1fNGP4HlJpOs9Ki4.x2FG4YhKZsjLiwNNBiAERF9JO',
+	'$2a$12$jFwdIm21E9CyrEcg8MI2UeYCGJnQH.2I.1UPHe7mqfM3GNvrS7PAa',
 	'professor3@email.com',
-	(SELECT id FROM roles WHERE name ILIKE 'ROLE_PROFESSOR') /* ROLE */
+	(SELECT id FROM roles WHERE role ILIKE 'ROLE_PROFESSOR') /* ROLE */
 );
 INSERT INTO professors (id, salary) VALUES (
 	(SELECT id FROM users WHERE username ILIKE 'professor3.test3'),

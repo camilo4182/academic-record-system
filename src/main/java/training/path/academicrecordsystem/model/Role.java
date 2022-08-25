@@ -15,6 +15,6 @@ public class Role {
     private String id;
 
     @NotBlank(message = "Role cannot be blank")
-    private String role;
+    private String roleName;
 
 }

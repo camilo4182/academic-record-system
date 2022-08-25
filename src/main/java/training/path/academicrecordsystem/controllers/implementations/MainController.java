@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequest;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationResponse;
 import training.path.academicrecordsystem.controllers.interfaces.IMainController;
-import training.path.academicrecordsystem.security.AcademicUserDetailsService;
-import training.path.academicrecordsystem.security.AcademicUserPwdAuthenticationProvider;
-import training.path.academicrecordsystem.security.JWTTokenGeneratorService;
+import training.path.academicrecordsystem.security.userdetails.AcademicUserDetailsService;
+import training.path.academicrecordsystem.security.authproviders.AcademicUserPwdAuthenticationProvider;
+import training.path.academicrecordsystem.security.jwtauth.JWTTokenGeneratorService;
 
 @Profile("dev")
 @RestController

@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.userdetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class AcademicUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().getRole()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
     }
 
     @Override

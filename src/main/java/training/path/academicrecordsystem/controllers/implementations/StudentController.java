@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.controllers.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.*;
@@ -24,16 +25,19 @@ public class StudentController implements IStudentController {
 
     private final IStudentService studentService;
     private final IEnrollmentService enrollmentService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public StudentController(IStudentService studentService, IEnrollmentService enrollmentService) {
+    public StudentController(IStudentService studentService, IEnrollmentService enrollmentService, PasswordEncoder passwordEncoder) {
         this.studentService = studentService;
         this.enrollmentService = enrollmentService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @PostMapping("students")
     public ResponseEntity<String> save(@RequestBody RequestBodyStudentDTO requestBodyStudentDTO) throws ResourceNotFoundException, UniqueColumnViolationException {
+        requestBodyStudentDTO.setPassword(passwordEncoder.encode(requestBodyStudentDTO.getPassword()));
         Student student = StudentMapper.createEntity(requestBodyStudentDTO);
         studentService.save(student);
         Enrollment enrollment = EnrollmentMapper.createEntityFromStudent(student);
@@ -69,8 +73,15 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @GetMapping("students/profile/{id}")
+    @GetMapping("students/{id}")
     public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
+        ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
+        return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping("students/profile/{id}")
+    public ResponseEntity<ResponseBodyStudentDTO> viewProfile(@PathVariable("id") String id) throws ResourceNotFoundException {
         ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
         return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
     }

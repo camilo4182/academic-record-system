@@ -3,15 +3,12 @@ package training.path.academicrecordsystem.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,10 +17,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
+import training.path.academicrecordsystem.security.interfaces.IRoles;
+import training.path.academicrecordsystem.security.interfaces.SecurityConstants;
+import training.path.academicrecordsystem.security.jwtauth.JWTTokenValidatorFilter;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,9 +44,10 @@ public class WebSecurityConfiguration {
                         .mvcMatchers(HttpMethod.POST, "/**").authenticated()
                         .mvcMatchers(HttpMethod.PUT, "/**").authenticated()
                         .mvcMatchers(HttpMethod.DELETE, "/**").authenticated()
+                        .mvcMatchers("/students").hasAnyRole(IRoles.ADMIN)
+                        .mvcMatchers("/students/*").hasAnyRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.GET, "/students/**").hasRole(IRoles.STUDENT)
                         .mvcMatchers(HttpMethod.PUT, "/students/profile/**").hasRole(IRoles.STUDENT)
-                        .mvcMatchers("/students/**").hasAnyRole(IRoles.ADMIN)
                         .mvcMatchers("/classes").hasRole(IRoles.ADMIN)
                         .anyRequest().permitAll()
         ).httpBasic(Customizer.withDefaults())

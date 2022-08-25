@@ -10,6 +10,9 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
+SELECT u.id AS user_id, u.username AS name, u.password AS password, u.email AS email, r.name AS role
+FROM users u INNER JOIN roles r ON u.role_id = r.id
+WHERE u.username ILIKE 'student1.test1';
 
 SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS email, average_grade, c.id AS career_id, c.name AS career
 FROM students s INNER JOIN users u ON s.id = u.id

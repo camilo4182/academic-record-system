@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.exceptionshandlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;

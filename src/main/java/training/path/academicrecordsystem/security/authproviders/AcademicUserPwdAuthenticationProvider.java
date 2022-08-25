@@ -1,4 +1,4 @@
-package training.path.academicrecordsystem.security;
+package training.path.academicrecordsystem.security.authproviders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -38,7 +38,7 @@ public class AcademicUserPwdAuthenticationProvider implements AuthenticationProv
             User foundUser = foundUserOptional.orElseThrow();
             if (passwordEncoder.matches(password, foundUser.getPassword())) {
                 List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(foundUser.getRole().getRole()));
+                authorities.add(new SimpleGrantedAuthority(foundUser.getRole().getRoleName()));
                 return new UsernamePasswordAuthenticationToken(username, password, authorities);
             }
             else {

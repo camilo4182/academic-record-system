@@ -21,6 +21,8 @@ public interface IStudentController {
 
     ResponseEntity<ResponseBodyStudentDTO> findById(String id) throws ResourceNotFoundException;
 
+    ResponseEntity<ResponseBodyStudentDTO> viewProfile(String id) throws ResourceNotFoundException;
+
     ResponseEntity<List<ResponseBodyStudentDTO>> findAll(Integer limit, Integer offset);
 
     ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@UUIDValidator String studentId,
