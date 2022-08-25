@@ -1,14 +1,11 @@
 package training.path.academicrecordsystem.model;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Role {
 
     @NotBlank(message = "Id cannot be blank")
@@ -17,4 +14,12 @@ public class Role {
     @NotBlank(message = "Role cannot be blank")
     private String roleName;
 
+    public Role() {
+    }
+
+    @Builder
+    public Role(String id, String roleName) {
+        this.id = id;
+        this.roleName = roleName;
+    }
 }

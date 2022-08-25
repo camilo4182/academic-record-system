@@ -47,11 +47,11 @@ public class ProfessorService implements IProfessorService {
 
     private void verifyUniqueness(Professor professor) throws UniqueColumnViolationException {
         Optional<Professor> foundProfessorWithName = professorRepository.findByUserName(professor.getUserName());
-        if (foundProfessorWithName.isPresent() && !Objects.equals(foundProfessorWithName.orElseThrow().getId(), professor.getId()))
+        if (foundProfessorWithName.isPresent() && !Objects.equals(foundProfessorWithName.get().getId(), professor.getId()))
             throw new UniqueColumnViolationException("There is already a professor named " + professor.getFirstName() + " " + professor.getLastName() + ". Enter another one.");
 
         Optional<Professor> foundProfessorWithEmail = professorRepository.findByEmail(professor.getEmail());
-        if (foundProfessorWithEmail.isPresent() && !Objects.equals(foundProfessorWithEmail.orElseThrow().getId(), professor.getId()))
+        if (foundProfessorWithEmail.isPresent() && !Objects.equals(foundProfessorWithEmail.get().getId(), professor.getId()))
             throw new UniqueColumnViolationException("There is already a professor with the email " + professor.getEmail() + ". Enter another one.");
     }
 

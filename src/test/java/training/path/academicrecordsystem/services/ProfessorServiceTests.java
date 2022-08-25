@@ -30,7 +30,13 @@ class ProfessorServiceTests {
 
 	@Test
 	void givenValidProfessorData_whenSave_thenItDoesNotThrowException() {
-		Professor professor = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").salary(35000).build();
+		Professor professor = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("andres@email.com")
+				.salary(35000)
+				.build();
 
 		when(professorRepository.save(any())).thenReturn(1);
 
@@ -39,8 +45,21 @@ class ProfessorServiceTests {
 
 	@Test
 	void givenTwoProfessorsWithSameData_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").salary(35000).build();
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("andres@email.com").salary(35000).build();
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("andres@email.com")
+				.salary(35000)
+				.build();
+
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("andres@email.com")
+				.salary(35000)
+				.build();
 
 		when(professorRepository.save(any())).thenReturn(0);
 		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
@@ -51,8 +70,21 @@ class ProfessorServiceTests {
 
 	@Test
 	void givenTwoProfessorsWithSameName_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("other@email.com").salary(35000).build();
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("another@email.com").salary(35000).build();
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("other@email.com")
+				.salary(35000)
+				.build();
+
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Quintero")
+				.userName("andres.quintero")
+				.email("another@email.com")
+				.salary(43000)
+				.build();
 
 		when(professorRepository.save(any())).thenReturn(0);
 		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
@@ -62,8 +94,21 @@ class ProfessorServiceTests {
 
 	@Test
 	void givenTwoProfessorsWithSameEmail_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Juan").email("same@email.com").salary(35000).build();
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString()).firstName("Andres").email("same@email.com").salary(35000).build();
+		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("same@email.com")
+				.salary(35000)
+				.build();
+
+		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
+				.firstName("Andres")
+				.lastName("Quintero")
+				.userName("andres.quintero")
+				.email("same@email.com")
+				.salary(35000)
+				.build();
 
 		when(professorRepository.save(any())).thenReturn(0);
 		when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor2));
@@ -74,7 +119,13 @@ class ProfessorServiceTests {
 	@Test
 	void givenExistingProfessor_whenUpdate_thenItDoesNotThrowException() {
 		String id = UUID.randomUUID().toString();
-		Professor professor = Professor.builder().id(id).firstName("Maria").email("maria@email.com").salary(35000).build();
+		Professor professor = Professor.builder().id(id)
+				.firstName("Maria")
+				.lastName("Rodriguez")
+				.userName("maria.rodriguez")
+				.email("maria.rodriguez@email.com")
+				.salary(35000)
+				.build();
 
 		when(professorRepository.exists(anyString())).thenReturn(true);
 		when(professorRepository.update(anyString(), any())).thenReturn(1);
@@ -85,7 +136,13 @@ class ProfessorServiceTests {
 	@Test
 	void givenNonExistingProfessor_whenUpdate_thenItThrowsException() {
 		String id = UUID.randomUUID().toString();
-		Professor professor = Professor.builder().id(id).firstName("Null").email("null@email.com").salary(0).build();
+		Professor professor = Professor.builder().id(id)
+				.firstName("Null")
+				.lastName("Null")
+				.userName("null.null")
+				.email("null@email.com")
+				.salary(0)
+				.build();
 
 		when(professorRepository.exists(anyString())).thenReturn(false);
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
@@ -116,7 +173,13 @@ class ProfessorServiceTests {
 	@Test
 	void givenValidId_whenFindById_thenReturnProfessor() {
 		String id = UUID.randomUUID().toString();
-		Professor professor = Professor.builder().id(id).firstName("Juan").email("juan@email.co").salary(35000).build();
+		Professor professor = Professor.builder().id(id)
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("juan@email.co")
+				.salary(35000)
+				.build();
 
 		when(professorRepository.findById(anyString())).thenReturn(Optional.of(professor));
 
@@ -138,9 +201,24 @@ class ProfessorServiceTests {
 		String professorId2 = UUID.randomUUID().toString();
 		String professorId3 = UUID.randomUUID().toString();
 
-		Professor professor1 = Professor.builder().id(professorId1).firstName("Professor 1").salary(30000).build();
-		Professor professor2 = Professor.builder().id(professorId2).firstName("Professor 2").salary(35000).build();
-		Professor professor3 = Professor.builder().id(professorId3).firstName("Professor 3").salary(40000).build();
+		Professor professor1 = Professor.builder().id(professorId1)
+				.firstName("Professor1")
+				.lastName("Test1")
+				.userName("professor1.test1")
+				.salary(30000)
+				.build();
+		Professor professor2 = Professor.builder().id(professorId2)
+				.firstName("Professor2")
+				.lastName("Test2")
+				.userName("professor2.test2")
+				.salary(35000)
+				.build();
+		Professor professor3 = Professor.builder().id(professorId3)
+				.firstName("Professor3")
+				.lastName("Test3")
+				.userName("professor3.test3")
+				.salary(40000)
+				.build();
 
 		List<Professor> professors = List.of(professor1, professor2, professor3);
 
@@ -152,9 +230,9 @@ class ProfessorServiceTests {
 		assertEquals(professorId2, responseList.get(1).getId());
 		assertEquals(professorId3, responseList.get(2).getId());
 
-		assertEquals("Professor 1", responseList.get(0).getFirstName());
-		assertEquals("Professor 2", responseList.get(1).getFirstName());
-		assertEquals("Professor 3", responseList.get(2).getFirstName());
+		assertEquals("Professor1", responseList.get(0).getFirstName());
+		assertEquals("Professor2", responseList.get(1).getFirstName());
+		assertEquals("Professor3", responseList.get(2).getFirstName());
 
 	}
 
