@@ -18,9 +18,11 @@ public interface IEnrollmentService {
     void save(@Valid Enrollment enrollment) throws ResourceNotFoundException;
 
     @Validated(OnEnrollClasses.class)
-    void saveClass(@Valid Enrollment enrollment, @NotEmpty List<CourseClass> courseClasses)
+    void enrollToClasses(@Valid Enrollment enrollment, @NotEmpty List<CourseClass> courseClasses)
             throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException;
 
     List<Enrollment> findAll();
+
+    Enrollment findByStudent(String id) throws ResourceNotFoundException;
 
 }

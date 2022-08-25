@@ -23,21 +23,20 @@ public class EnrollmentMapper {
 
     public static Enrollment toEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
         Enrollment enrollment = new Enrollment();
-        enrollment.setId(requestBodyEnrollmentDTO.getId());
         enrollment.setSemester(requestBodyEnrollmentDTO.getSemester());
 
         Student student = new Student();
         student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
-        for (String classId : requestBodyEnrollmentDTO.getClassIds()) {
-            CourseClass courseClass = new CourseClass();
-            courseClass.setId(classId);
-            enrollment.addClass(courseClass);
-        }
+        CourseClass courseClass = new CourseClass();
+        courseClass.setId(requestBodyEnrollmentDTO.getClassId());
+        enrollment.addClass(courseClass);
+
         return enrollment;
     }
 
+    // Not used
     public static Enrollment createEntity(RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) {
         Enrollment enrollment = new Enrollment();
         enrollment.setId(UUID.randomUUID().toString());
@@ -47,11 +46,10 @@ public class EnrollmentMapper {
         student.setId(requestBodyEnrollmentDTO.getStudentId());
         enrollment.setStudent(student);
 
-        for (String classId : requestBodyEnrollmentDTO.getClassIds()) {
-            CourseClass courseClass = new CourseClass();
-            courseClass.setId(classId);
-            enrollment.addClass(courseClass);
-        }
+        CourseClass courseClass = new CourseClass();
+        courseClass.setId(requestBodyEnrollmentDTO.getClassId());
+        enrollment.addClass(courseClass);
+
         return enrollment;
     }
 

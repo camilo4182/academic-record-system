@@ -35,7 +35,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public void saveClass(Enrollment enrollment, CourseClass courseClass) {
+    public void saveEnrollmentClasses(Enrollment enrollment, CourseClass courseClass) {
         String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id, semester) VALUES (?, ?, ?);";
         jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()),
                 UUID.fromString(courseClass.getId()),
@@ -77,6 +77,19 @@ public class EnrollmentRepository implements IEnrollmentRepository {
                            ) AS prof ON cl.professor_id = prof.professor_id
                 """;
         return jdbcTemplate.query(query, new EnrollmentFullInfoRowMapper());
+    }
+
+    @Override
+    public Optional<Enrollment> findByStudent(String id) {
+        String query =
+                """
+                SELECT e.id AS enrollment_id, u.id AS student_id, first_name , last_name, username, career_id, c.name AS career
+                FROM users u INNER JOIN students s ON u.id = s.id
+                INNER JOIN enrollments e ON e.student_id = s.id
+                INNER JOIN careers c ON c.id = e.career_id
+                WHERE e.student_id = ?;
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(query, new EnrollmentInfoRowMapper(), UUID.fromString(id)));
     }
 
     @Override

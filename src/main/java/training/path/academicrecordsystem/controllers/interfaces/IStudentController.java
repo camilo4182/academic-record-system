@@ -28,8 +28,4 @@ public interface IStudentController {
     ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@UUIDValidator String studentId,
                                                                        @SemesterValidator Integer semester) throws ResourceNotFoundException;
 
-    ResponseEntity<String> enroll(@UUIDValidator String studentId,
-                                  @UUIDValidator String enrollmentId,
-                                  @Valid RequestBodyEnrollmentDTO requestBodyEnrollmentDTO) throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException;
-
 }

@@ -10,11 +10,13 @@ public interface IEnrollmentRepository {
 
     void save(Enrollment enrollment);
 
-    void saveClass(Enrollment enrollment, CourseClass courseClass);
+    void saveEnrollmentClasses(Enrollment enrollment, CourseClass courseClass);
 
     Optional<Enrollment> findById(String id);
 
     List<Enrollment> findAll();
+
+    Optional<Enrollment> findByStudent(String id);
 
     boolean exists(String id);
 

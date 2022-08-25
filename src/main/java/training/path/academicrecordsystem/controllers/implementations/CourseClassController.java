@@ -6,12 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
+import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
+import training.path.academicrecordsystem.exceptions.ClassNotAvailableException;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
 import training.path.academicrecordsystem.model.CourseClass;
+import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
+import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +28,12 @@ import java.util.Objects;
 public class CourseClassController implements ICourseClassController {
 
     private final ICourseClassService courseClassService;
+    private final IEnrollmentService enrollmentService;
 
     @Autowired
-    public CourseClassController(ICourseClassService courseClassService) {
+    public CourseClassController(ICourseClassService courseClassService, IEnrollmentService enrollmentService) {
         this.courseClassService = courseClassService;
+        this.enrollmentService = enrollmentService;
     }
 
     @Override
@@ -88,6 +97,16 @@ public class CourseClassController implements ICourseClassController {
             }
         }
         return new ResponseEntity<>(courseClasses.stream().map(CourseClassMapper::toDTO).toList(), HttpStatus.OK);
+    }
+
+    @Override
+    @PostMapping("classes/enroll/{classId}")
+    public ResponseEntity<String> enroll(@PathVariable("classId") String classId, @RequestBody RequestBodyEnrollmentDTO enrollmentDTO)
+            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException {
+        enrollmentDTO.setClassId(classId);
+        Enrollment enrollment = EnrollmentMapper.toEntity(enrollmentDTO);
+        enrollmentService.enrollToClasses(enrollment, enrollment.getCourseClasses());
+        return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 
 }

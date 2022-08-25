@@ -2,8 +2,13 @@ package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
+import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
+import training.path.academicrecordsystem.exceptions.ClassNotAvailableException;
+import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
+import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -22,5 +27,8 @@ public interface ICourseClassController {
     ResponseEntity<List<ResponseBodyCourseClassDTO>> findAll(@Pattern(regexp = "^true$|^false$",
                                                                 message = "Invalid request param value: only accepted 'true' or 'false'") String available,
                                                              Integer limit, Integer offset);
-    
+
+    ResponseEntity<String> enroll(@UUIDValidator String classId, @Valid RequestBodyEnrollmentDTO enrollmentDTO)
+            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException;
+
 }

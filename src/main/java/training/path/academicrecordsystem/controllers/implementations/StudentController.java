@@ -99,7 +99,7 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @GetMapping("students/{studentId}/enrollment")
+    @GetMapping("students/enrollment/{studentId}")
     public ResponseEntity<List<ResponseBodyEnrollmentDTO>> findEnrollmentInfo(@PathVariable("studentId") String studentId,
                                                                               @RequestParam(name = "semester", required = false) Integer semester)
             throws ResourceNotFoundException {
@@ -111,19 +111,6 @@ public class StudentController implements IStudentController {
             List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
             return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
         }
-    }
-
-    @Override
-    @PostMapping("students/{studentId}/enrollment/{enrollmentId}")
-    public ResponseEntity<String> enroll(@PathVariable("studentId") String studentId,
-                                         @PathVariable("enrollmentId") String enrollmentId,
-                                         @RequestBody RequestBodyEnrollmentDTO requestBodyEnrollmentDTO)
-            throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException {
-        requestBodyEnrollmentDTO.setStudentId(studentId);
-        requestBodyEnrollmentDTO.setId(enrollmentId);
-        Enrollment enrollment = EnrollmentMapper.toEntity(requestBodyEnrollmentDTO);
-        enrollmentService.saveClass(enrollment, enrollment.getCourseClasses());
-        return new ResponseEntity<>("Student was enrolled to a class", HttpStatus.OK);
     }
 
 }
