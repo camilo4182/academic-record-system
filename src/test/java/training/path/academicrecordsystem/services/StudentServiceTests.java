@@ -22,8 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -59,6 +58,26 @@ public class StudentServiceTests {
         when(studentRepository.save(any())).thenReturn(1);
 
         assertDoesNotThrow(() -> studentService.save(student));
+    }
+
+    @Test
+    void givenNonExistingRole_whenSave_thenItThrowsException() {
+        Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
+        Role role = Role.builder().id(UUID.randomUUID().toString()).roleName("Seller").build();
+        Student student = Student.builder().id(UUID.randomUUID().toString())
+                .firstName("Andres")
+                .lastName("Quintero")
+                .userName("andres.quintero")
+                .email("andres@email.com")
+                .career(career)
+                .role(role)
+                .build();
+
+        when(userRepository.findRoleByName(anyString())).thenReturn(Optional.empty());
+        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(studentRepository.save(any())).thenReturn(0);
+
+        assertThrows(ResourceNotFoundException.class, () -> studentService.save(student));
     }
 
     @Test
@@ -336,6 +355,49 @@ public class StudentServiceTests {
         assertEquals(enrollmentId, studentEnrollment.getId());
         assertEquals("Juan", studentEnrollment.getStudent().getFirstName());
 
+    }
+
+    @Test
+    void givenExistingStudents_whenSaveWithPagination_thenItReturnsTheSublist() {
+        String studentId1 = UUID.randomUUID().toString();
+        String studentId2 = UUID.randomUUID().toString();
+        String studentId3 = UUID.randomUUID().toString();
+        String studentId4 = UUID.randomUUID().toString();
+        String studentId5 = UUID.randomUUID().toString();
+        String studentId6 = UUID.randomUUID().toString();
+
+        Student student1 = Student.builder().id(studentId1).firstName("Student 1").build();
+        Student student2 = Student.builder().id(studentId2).firstName("Student 2").build();
+        Student student3 = Student.builder().id(studentId3).firstName("Student 3").build();
+        Student student4 = Student.builder().id(studentId4).firstName("Student 4").build();
+        Student student5 = Student.builder().id(studentId5).firstName("Student 5").build();
+        Student student6 = Student.builder().id(studentId6).firstName("Student 6").build();
+
+        List<Student> students = List.of(student1, student2, student3, student4, student5, student6);
+
+        int limit = 2;
+        int offset = 2;
+
+        when(studentRepository.findAll(anyInt(), anyInt())).thenReturn(students.subList(offset, offset*2));
+
+        List<Student> responseList = studentService.findAll(limit, offset);
+
+        assertEquals(studentId3, responseList.get(0).getId());
+        assertEquals(studentId4, responseList.get(1).getId());
+
+        assertEquals("Student 3", responseList.get(0).getFirstName());
+        assertEquals("Student 4", responseList.get(1).getFirstName());
+    }
+
+    @Test
+    void givenValidStudentIdAndSemester_whenFindEnrollmentsBySemester_thenItReturnsListOfEnrollments() {
+        // TODO: implement the Enrollments and Student
+
+
+        String studentId = UUID.randomUUID().toString();
+        int semester = 4;
+
+        when(studentRepository.exists(anyString())).thenReturn(true);
     }
     
 }

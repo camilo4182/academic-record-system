@@ -17,8 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -211,6 +210,34 @@ public class CareerServiceTests {
         when(careerRepository.findCoursesByCareer(anyString())).thenReturn(null);
 
         assertThrows(ResourceNotFoundException.class, () -> careerService.findCoursesByCareer(careerId));
+    }
+
+    @Test
+    void givenExistingCareers_whenFindAllWithPagination_thenItReturnsTheSublist() {
+        String careerId1 = UUID.randomUUID().toString();
+        String careerId2 = UUID.randomUUID().toString();
+        String careerId3 = UUID.randomUUID().toString();
+        String careerId4 = UUID.randomUUID().toString();
+
+        Career career1 = Career.builder().id(careerId1).name("Career 1").build();
+        Career career2 = Career.builder().id(careerId2).name("Career 2").build();
+        Career career3 = Career.builder().id(careerId3).name("Career 3").build();
+        Career career4 = Career.builder().id(careerId4).name("Career 4").build();
+
+        List<Career> careers = List.of(career1, career2, career3, career4);
+
+        int limit = 2;
+        int offset = 2;
+
+        when(careerRepository.findAll(anyInt(), anyInt())).thenReturn(careers.subList(offset, careers.size()));
+
+        List<Career> responseList = careerService.findAll(limit, offset);
+
+        assertEquals(careerId3, responseList.get(0).getId());
+        assertEquals(careerId4, responseList.get(1).getId());
+
+        assertEquals("Career 3", responseList.get(0).getName());
+        assertEquals("Career 4", responseList.get(1).getName());
     }
 
 }

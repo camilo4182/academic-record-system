@@ -10,6 +10,13 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
+SELECT u.id AS prof_id, cl.id AS class_id, capacity, enrolled_students, available,
+co.id AS course_id, co.name AS course, credits
+FROM professors p INNER JOIN users u ON u.id = p.id
+INNER JOIN classes cl ON cl.professor_id = p.id
+INNER JOIN courses co ON cl.course_id = co.id
+WHERE u.id = '2751b800-7971-4811-8b01-efb7a38d49b2';
+
 SELECT u.id AS user_id, u.username AS name, u.password AS password, u.email AS email, r.name AS role
 FROM users u INNER JOIN roles r ON u.role_id = r.id
 WHERE u.username ILIKE 'student1.test1';
@@ -36,7 +43,7 @@ FROM users INNER JOIN professors
 ON users.id = professors.id;
 
 /* Get students */
-SELECT u.id, u.name AS student_name, u.email, average_grade
+SELECT u.id, first_name, last_name, username, password, email, average_grade
 FROM users u INNER JOIN students s ON u.id = s.id;
 
 SELECT u.id, u.name AS student_name, u.email, average_grade, e.id

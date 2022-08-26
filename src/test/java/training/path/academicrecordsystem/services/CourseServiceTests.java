@@ -16,8 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -168,6 +167,40 @@ public class CourseServiceTests {
         when(courseRepository.getClassesByCourse(anyString())).thenReturn(classes);
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.findClassesByCourse(courseId));
+    }
+
+    @Test
+    void givenExistingCourses_whenFindAllWithPagination_thenItReturnsTheSublist() {
+        String courseId1 = UUID.randomUUID().toString();
+        String courseId2 = UUID.randomUUID().toString();
+        String courseId3 = UUID.randomUUID().toString();
+        String courseId4 = UUID.randomUUID().toString();
+        String courseId5 = UUID.randomUUID().toString();
+        String courseId6 = UUID.randomUUID().toString();
+
+        Course course1 = Course.builder().id(courseId1).name("Course 1").credits(0).build();
+        Course course2 = Course.builder().id(courseId2).name("Course 2").credits(4).build();
+        Course course3 = Course.builder().id(courseId3).name("Course 3").credits(3).build();
+        Course course4 = Course.builder().id(courseId4).name("Course 4").credits(2).build();
+        Course course5 = Course.builder().id(courseId5).name("Course 5").credits(5).build();
+        Course course6 = Course.builder().id(courseId6).name("Course 6").credits(2).build();
+
+        List<Course> courses = List.of(course1, course2, course3, course4, course5, course6);
+
+        int limit = 3;
+        int offset = 3;
+
+        when(courseRepository.findAll(anyInt(), anyInt())).thenReturn(courses.subList(offset, courses.size()));
+
+        List<Course> responseList = courseService.findAll(limit, offset);
+
+        assertEquals(courseId4, responseList.get(0).getId());
+        assertEquals(courseId5, responseList.get(1).getId());
+        assertEquals(courseId6, responseList.get(2).getId());
+
+        assertEquals("Course 4", responseList.get(0).getName());
+        assertEquals("Course 5", responseList.get(1).getName());
+        assertEquals("Course 6", responseList.get(2).getName());
     }
 
 }

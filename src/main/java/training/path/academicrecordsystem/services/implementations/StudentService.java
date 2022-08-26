@@ -102,5 +102,4 @@ public class StudentService implements IStudentService {
         return studentRepository.findEnrollmentsBySemester(studentId, semester);
     }
 
-
 }
