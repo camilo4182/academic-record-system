@@ -97,9 +97,10 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) throws ResourceNotFoundException {
+    public Enrollment findEnrollmentsBySemester(String studentId, int semester) throws ResourceNotFoundException {
         if (!studentRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
-        return studentRepository.findEnrollmentsBySemester(studentId, semester);
+        return studentRepository.findEnrollmentsBySemester(studentId, semester)
+                .orElseThrow(() -> new ResourceNotFoundException("The student has not enrolled to any class this semester"));
     }
 
 }

@@ -36,6 +36,6 @@ public interface IStudentService {
 
     List<Enrollment> findEnrollmentInfo(@UUIDValidator String studentId) throws ResourceNotFoundException;
 
-    List<Enrollment> findEnrollmentsBySemester(@UUIDValidator String studentId, @Min(1) @Max(12) int semester) throws ResourceNotFoundException;
+    Enrollment findEnrollmentsBySemester(@UUIDValidator String studentId, @Min(1) @Max(12) int semester) throws ResourceNotFoundException;
 
 }

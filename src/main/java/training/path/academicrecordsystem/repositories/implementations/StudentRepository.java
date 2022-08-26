@@ -67,7 +67,8 @@ public class StudentRepository implements IStudentRepository {
     public Optional<Student> findById(String id) {
         String query =
                 """
-                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username,
+                u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN careers c ON e.career_id = c.id
@@ -130,7 +131,8 @@ public class StudentRepository implements IStudentRepository {
     public List<Student> findAll() {
         String query =
                 """
-                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username,
+                u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN enrollments e ON s.id = e.student_id
                 INNER JOIN careers c ON e.career_id = c.id
@@ -143,7 +145,8 @@ public class StudentRepository implements IStudentRepository {
     public List<Student> findAll(int limit, int offset) {
         String query =
                 """
-                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+                SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username,
+                u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
                 FROM students s INNER JOIN users u ON s.id = u.id
                 INNER JOIN careers c ON s.career_id = c.id
                 ORDER BY u.first_name
@@ -167,9 +170,9 @@ public class StudentRepository implements IStudentRepository {
     public List<Enrollment> findEnrollmentInfo(String studentId) {
         String query =
                 """
-                SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, semester, cl.id AS class_id, capacity,
-                    enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name,
-                    e.career_id AS career_id, c.name AS career
+                SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name,
+                u.username AS username, semester, cl.id AS class_id, capacity, enrolled_students, available, co.id AS course_id,
+                co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name, e.career_id AS career_id, c.name AS career
                 FROM users u INNER JOIN students s ON u.id = s.id
                 INNER JOIN enrollments e ON e.student_id = s.id
                 INNER JOIN careers c ON c.id = e.career_id
@@ -205,7 +208,8 @@ public class StudentRepository implements IStudentRepository {
         } catch (NoSuchElementException e) {
             String queryForNoClasses =
                     """
-                    SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, e.career_id AS career_id, c.name AS career
+                    SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name,
+                    u.username AS username, e.career_id AS career_id, c.name AS career
                     FROM users u INNER JOIN students s ON u.id = s.id
                     INNER JOIN enrollments e ON e.student_id = s.id
                     INNER JOIN careers c ON c.id = e.career_id
@@ -216,9 +220,9 @@ public class StudentRepository implements IStudentRepository {
     }
 
     @Override
-    public List<Enrollment> findEnrollmentsBySemester(String studentId, int semester) {
+    public Optional<Enrollment> findEnrollmentsBySemester(String studentId, int semester) {
         List<Enrollment> allEnrollments = findEnrollmentInfo(studentId);
-        return allEnrollments.stream().filter(e -> e.getSemester() == semester).toList();
+        return allEnrollments.stream().filter(e -> e.getSemester() == semester).findFirst();
     }
 
 }

@@ -390,14 +390,78 @@ public class StudentServiceTests {
     }
 
     @Test
-    void givenValidStudentIdAndSemester_whenFindEnrollmentsBySemester_thenItReturnsListOfEnrollments() {
+    void givenValidStudentIdAndSemester_whenFindEnrollmentsBySemester_thenItReturnsListOfEnrollments() throws ResourceNotFoundException {
         // TODO: implement the Enrollments and Student
-
+        String enrollmentID1 = UUID.randomUUID().toString();
+        String enrollmentID2 = UUID.randomUUID().toString();
+        String enrollmentID3 = UUID.randomUUID().toString();
 
         String studentId = UUID.randomUUID().toString();
-        int semester = 4;
+        Student student = new Student();
+        student.setId(studentId);
+        int semester = 2;
+
+        Enrollment enrollment1 = Enrollment.builder()
+                .id(enrollmentID1)
+                .student(student)
+                .semester(1)
+                .build();
+
+        Enrollment enrollment2 = Enrollment.builder()
+                .id(enrollmentID2)
+                .student(student)
+                .semester(2)
+                .build();
+
+        Enrollment enrollment3 = Enrollment.builder()
+                .id(enrollmentID3)
+                .student(student)
+                .semester(3)
+                .build();
 
         when(studentRepository.exists(anyString())).thenReturn(true);
+        when(studentRepository.findEnrollmentsBySemester(anyString(), anyInt())).thenReturn(Optional.of(enrollment2));
+
+        assertDoesNotThrow(() -> studentService.findEnrollmentsBySemester(studentId, semester));
+        Enrollment enrollment = studentService.findEnrollmentsBySemester(studentId, semester);
+        assertEquals(enrollmentID2, enrollment.getId());
+        assertEquals(semester, enrollment.getSemester());
     }
-    
+
+    @Test
+    void givenValidStudentIdAndNotEnrollmentThisSemester_whenFindEnrollmentsBySemester_thenItThrowsException() throws ResourceNotFoundException {
+        // TODO: implement the Enrollments and Student
+        String enrollmentID1 = UUID.randomUUID().toString();
+        String enrollmentID2 = UUID.randomUUID().toString();
+        String enrollmentID3 = UUID.randomUUID().toString();
+
+        String studentId = UUID.randomUUID().toString();
+        Student student = new Student();
+        student.setId(studentId);
+        int semester = 4;
+
+        Enrollment enrollment1 = Enrollment.builder()
+                .id(enrollmentID1)
+                .student(student)
+                .semester(1)
+                .build();
+
+        Enrollment enrollment2 = Enrollment.builder()
+                .id(enrollmentID2)
+                .student(student)
+                .semester(2)
+                .build();
+
+        Enrollment enrollment3 = Enrollment.builder()
+                .id(enrollmentID3)
+                .student(student)
+                .semester(3)
+                .build();
+
+        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(studentRepository.findEnrollmentsBySemester(anyString(), anyInt())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> studentService.findEnrollmentsBySemester(studentId, semester));
+    }
+
 }

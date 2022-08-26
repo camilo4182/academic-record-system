@@ -108,7 +108,7 @@ public class StudentController implements IStudentController {
             return new ResponseEntity<>(enrollments.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
         }
         else {
-            List<Enrollment> enrollmentList = studentService.findEnrollmentsBySemester(studentId, semester);
+            List<Enrollment> enrollmentList = List.of(studentService.findEnrollmentsBySemester(studentId, semester));
             return new ResponseEntity<>(enrollmentList.stream().map(EnrollmentMapper::toDTO).toList(), HttpStatus.OK);
         }
     }

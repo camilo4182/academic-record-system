@@ -32,6 +32,6 @@ public interface IStudentRepository {
 
     List<Enrollment> findEnrollmentInfo(String studentId);
 
-    List<Enrollment> findEnrollmentsBySemester(String studentId, int semester);
+    Optional<Enrollment> findEnrollmentsBySemester(String studentId, int semester);
 
 }
