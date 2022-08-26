@@ -18,8 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -164,6 +163,146 @@ public class CourseClassServiceTests {
         assertEquals(classId3, responseList.get(2).getId());
         assertEquals(classId4, responseList.get(3).getId());
 
+    }
+
+    @Test
+    void givenClasses_whenFindAllWithPagination_thenItReturnsListPaginated() {
+        String classID1 = UUID.randomUUID().toString();
+        String classID2 = UUID.randomUUID().toString();
+        String classID3 = UUID.randomUUID().toString();
+        String classID4 = UUID.randomUUID().toString();
+
+        CourseClass class1 = CourseClass.builder()
+                .id(classID1)
+                .enrolledStudents(20)
+                .capacity(30)
+                .available(true)
+                .build();
+
+        CourseClass class2 = CourseClass.builder()
+                .id(classID2)
+                .enrolledStudents(20)
+                .capacity(20)
+                .available(false)
+                .build();
+
+        CourseClass class3 = CourseClass.builder()
+                .id(classID3)
+                .enrolledStudents(0)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        CourseClass class4 = CourseClass.builder()
+                .id(classID4)
+                .enrolledStudents(2)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        List<CourseClass> classes = List.of(class1, class2, class3, class4);
+        int limit = 2;
+        int offset = 2;
+
+        when(courseClassRepository.findAll(anyInt(), anyInt())).thenReturn(classes.subList(offset, classes.size()));
+
+        List<CourseClass> responseList = courseClassService.findAll(limit, offset);
+
+        assertEquals(2, responseList.size());
+        assertEquals(classID3, responseList.get(0).getId());
+        assertEquals(classID4, responseList.get(1).getId());
+    }
+
+    @Test
+    void givenAvailableClasses_whenFindAllAvailable_thenItReturnsListOfClassCourseWithAvailableTrue() {
+        String classID1 = UUID.randomUUID().toString();
+        String classID2 = UUID.randomUUID().toString();
+        String classID3 = UUID.randomUUID().toString();
+        String classID4 = UUID.randomUUID().toString();
+
+        CourseClass class1 = CourseClass.builder()
+                .id(classID1)
+                .enrolledStudents(20)
+                .capacity(30)
+                .available(true)
+                .build();
+
+        CourseClass class2 = CourseClass.builder()
+                .id(classID2)
+                .enrolledStudents(20)
+                .capacity(20)
+                .available(false)
+                .build();
+
+        CourseClass class3 = CourseClass.builder()
+                .id(classID3)
+                .enrolledStudents(0)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        CourseClass class4 = CourseClass.builder()
+                .id(classID4)
+                .enrolledStudents(2)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        List<CourseClass> classes = List.of(class1, class2, class3, class4);
+
+        when(courseClassRepository.findAllAvailable()).thenReturn(classes.stream().filter(CourseClass::isAvailable).toList());
+
+        List<CourseClass> responseList = courseClassService.findAllAvailable();
+
+        assertEquals(3, responseList.size());
+        assertTrue(responseList.get(0).isAvailable());
+        assertTrue(responseList.get(1).isAvailable());
+        assertTrue(responseList.get(2).isAvailable());
+    }
+
+    @Test
+    void givenUnavailableClasses_whenFindAllUnavailable_thenItReturnsListOfClassCourseWithAvailableFalse() {
+        String classID1 = UUID.randomUUID().toString();
+        String classID2 = UUID.randomUUID().toString();
+        String classID3 = UUID.randomUUID().toString();
+        String classID4 = UUID.randomUUID().toString();
+
+        CourseClass class1 = CourseClass.builder()
+                .id(classID1)
+                .enrolledStudents(20)
+                .capacity(30)
+                .available(true)
+                .build();
+
+        CourseClass class2 = CourseClass.builder()
+                .id(classID2)
+                .enrolledStudents(20)
+                .capacity(20)
+                .available(false)
+                .build();
+
+        CourseClass class3 = CourseClass.builder()
+                .id(classID3)
+                .enrolledStudents(0)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        CourseClass class4 = CourseClass.builder()
+                .id(classID4)
+                .enrolledStudents(2)
+                .capacity(20)
+                .available(true)
+                .build();
+
+        List<CourseClass> classes = List.of(class1, class2, class3, class4);
+
+        when(courseClassRepository.findAllUnavailable()).thenReturn(classes.stream().filter(courseClass -> !courseClass.isAvailable()).toList());
+
+        List<CourseClass> responseList = courseClassService.findAllUnavailable();
+
+        assertEquals(1, responseList.size());
+        assertFalse(responseList.get(0).isAvailable());
     }
 
 }
