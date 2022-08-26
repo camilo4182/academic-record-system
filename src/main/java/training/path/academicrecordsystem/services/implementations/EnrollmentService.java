@@ -51,9 +51,9 @@ public class EnrollmentService implements IEnrollmentService {
         Optional<Enrollment> enrollmentOptional = enrollmentRepository.findByStudent(enrollment.getStudent().getId());
 
         if (enrollmentOptional.isEmpty())
-            throw new ResourceNotFoundException("Enrollment with id " + enrollment.getId() + " was not found");
+            throw new ResourceNotFoundException("This student does not have an enrollment associated");
 
-        Enrollment foundEnrollment = enrollmentOptional.orElseThrow();
+        Enrollment foundEnrollment = enrollmentOptional.get();
 
         if (!Objects.equals(enrollment.getStudent().getId(), foundEnrollment.getStudent().getId()))
             throw new NotMatchEnrollmentStudentException("This enrollment does not belong to the selected student");
@@ -62,25 +62,20 @@ public class EnrollmentService implements IEnrollmentService {
 
         List<CourseClass> classesToEnroll = new ArrayList<>();
         for (CourseClass courseClass : courseClasses) {
-            classesToEnroll.add(courseClassRepository.findById(courseClass.getId()).orElseThrow(() ->
-                    new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found")));
+            if (!courseClassRepository.exists(courseClass.getId()))
+                throw new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found");
+
+            if (!courseClassRepository.isAvailable(courseClass.getId()))
+                throw new ClassNotAvailableException("The class " + courseClass.getId() + " does not have available spaces anymore");
 
             /*if (enrollmentRepository.studentAlreadyEnrolled(enrollment.getId(), courseClass.getId()))
                 throw new StudentAlreadyEnrolledException("This student is already enrolled in the class " + courseClass.getId());*/
 
-            if (!courseClassRepository.isAvailable(courseClass.getId()))
-                throw new ClassNotAvailableException("The class " + courseClass.getId() + " does not have available spaces anymore");
+            classesToEnroll.add(courseClass);
         }
         for (CourseClass courseClass : classesToEnroll) {
             courseClass.increaseEnrolledStudents();
             enrollmentRepository.saveEnrollmentClasses(enrollment, courseClass);
-        }
-    }
-
-    private void verifyClasses(List<CourseClass> courseClasses) throws ResourceNotFoundException {
-        for (CourseClass courseClass : courseClasses) {
-            if (!courseClassRepository.exists(courseClass.getId()))
-                throw new ResourceNotFoundException("Class with id " + courseClass.getId() + " was not found");
         }
     }
 
@@ -91,6 +86,7 @@ public class EnrollmentService implements IEnrollmentService {
 
     @Override
     public Enrollment findByStudent(String id) throws ResourceNotFoundException {
+        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("The student " + id + " was not found");
         return enrollmentRepository.findByStudent(id).orElseThrow(() -> new ResourceNotFoundException("The student " + id + " does not have a enrollment"));
     }
 
