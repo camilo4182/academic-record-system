@@ -25,6 +25,24 @@ public class CareerRepository implements ICareerRepository {
     }
 
     @Override
+    public int save(Career career) {
+        String query = "INSERT INTO careers (id, name) VALUES (?, ?)";
+        return jdbcTemplate.update(query, UUID.fromString(career.getId()), career.getName());
+    }
+
+    @Override
+    public int update(String id, Career career) {
+        String query = "UPDATE careers SET name = ? WHERE id = ?";
+        return jdbcTemplate.update(query, career.getName(), UUID.fromString(id));
+    }
+
+    @Override
+    public int deleteById(String id) {
+        String query = "DELETE FROM careers WHERE id = ?";
+        return jdbcTemplate.update(query, UUID.fromString(id));
+    }
+
+    @Override
     public Optional<Career> findById(String id) {
         String query = "SELECT * FROM careers WHERE id = ?";
         try {
@@ -55,24 +73,6 @@ public class CareerRepository implements ICareerRepository {
     public List<Career> findAll(int limit, int offset) {
         String query = "SELECT * FROM careers ORDER BY name LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Career.class), limit, offset);
-    }
-
-    @Override
-    public int save(Career career) {
-        String query = "INSERT INTO careers (id, name) VALUES (?, ?)";
-        return jdbcTemplate.update(query, UUID.fromString(career.getId()), career.getName());
-    }
-
-    @Override
-    public int update(String id, Career career) {
-        String query = "UPDATE careers SET name = ? WHERE id = ?";
-        return jdbcTemplate.update(query, career.getName(), UUID.fromString(id));
-    }
-
-    @Override
-    public int deleteById(String id) {
-        String query = "DELETE FROM careers WHERE id = ?";
-        return jdbcTemplate.update(query, UUID.fromString(id));
     }
 
     @Override
