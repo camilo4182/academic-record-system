@@ -61,7 +61,7 @@ public class StudentServiceTests {
     }
 
     @Test
-    void givenNonExistingRole_whenSave_thenItThrowsException() {
+    void givenUnregisteredRole_whenSave_thenItThrowsException() {
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
         Role role = Role.builder().id(UUID.randomUUID().toString()).roleName("Seller").build();
         Student student = Student.builder().id(UUID.randomUUID().toString())
@@ -73,7 +73,7 @@ public class StudentServiceTests {
                 .role(role)
                 .build();
 
-        when(userRepository.findRoleByName(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.empty());
         when(careerRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.save(any())).thenReturn(0);
 
@@ -84,7 +84,7 @@ public class StudentServiceTests {
     void givenTwoStudentsWithSameData_whenSave_thenItThrowsException() {
         Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.STUDENT).build();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString())
+        Student newStudent = Student.builder().id(UUID.randomUUID().toString())
                 .firstName("Juan")
                 .lastName("Rodriguez")
                 .userName("juan.rodriguez")
@@ -93,7 +93,7 @@ public class StudentServiceTests {
                 .role(role)
                 .build();
 
-        Student student2 = Student.builder().id(UUID.randomUUID().toString())
+        Student registeredStudent = Student.builder().id(UUID.randomUUID().toString())
                 .firstName("Juan")
                 .lastName("Rodriguez")
                 .userName("juan.rodriguez")
@@ -102,19 +102,20 @@ public class StudentServiceTests {
                 .role(role)
                 .build();
 
-        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
+        when(careerRepository.exists(career.getId())).thenReturn(true);
+        when(studentRepository.findByUserName(newStudent.getUserName())).thenReturn(Optional.of(registeredStudent));
+        when(studentRepository.findByEmail(newStudent.getEmail())).thenReturn(Optional.of(registeredStudent));
         when(studentRepository.save(any())).thenReturn(0);
-        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student2));
-        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student2));
 
-        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(student1));
+        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(newStudent));
     }
 
     @Test
-    void givenTwoStudentsWithSameName_whenSave_thenItThrowsException() {
+    void givenTwoStudentsWithSameUserName_whenSave_thenItThrowsException() {
         Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.STUDENT).build();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString())
+        Student studentToSave = Student.builder().id(UUID.randomUUID().toString())
                 .firstName("Juan")
                 .lastName("Rodriguez")
                 .userName("juan.rodriguez")
@@ -132,18 +133,20 @@ public class StudentServiceTests {
                 .role(role)
                 .build();
 
-        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
+        when(careerRepository.exists(studentToSave.getCareer().getId())).thenReturn(true);
+        when(studentRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.of(student2));
+        when(studentRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.empty());
         when(studentRepository.save(any())).thenReturn(0);
-        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student2));
 
-        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(student1));
+        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(studentToSave));
     }
 
     @Test
     void givenTwoStudentsWithSameEmail_whenSave_thenItThrowsException() {
         Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.STUDENT).build();
         Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
-        Student student1 = Student.builder().id(UUID.randomUUID().toString())
+        Student studentToSave = Student.builder().id(UUID.randomUUID().toString())
                 .firstName("Juan")
                 .lastName("Rodriguez")
                 .userName("juan.rodriguez")
@@ -161,28 +164,31 @@ public class StudentServiceTests {
                 .role(role)
                 .build();
 
-        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
+        when(careerRepository.exists(studentToSave.getCareer().getId())).thenReturn(true);
+        when(studentRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.empty());
+        when(studentRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.of(student2));
         when(studentRepository.save(any())).thenReturn(0);
-        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student2));
 
-        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(student1));
+        assertThrows(UniqueColumnViolationException.class, () -> studentService.save(studentToSave));
     }
 
     @Test
-    void givenNonExistingCareer_whenSave_thenItThrowsException() {
+    void givenUnregisteredCareer_whenSave_thenItThrowsException() {
         Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.STUDENT).build();
-        Career career = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
+        Career unregisteredCareer = Career.builder().id(UUID.randomUUID().toString()).name("Software Engineering").build();
         Student student = Student.builder().id(UUID.randomUUID().toString())
                 .firstName("Andres")
                 .lastName("Quintero")
                 .userName("andres.quintero")
                 .email("same@email.com")
-                .career(career)
+                .career(unregisteredCareer)
                 .role(role)
                 .build();
 
+        when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
         when(careerRepository.exists(anyString())).thenReturn(false);
-        when(studentRepository.save(any())).thenReturn(1);
+        when(studentRepository.save(any())).thenReturn(0);
 
         assertThrows(ResourceNotFoundException.class, () -> studentService.save(student));
     }

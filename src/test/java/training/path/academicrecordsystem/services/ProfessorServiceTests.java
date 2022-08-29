@@ -8,7 +8,10 @@ import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.model.Role;
 import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.implementations.UserRepository;
+import training.path.academicrecordsystem.security.interfaces.IRoles;
 import training.path.academicrecordsystem.services.implementations.ProfessorService;
 
 import java.util.List;
@@ -23,6 +26,9 @@ import static org.mockito.Mockito.when;
 class ProfessorServiceTests {
 
 	@Mock
+	UserRepository userRepository;
+
+	@Mock
     ProfessorRepository professorRepository;
 
 	@InjectMocks
@@ -30,90 +36,137 @@ class ProfessorServiceTests {
 
 	@Test
 	void givenValidProfessorData_whenSave_thenItDoesNotThrowException() {
-		Professor professor = Professor.builder().id(UUID.randomUUID().toString())
+		String professorID = UUID.randomUUID().toString();
+		Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.PROFESSOR).build();
+		Professor professor = Professor.builder().id(professorID)
 				.firstName("Juan")
 				.lastName("Rodriguez")
 				.userName("juan.rodriguez")
 				.email("juan.rodriguez@email.com")
 				.salary(35000)
+				.role(role)
 				.build();
 
+		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
+		when(professorRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
+		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
 		when(professorRepository.save(any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.save(professor));
 	}
 
 	@Test
-	void givenTwoProfessorsWithSameData_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
+	void givenUnregisteredRole_whenSave_thenItThrowsException() {
+		String professorID = UUID.randomUUID().toString();
+		Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.PROFESSOR).build();
+		Professor professor = Professor.builder().id(professorID)
 				.firstName("Juan")
 				.lastName("Rodriguez")
 				.userName("juan.rodriguez")
 				.email("juan.rodriguez@email.com")
 				.salary(35000)
+				.role(role)
 				.build();
 
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
-				.firstName("Juan")
-				.lastName("Rodriguez")
-				.userName("juan.rodriguez")
-				.email("juan.rodriguez@email.com")
-				.salary(35000)
-				.build();
+		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.empty());
+		when(professorRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
+		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
+		when(professorRepository.save(any())).thenReturn(1);
 
-		when(professorRepository.save(any())).thenReturn(0);
-		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
-		when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor2));
-
-		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
+		assertThrows(ResourceNotFoundException.class, () -> professorService.save(professor));
 	}
 
 	@Test
-	void givenTwoProfessorsWithSameName_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
+	void givenTwoProfessorsWithSameData_whenSave_thenItThrowsException() {
+		String newProfessorID = UUID.randomUUID().toString();
+		String registeredProfessorID = UUID.randomUUID().toString();
+		Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.PROFESSOR).build();
+		Professor newProfessor = Professor.builder().id(newProfessorID)
 				.firstName("Juan")
 				.lastName("Rodriguez")
 				.userName("juan.rodriguez")
 				.email("juan.rodriguez@email.com")
 				.salary(35000)
+				.role(role)
 				.build();
 
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
+		Professor registeredProfessor = Professor.builder().id(registeredProfessorID)
 				.firstName("Juan")
-				.lastName("Quintero")
-				.userName("juan.quintero")
-				.email("juan.quintero@email.com")
-				.salary(43000)
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("juan.rodriguez@email.com")
+				.salary(35000)
+				.role(role)
 				.build();
 
+		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
+		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
+		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
 		when(professorRepository.save(any())).thenReturn(0);
-		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
 
-		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
+	}
+
+	@Test
+	void givenTwoProfessorsWithSameUserName_whenSave_thenItThrowsException() {
+		String newProfessorID = UUID.randomUUID().toString();
+		String registeredProfessorID = UUID.randomUUID().toString();
+		Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.PROFESSOR).build();
+		Professor newProfessor = Professor.builder().id(newProfessorID)
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("juan1.rodriguez1@email.com")
+				.salary(35000)
+				.role(role)
+				.build();
+
+		Professor registeredProfessor = Professor.builder().id(registeredProfessorID)
+				.firstName("Juan")
+				.lastName("Rodriguez")
+				.userName("juan.rodriguez")
+				.email("juan2.rodriguez2@email.com")
+				.salary(35000)
+				.role(role)
+				.build();
+
+		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
+		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
+		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.empty());
+		when(professorRepository.save(any())).thenReturn(0);
+
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
 	}
 
 	@Test
 	void givenTwoProfessorsWithSameEmail_whenSave_thenItThrowsException() {
-		Professor professor1 = Professor.builder().id(UUID.randomUUID().toString())
-				.firstName("Andres")
+		String newProfessorID = UUID.randomUUID().toString();
+		String registeredProfessorID = UUID.randomUUID().toString();
+		Role role = Role.builder().id(UUID.randomUUID().toString()).roleName(IRoles.PROFESSOR).build();
+		Professor newProfessor = Professor.builder().id(newProfessorID)
+				.firstName("Juan")
 				.lastName("Rodriguez")
 				.userName("juan.rodriguez")
-				.email("andres@email.com")
+				.email("same@email.com")
 				.salary(35000)
+				.role(role)
 				.build();
 
-		Professor professor2 = Professor.builder().id(UUID.randomUUID().toString())
-				.firstName("Andres")
-				.lastName("Quintero")
-				.userName("andres.quintero")
-				.email("andres@email.com")
+		Professor registeredProfessor = Professor.builder().id(registeredProfessorID)
+				.firstName("Alejandro")
+				.lastName("Magno")
+				.userName("alejandro.magno")
+				.email("same@email.com")
 				.salary(35000)
+				.role(role)
 				.build();
 
+		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
+		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.empty());
+		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
 		when(professorRepository.save(any())).thenReturn(0);
-		when(professorRepository.findByEmail(anyString())).thenReturn(Optional.of(professor2));
 
-		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(professor1));
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
 	}
 
 	@Test
@@ -151,9 +204,9 @@ class ProfessorServiceTests {
 	}
 
 	@Test
-	void givenExistingProfessor_whenUpdateBasicInfo_thenItDoesNotThrowException() {
-		String id = UUID.randomUUID().toString();
-		Professor professor = Professor.builder().id(id)
+	void givenExistingProfessorWithUpdatedUniqueUserNameAndEmail_whenUpdateBasicInfo_thenItDoesNotThrowException() {
+		String professorID = UUID.randomUUID().toString();
+		Professor professor = Professor.builder().id(professorID)
 				.firstName("Maria")
 				.lastName("Rodriguez")
 				.userName("maria.rodriguez")
@@ -161,16 +214,18 @@ class ProfessorServiceTests {
 				.salary(35000)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
+		when(professorRepository.exists(professorID)).thenReturn(true);
+		when(professorRepository.findByUserName(professor.getUserName())).thenReturn(Optional.empty());
+		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.empty());
 		when(professorRepository.update(anyString(), any())).thenReturn(1);
 
-		assertDoesNotThrow(() -> professorService.updateBasicInfo(id, professor));
+		assertDoesNotThrow(() -> professorService.updateBasicInfo(professorID, professor));
 	}
 
 	@Test
 	void givenNonExistingProfessor_whenUpdateBasicInfo_thenItThrowsException() {
-		String id = UUID.randomUUID().toString();
-		Professor professor = Professor.builder().id(id)
+		String unregisteredProfessorID = UUID.randomUUID().toString();
+		Professor unregisteredProfessor = Professor.builder().id(unregisteredProfessorID)
 				.firstName("Null")
 				.lastName("Null")
 				.userName("null.null")
@@ -178,16 +233,16 @@ class ProfessorServiceTests {
 				.salary(0)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(false);
+		when(professorRepository.exists(unregisteredProfessorID)).thenReturn(false);
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
-		assertThrows(ResourceNotFoundException.class, () -> professorService.updateBasicInfo(id, professor));
+		assertThrows(ResourceNotFoundException.class, () -> professorService.updateBasicInfo(unregisteredProfessorID, unregisteredProfessor));
 	}
 
 	@Test
 	void givenNonTwoProfessorsWithSameNameButDifferentLastNames_whenUpdateBasicInfo_thenItDoesNotThrowException() {
 		String id = UUID.randomUUID().toString();
-		Professor professor1 = Professor.builder().id(id)
+		Professor professorToUpdate = Professor.builder().id(id)
 				.firstName("Maria")
 				.lastName("Rodriguez")
 				.userName("maria.rodriguez")
@@ -204,16 +259,16 @@ class ProfessorServiceTests {
 				.build();
 
 		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
+		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
-		assertDoesNotThrow(() -> professorService.updateBasicInfo(id, professor1));
+		assertDoesNotThrow(() -> professorService.updateBasicInfo(id, professorToUpdate));
 	}
 
 	@Test
-	void givenNonTwoProfessorsWithSameNameAndLastName_whenUpdateBasicInfo_thenItThrowsException() {
+	void givenNonTwoProfessorsWithSameUserName_whenUpdateBasicInfo_thenItThrowsException() {
 		String id = UUID.randomUUID().toString();
-		Professor professor1 = Professor.builder().id(id)
+		Professor professorToUpdate = Professor.builder().id(id)
 				.firstName("Maria")
 				.lastName("Rodriguez")
 				.userName("maria.rodriguez")
@@ -230,16 +285,16 @@ class ProfessorServiceTests {
 				.build();
 
 		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
+		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
-		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professor1));
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professorToUpdate));
 	}
 
 	@Test
 	void givenNonTwoProfessorsWithSameEmail_whenUpdateBasicInfo_thenItThrowsException() {
 		String id = UUID.randomUUID().toString();
-		Professor professor1 = Professor.builder().id(id)
+		Professor professorToUpdate = Professor.builder().id(id)
 				.firstName("Juan")
 				.lastName("Velasquez")
 				.userName("juan.velasquez")
@@ -256,18 +311,19 @@ class ProfessorServiceTests {
 				.build();
 
 		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(anyString())).thenReturn(Optional.of(professor2));
+		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.empty());
+		when(professorRepository.findByEmail(professorToUpdate.getEmail())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
-		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professor1));
+		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professorToUpdate));
 	}
 
 	@Test
 	void givenValidId_whenDeleteById_thenItDoesNotThrowException() {
 		String id = UUID.randomUUID().toString();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.deleteById(anyString())).thenReturn(1);
+		when(professorRepository.exists(id)).thenReturn(true);
+		when(professorRepository.deleteById(id)).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.deleteById(id));
 	}
