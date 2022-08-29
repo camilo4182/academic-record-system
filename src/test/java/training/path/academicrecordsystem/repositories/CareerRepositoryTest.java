@@ -54,16 +54,14 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(1)
     void givenValidCareerInformation_whenSave_thenTheCareerIsStoredInTheDB() {
         String careerID = UUID.randomUUID().toString();
-        Career career = setupCareer(careerID, "Medicine");
+        Career career = setupCareer(careerID, "Music");
 
         assertEquals(1, careerRepository.save(career));
     }
 
     @Test
-    @Order(2)
     void givenRegisteredCareer_whenFindByName_thenTheCareerWithThatNameIsReturned() {
         String careerName = "Medicine";
 
@@ -75,7 +73,6 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(3)
     void givenUnregisteredCareer_whenFindByName_thenAnEmptyOptionalIsReturned() {
         String careerName = "Art";
 
@@ -84,11 +81,9 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(4)
     void givenSavedCareer_whenFindById_thenTheCareerIdentifiedByThatIdIsReturned() {
-        String careerID = UUID.randomUUID().toString();
-        Career careerToSave = setupCareer(careerID, "Software Engineering");
-        careerRepository.save(careerToSave);
+        Career registeredCareer = careerRepository.findByName("Software Engineering").orElseThrow();
+        String careerID = registeredCareer.getId();
 
         Optional<Career> careerOptional = careerRepository.findById(careerID);
         assertTrue(careerOptional.isPresent());
@@ -98,24 +93,21 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(5)
     void givenUpdatedCareerInformation_whenUpdate_thenTheTableRecordIsUpdatedInDB() {
-        String careerID = UUID.randomUUID().toString();
-        Career careerToSave = setupCareer(careerID, "International Finance");
-        careerRepository.save(careerToSave);
+        Career registeredCareer = careerRepository.findByName("Chemistry").orElseThrow();
+        String careerID = registeredCareer.getId();
 
-        Career careerToUpdate = setupCareer(careerID, "Economics");
+        Career careerToUpdate = setupCareer(careerID, "Physics");
         assertEquals(1, careerRepository.update(careerID, careerToUpdate));
 
         Optional<Career> careerOptional = careerRepository.findById(careerID);
         assertTrue(careerOptional.isPresent());
 
         Career updatedCareer = careerOptional.get();
-        assertEquals("Economics", updatedCareer.getName());
+        assertEquals("Physics", updatedCareer.getName());
     }
 
     @Test
-    @Order(6)
     void givenValidCareerId_whenDeleteById_thenTheCareerIsDeletedFromDB() {
         String careerID = UUID.randomUUID().toString();
         Career careerToDelete = setupCareer(careerID, "Philosophy");
@@ -126,16 +118,14 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(7)
     void givenRegisteredCareers_whenFindAll_thenAListOfCareersIsReturned() {
         List<Career> careers = careerRepository.findAll();
 
         assertFalse(careers.isEmpty());
-        assertEquals(3, careers.size());
+        assertEquals(4, careers.size());
     }
 
     @Test
-    @Order(8)
     void givenRegisteredCareers_whenFindAllWithPagination_thenAListOfCareersIsReturned() {
         int limit = 1;
         int offset = 1;
@@ -146,7 +136,6 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(9)
     void givenRegisteredCareer_whenCallingExistsMethod_thenItReturnsTrue() {
         Optional<Career> careerOptional = careerRepository.findByName("Medicine");
         assertTrue(careerOptional.isPresent());
@@ -156,7 +145,6 @@ public class CareerRepositoryTest {
     }
 
     @Test
-    @Order(10)
     void givenUnregisteredCareer_whenCallingExistsMethod_thenItReturnsFalse() {
         String unregisteredCareerID = UUID.randomUUID().toString();
 

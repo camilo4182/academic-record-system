@@ -79,7 +79,7 @@ CREATE TABLE enrollment_classes (
 );
 
 /* ================================================== TEST DATA ================================================== */
-INSERT INTO careers (id, name) VALUES (gen_random_uuid(), 'System Engineeering');
+INSERT INTO careers (id, name) VALUES (gen_random_uuid(), 'Software Engineering');
 INSERT INTO careers (id, name) VALUES (gen_random_uuid(), 'Medicine');
 INSERT INTO careers (id, name) VALUES (gen_random_uuid(), 'Economics');
 INSERT INTO careers (id, name) VALUES (gen_random_uuid(), 'Chemistry');
@@ -94,22 +94,22 @@ INSERT INTO courses (id, name, credits) VALUES (gen_random_uuid(), 'Microeconomi
 
 
 INSERT INTO career_courses (career_id, course_id) VALUES (
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering'),
 	(SELECT id FROM courses WHERE name ILIKE 'Algorithms I')
 );
 
 INSERT INTO career_courses (career_id, course_id) VALUES (
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering'),
 	(SELECT id FROM courses WHERE name ILIKE 'Algebra')
 );
 
 INSERT INTO career_courses (career_id, course_id) VALUES (
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering'),
 	(SELECT id FROM courses WHERE name ILIKE 'Calculus I')
 );
 
 INSERT INTO career_courses (career_id, course_id) VALUES (
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering'),
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering'),
 	(SELECT id FROM courses WHERE name ILIKE 'Data Bases')
 );
 
@@ -199,7 +199,7 @@ INSERT INTO students (id, average_grade) VALUES (
 INSERT INTO enrollments (id, student_id, career_id) VALUES (
 	gen_random_uuid(),
 	(SELECT u.id FROM students s INNER JOIN users u ON s.id = u.id WHERE u.username ILIKE 'student1.test1'),
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering')
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering')
 );
 
 
@@ -219,7 +219,7 @@ INSERT INTO students (id, average_grade) VALUES (
 INSERT INTO enrollments (id, student_id, career_id) VALUES (
 	gen_random_uuid(),
 	(SELECT u.id FROM students s INNER JOIN users u ON s.id = u.id WHERE u.username ILIKE 'student2.test2'),
-	(SELECT id FROM careers WHERE name ILIKE 'System Engineeering')
+	(SELECT id FROM careers WHERE name ILIKE 'Software Engineering')
 );
 
 
