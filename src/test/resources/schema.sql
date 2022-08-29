@@ -326,3 +326,12 @@ INSERT INTO classes (id, capacity, enrolled_students, available, course_id, prof
 	(SELECT id FROM courses WHERE name ILIKE 'Data Bases'),
 	(SELECT id FROM users WHERE username ILIKE 'professor1.test1')
 );
+
+INSERT INTO classes (id, capacity, enrolled_students, available, course_id, professor_id) VALUES (
+	gen_random_uuid(),
+	0,
+	0,
+	FALSE,
+	(SELECT id FROM courses WHERE name ILIKE 'Data Bases'),
+	(SELECT id FROM users WHERE username ILIKE 'professor2.test2')
+);

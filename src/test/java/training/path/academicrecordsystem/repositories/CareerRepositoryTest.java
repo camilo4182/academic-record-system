@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Testcontainers
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CareerRepositoryTest {
 
     @Autowired
