@@ -32,15 +32,6 @@ public class CourseRepositoryTest {
     @Autowired
     private CourseRepository courseRepository;
 
-    @Autowired
-    private CourseClassRepository classRepository;
-
-    @Autowired
-    private ProfessorRepository professorRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     @Container
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:14-alpine")
             .withDatabaseName("academic-record-system")

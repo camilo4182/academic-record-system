@@ -36,8 +36,12 @@ public class UserRepository implements IUserRepository {
     @Override
     public Optional<Role> findRoleByName(String name) {
         String query = "SELECT * FROM roles WHERE role ILIKE ?;";
-        Role role = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Role.class), name);
-        return Optional.ofNullable(role);
+        try {
+            Role role = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Role.class), name);
+            return Optional.ofNullable(role);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 }

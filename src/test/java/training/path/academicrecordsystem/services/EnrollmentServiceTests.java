@@ -209,7 +209,6 @@ public class EnrollmentServiceTests {
     void givenEnrollmentAndRegisteredCourseAndRegisteredStudentWithoutEnrollment_whenEnrollToClasses_thenItThrowsException() {
         String studentID = UUID.randomUUID().toString();
         String classID = UUID.randomUUID().toString();
-        String registeredEnrollmentID = UUID.randomUUID().toString();
 
         Student student = Student.builder()
                 .id(studentID)
