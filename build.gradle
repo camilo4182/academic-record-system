@@ -29,6 +29,9 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
 	testImplementation 'org.springframework:spring-test'
 	testImplementation 'org.mockito:mockito-inline:4.7.0'
+	testImplementation 'org.testcontainers:postgresql:1.17.3'
+	testImplementation 'org.testcontainers:junit-jupiter:1.17.3'
+	testImplementation 'org.springframework.security:spring-security-test:5.7.3'
 }
 
 tasks.named('test') {

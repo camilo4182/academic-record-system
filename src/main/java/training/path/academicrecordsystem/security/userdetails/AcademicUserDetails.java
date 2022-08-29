@@ -16,21 +16,25 @@ import java.util.List;
 @NoArgsConstructor
 public class AcademicUserDetails implements UserDetails {
 
-    private User user;
+    //private User user;
+    private String username;
+    private String password;
+    private List<SimpleGrantedAuthority> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+        //return List.of(new SimpleGrantedAuthority(user.getRole().getRoleName()));
+        return roles;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return username;
     }
 
     @Override
