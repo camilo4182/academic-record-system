@@ -25,6 +25,24 @@ public class CourseRepository implements ICourseRepository {
     }
 
     @Override
+    public int save(Course course) {
+        String query = "INSERT INTO courses (id, name, credits) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(query, UUID.fromString(course.getId()), course.getName(), course.getCredits());
+    }
+
+    @Override
+    public int update(String id, Course course) {
+        String query = "UPDATE courses SET name = ?, credits = ? WHERE id = ?";
+        return jdbcTemplate.update(query, course.getName(), course.getCredits(), UUID.fromString(id));
+    }
+
+    @Override
+    public int deleteById(String id) {
+        String query = "DELETE FROM courses WHERE id = ?";
+        return jdbcTemplate.update(query, UUID.fromString(id));
+    }
+
+    @Override
     public Optional<Course> findById(String id) {
         String query = "SELECT * FROM courses WHERE id = ?";
         try {
@@ -55,24 +73,6 @@ public class CourseRepository implements ICourseRepository {
     public List<Course> findAll(int limit, int offset) {
         String query = "SELECT * FROM courses ORDER BY name LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Course.class), limit, offset);
-    }
-
-    @Override
-    public int save(Course course) {
-        String query = "INSERT INTO courses (id, name, credits) VALUES (?, ?, ?)";
-        return jdbcTemplate.update(query, UUID.fromString(course.getId()), course.getName(), course.getCredits());
-    }
-
-    @Override
-    public int update(String id, Course course) {
-        String query = "UPDATE courses SET name = ?, credits = ? WHERE id = ?";
-        return jdbcTemplate.update(query, course.getName(), course.getCredits(), UUID.fromString(id));
-    }
-
-    @Override
-    public int deleteById(String id) {
-        String query = "DELETE FROM courses WHERE id = ?";
-        return jdbcTemplate.update(query, UUID.fromString(id));
     }
 
     @Override

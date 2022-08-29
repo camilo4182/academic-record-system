@@ -8,6 +8,12 @@ import java.util.Optional;
 
 public interface ICourseRepository {
 
+    int save(Course course);
+
+    int update(String id, Course course);
+
+    int deleteById(String id);
+
     Optional<Course> findById(String id);
 
     Optional<Course> findByName(String name);
@@ -15,12 +21,6 @@ public interface ICourseRepository {
     List<Course> findAll();
 
     List<Course> findAll(int limit, int offset);
-
-    int save(Course course);
-
-    int update(String id, Course course);
-
-    int deleteById(String id);
 
     boolean exists(String id);
 
