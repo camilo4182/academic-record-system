@@ -5,6 +5,8 @@ import training.path.academicrecordsystem.controllers.dtos.ResponseBodyProfessor
 import training.path.academicrecordsystem.controllers.dtos.UpdateProfessorByAdminDTO;
 import training.path.academicrecordsystem.controllers.dtos.UpdateUserByUserDTO;
 import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.model.Role;
+import training.path.academicrecordsystem.security.interfaces.IRoles;
 
 import java.util.UUID;
 
@@ -47,6 +49,11 @@ public class ProfessorMapper {
         professor.setPassword(professorDTO.getPassword());
         professor.setEmail(professorDTO.getEmail());
         professor.setSalary(professorDTO.getSalary());
+
+        Role role = new Role();
+        role.setRoleName("ROLE_" + IRoles.PROFESSOR);
+        professor.setRole(role);
+
         return professor;
     }
 

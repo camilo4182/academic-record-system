@@ -3,6 +3,7 @@ package training.path.academicrecordsystem.controllers.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import training.path.academicrecordsystem.controllers.dtos.*;
@@ -23,15 +24,18 @@ import java.util.Objects;
 public class ProfessorController implements IProfessorController {
 
     private final IProfessorService professorService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ProfessorController(IProfessorService professorService) {
+    public ProfessorController(IProfessorService professorService, PasswordEncoder passwordEncoder) {
         this.professorService = professorService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     @PostMapping("professors")
-    public ResponseEntity<String> save(@RequestBody RequestBodyProfessorDTO professorDTO) throws UniqueColumnViolationException {
+    public ResponseEntity<String> save(@RequestBody RequestBodyProfessorDTO professorDTO) throws UniqueColumnViolationException, ResourceNotFoundException {
+        professorDTO.setPassword(passwordEncoder.encode(professorDTO.getPassword()));
         Professor professor = ProfessorMapper.createEntity(professorDTO);
         professorService.save(professor);
         return new ResponseEntity<>("Professor registered", HttpStatus.OK);

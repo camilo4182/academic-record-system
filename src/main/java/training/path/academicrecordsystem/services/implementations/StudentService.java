@@ -34,12 +34,14 @@ public class StudentService implements IStudentService {
 
     @Override
     public void save(Student student) throws ResourceNotFoundException, UniqueColumnViolationException {
+        Role role = userRepository.findRoleByName(student.getRole().getRoleName()).orElseThrow(
+                () -> new ResourceNotFoundException("The role " + student.getRole().getRoleName() + " is not available"));
+        student.setRole(role);
+
         if (!careerRepository.exists(student.getCareer().getId()))
             throw new ResourceNotFoundException("Career " + student.getCareer().getId() + " was not found");
+
         verifyUniqueness(student);
-        Role role = userRepository.findRoleByName(student.getRole().getRoleName()).orElseThrow(() ->
-                new ResourceNotFoundException("The role " + student.getRole().getRoleName() + " is not available"));
-        student.setRole(role);
         studentRepository.save(student);
     }
 

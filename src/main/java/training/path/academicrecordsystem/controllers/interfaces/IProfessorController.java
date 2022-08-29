@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IProfessorController {
 
-    ResponseEntity<String> save(@Valid RequestBodyProfessorDTO professorDTO) throws UniqueColumnViolationException;
+    ResponseEntity<String> save(@Valid RequestBodyProfessorDTO professorDTO) throws UniqueColumnViolationException, ResourceNotFoundException;
 
     ResponseEntity<String> updateByAdmin(String id, @Valid UpdateProfessorByAdminDTO professorDTO) throws ResourceNotFoundException, UniqueColumnViolationException;
 

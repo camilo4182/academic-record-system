@@ -17,7 +17,7 @@ import java.util.List;
 public interface IProfessorService {
 
     @Validated(OnCreate.class)
-    void save(@Valid Professor professor) throws UniqueColumnViolationException;
+    void save(@Valid Professor professor) throws UniqueColumnViolationException, ResourceNotFoundException;
 
     @Validated(OnUpdate.class)
     void update(@UUIDValidator String id, @Valid Professor professor) throws ResourceNotFoundException, UniqueColumnViolationException;

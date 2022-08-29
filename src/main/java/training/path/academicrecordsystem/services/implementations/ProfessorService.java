@@ -7,7 +7,9 @@ import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.model.Role;
 import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IUserRepository;
 import training.path.academicrecordsystem.services.interfaces.IProfessorService;
 
 import java.util.List;
@@ -18,15 +20,21 @@ import java.util.Optional;
 @Validated
 public class ProfessorService implements IProfessorService {
 
+    private final IUserRepository userRepository;
     private final IProfessorRepository professorRepository;
 
     @Autowired
-    public ProfessorService(IProfessorRepository professorRepository) {
+    public ProfessorService(IProfessorRepository professorRepository, IUserRepository userRepository) {
+        this.userRepository = userRepository;
         this.professorRepository = professorRepository;
     }
 
     @Override
-    public void save(Professor professor) throws UniqueColumnViolationException {
+    public void save(Professor professor) throws UniqueColumnViolationException, ResourceNotFoundException {
+        Role role = userRepository.findRoleByName(professor.getRole().getRoleName()).orElseThrow(
+                () -> new ResourceNotFoundException("The role " + professor.getRole().getRoleName() + " is not available")
+        );
+        professor.setRole(role);
         verifyUniqueness(professor);
         professorRepository.save(professor);
     }
