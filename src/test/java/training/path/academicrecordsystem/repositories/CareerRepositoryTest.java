@@ -16,7 +16,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import training.path.academicrecordsystem.config.WithMockCustomUser;
 import training.path.academicrecordsystem.model.Career;
+import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
+import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,9 @@ public class CareerRepositoryTest {
 
     @Autowired
     private CareerRepository careerRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Container
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:14-alpine")
@@ -149,6 +154,34 @@ public class CareerRepositoryTest {
         String unregisteredCareerID = UUID.randomUUID().toString();
 
         assertFalse(careerRepository.exists(unregisteredCareerID));
+    }
+
+    @Test
+    void givenCareerWithCourses_whenFindCoursesByCareer_thenAListWithCoursesIsReturned() {
+        Optional<Career> careerOptional = careerRepository.findByName("Software Engineering");
+        assertTrue(careerOptional.isPresent());
+        Career registeredCareer = careerOptional.get();
+
+        List<Course> courses = careerRepository.findCoursesByCareer(registeredCareer.getId());
+        assertFalse(courses.isEmpty());
+        assertEquals(4, courses.size());
+    }
+
+    @Test
+    void givenCourseAndCareer_whenAssignCourseToCareer_thenARecordIsSavedInTheCareerCoursesTable() {
+        Optional<Career> careerOptional = careerRepository.findByName("Medicine");
+        assertTrue(careerOptional.isPresent());
+        String careerID = careerOptional.get().getId();
+
+        Optional<Course> courseOptional = courseRepository.findByName("Algorithms I");
+        assertTrue(courseOptional.isPresent());
+        String courseID = courseOptional.get().getId();
+
+        careerRepository.assignCourseToCareer(courseID, careerID);
+
+        List<Course> courses = careerRepository.findCoursesByCareer(careerID);
+        assertEquals(3, courses.size());
+        assertTrue(courses.stream().anyMatch(course -> "Algorithms I".equals(course.getName())));
     }
 
 }
