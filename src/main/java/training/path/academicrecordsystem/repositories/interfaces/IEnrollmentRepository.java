@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IEnrollmentRepository {
 
-    void save(Enrollment enrollment);
+    int save(Enrollment enrollment);
 
     void saveEnrollmentClasses(Enrollment enrollment, CourseClass courseClass);
 

@@ -150,7 +150,7 @@ INSERT INTO roles (id, role) VALUES (gen_random_uuid(), 'ROLE_PROFESSOR');
 
 
 
-/* ----------------------------------Administrators creation---------------------------------- */
+/* ---------------------------------- Administrators creation ---------------------------------- */
 
 INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
@@ -181,7 +181,7 @@ INSERT INTO administrators (id) VALUES (
 
 
 
-/** ----------------------------------Students creation---------------------------------- */
+/** ---------------------------------- Students creation ---------------------------------- */
 
 INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
@@ -244,7 +244,7 @@ INSERT INTO enrollments (id, student_id, career_id) VALUES (
 
 
 
-/* ----------------------------------Professors creation---------------------------------- */
+/* ---------------------------------- Professors creation ---------------------------------- */
 
 INSERT INTO users (id, first_name, last_name, username, password, email, role_id) VALUES (
 	gen_random_uuid(),
@@ -290,7 +290,7 @@ INSERT INTO professors (id, salary) VALUES (
 
 
 
-/* ----------------------------------Classes creation---------------------------------- */
+/* ---------------------------------- Classes creation ---------------------------------- */
 INSERT INTO classes (id, capacity, enrolled_students, available, course_id, professor_id) VALUES (
 	gen_random_uuid(),
 	2,
@@ -334,4 +334,20 @@ INSERT INTO classes (id, capacity, enrolled_students, available, course_id, prof
 	FALSE,
 	(SELECT id FROM courses WHERE name ILIKE 'Data Bases'),
 	(SELECT id FROM users WHERE username ILIKE 'professor2.test2')
+);
+
+
+
+/* ---------------------------------- Enrollment to classes ---------------------------------- */
+INSERT INTO enrollment_classes (enrollment_id, class_id, semester) VALUES (
+	(SELECT e.id
+		FROM users u INNER JOIN students s ON u.id = s.id
+		INNER JOIN enrollments e ON e.student_id = s.id
+		WHERE u.username ILIKE 'student1.test1'),
+	(SELECT cl.id
+		FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
+		INNER JOIN professors p ON p.id = cl.professor_id
+		INNER JOIN users u ON p.id = u.id
+		WHERE co.name ILIKE 'Algorithms I' AND u.email ILIKE 'professor1@email.com'),
+	1
 );

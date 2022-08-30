@@ -10,6 +10,13 @@ SELECT * FROM classes;
 SELECT * FROM enrollments;
 SELECT * FROM enrollment_classes;
 
+SELECT s.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username,
+u.email AS student_email, average_grade, c.id AS career_id, c.name AS career
+FROM students s INNER JOIN users u ON s.id = u.id
+INNER JOIN enrollments e ON e.student_id = s.id
+INNER JOIN careers c ON e.career_id = c.id
+WHERE u.id = 'c2e04860-bb02-4136-b338-17e1fdbd1491';
+
 SELECT u.id AS prof_id, cl.id AS class_id, capacity, enrolled_students, available,
 co.id AS course_id, co.name AS course, credits
 FROM professors p INNER JOIN users u ON u.id = p.id
@@ -40,7 +47,7 @@ ON users.id = professors.id;
 SELECT u.id, first_name, last_name, username, password, email, average_grade
 FROM users u INNER JOIN students s ON u.id = s.id;
 
-SELECT u.id, u.name AS student_name, u.email, average_grade, e.id
+SELECT u.id, u.username AS student_name, u.email, average_grade, e.id
 FROM users u INNER JOIN students s ON u.id = s.id
 INNER JOIN enrollments e ON e.student_id = s.id;
 
@@ -50,6 +57,13 @@ u.first_name AS prof_first_name, u.last_name AS prof_last_name, u.email AS prof_
 FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
 INNER JOIN professors p ON p.id = cl.professor_id
 INNER JOIN users u ON p.id = u.id;
+
+SELECT cl.id AS class_id, co.id AS course_id, co.name AS course_name, credits, available, p.id AS prof_id, 
+u.first_name AS prof_first_name, u.last_name AS prof_last_name, u.email AS prof_email, salary
+FROM classes cl INNER JOIN courses co ON co.id = cl.course_id
+INNER JOIN professors p ON p.id = cl.professor_id
+INNER JOIN users u ON p.id = u.id
+WHERE co.name ILIKE 'Algorithms I' AND u.email ILIKE 'professor1@email.com';
 
 /* Get careers with their courses */
 SELECT ca.id AS career_id, ca.name AS career, co.id AS course_id, co.name AS course
@@ -85,8 +99,8 @@ ORDER BY career_name;
 
 /* Get enrollment information with student, course and professor */
 SELECT e.id AS enrollment_id, u.id AS student_id, u.first_name AS first_name, u.last_name AS last_name, u.username AS username, semester, cl.id AS class_id, capacity,
-	enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name,
-	e.career_id AS career_id, c.name AS career
+enrolled_students, available, co.id AS course_id, co.name AS course, credits, prof.professor_id, professor_first_name, professor_last_name,
+e.career_id AS career_id, c.name AS career
 FROM users u INNER JOIN students s ON u.id = s.id
 INNER JOIN enrollments e ON e.student_id = s.id
 INNER JOIN careers c ON c.id = e.career_id
@@ -97,7 +111,7 @@ INNER JOIN (
 			SELECT p.id AS professor_id, u.first_name AS professor_first_name, u.last_name AS professor_last_name
 			FROM professors p INNER JOIN users u ON u.id = p.id
 		   ) AS prof ON cl.professor_id = prof.professor_id
-WHERE s.id = 'f830af09-9a80-4486-9797-70fd42704058';
+WHERE s.id = 'c2e04860-bb02-4136-b338-17e1fdbd1491';
 
 SELECT e.id AS enrollment_id, u.id AS student_id, u.name AS student, cl.id AS class_id, co.id AS course_id, co.name AS course, credits, semester
 FROM users u INNER JOIN students s ON u.id = s.id
