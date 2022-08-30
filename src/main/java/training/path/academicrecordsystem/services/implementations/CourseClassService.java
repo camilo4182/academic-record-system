@@ -8,6 +8,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
 import training.path.academicrecordsystem.repositories.interfaces.ICourseRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IProfessorRepository;
+import training.path.academicrecordsystem.repositories.interfaces.IUserRepository;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
 
 import java.util.List;
@@ -18,19 +19,19 @@ public class CourseClassService implements ICourseClassService {
 
     private final ICourseClassRepository courseClassRepository;
     private final ICourseRepository courseRepository;
-    private final IProfessorRepository professorRepository;
+    private final IUserRepository userRepository;
 
     @Autowired
-    public CourseClassService(ICourseClassRepository courseClassRepository, ICourseRepository courseRepository, IProfessorRepository professorRepository) {
+    public CourseClassService(ICourseClassRepository courseClassRepository, ICourseRepository courseRepository, IUserRepository userRepository) {
         this.courseClassRepository = courseClassRepository;
         this.courseRepository = courseRepository;
-        this.professorRepository = professorRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void save(CourseClass courseClass) throws ResourceNotFoundException {
         if (!courseRepository.exists(courseClass.getCourse().getId())) throw new ResourceNotFoundException("Course " + courseClass.getCourse().getId() + " was not found");
-        if (!professorRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
+        if (!userRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
         courseClassRepository.save(courseClass);
     }
 
@@ -38,7 +39,7 @@ public class CourseClassService implements ICourseClassService {
     public void update(CourseClass courseClass) throws ResourceNotFoundException {
         if (!courseClassRepository.exists(courseClass.getId())) throw new ResourceNotFoundException("Class " + courseClass.getId() + " was not found");
         if (!courseRepository.exists(courseClass.getCourse().getId())) throw new ResourceNotFoundException("Course " + courseClass.getCourse().getId() + " was not found");
-        if (!professorRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
+        if (!userRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
         courseClassRepository.update(courseClass.getId(), courseClass);
     }
 

@@ -11,13 +11,9 @@ import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Student;
-import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
-import training.path.academicrecordsystem.repositories.implementations.CourseClassRepository;
-import training.path.academicrecordsystem.repositories.implementations.EnrollmentRepository;
-import training.path.academicrecordsystem.repositories.implementations.StudentRepository;
+import training.path.academicrecordsystem.repositories.implementations.*;
 import training.path.academicrecordsystem.services.implementations.EnrollmentService;
 
-import javax.management.relation.RoleInfoNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,7 +29,7 @@ public class EnrollmentServiceTests {
     EnrollmentRepository enrollmentRepository;
 
     @Mock
-    StudentRepository studentRepository;
+    UserRepository userRepository;
 
     @Mock
     CourseClassRepository classRepository;
@@ -67,7 +63,7 @@ public class EnrollmentServiceTests {
                 .semester(1)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(careerRepository.exists(careerID)).thenReturn(true);
 
         assertDoesNotThrow(() -> enrollmentService.save(enrollment));
@@ -96,7 +92,7 @@ public class EnrollmentServiceTests {
                 .semester(1)
                 .build();
 
-        when(studentRepository.exists(unregisteredStudentID)).thenReturn(false);
+        when(userRepository.exists(unregisteredStudentID)).thenReturn(false);
         when(careerRepository.exists(careerID)).thenReturn(true);
 
         assertThrows(ResourceNotFoundException.class, () -> enrollmentService.save(enrollment));
@@ -125,7 +121,7 @@ public class EnrollmentServiceTests {
                 .semester(1)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(careerRepository.exists(unregisteredCareerID)).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class, () -> enrollmentService.save(enrollment));
@@ -160,7 +156,7 @@ public class EnrollmentServiceTests {
                 .student(student)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.of(registeredEnrollment));
         when(classRepository.exists(classID)).thenReturn(true);
         when(classRepository.isAvailable(classID)).thenReturn(true);
@@ -197,7 +193,7 @@ public class EnrollmentServiceTests {
                 .student(student)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(false);
+        when(userRepository.exists(studentID)).thenReturn(false);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.of(registeredEnrollment));
         when(classRepository.exists(classID)).thenReturn(true);
         when(classRepository.isAvailable(classID)).thenReturn(true);
@@ -228,7 +224,7 @@ public class EnrollmentServiceTests {
                 .semester(1)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.empty());
         when(classRepository.exists(classID)).thenReturn(true);
         when(classRepository.isAvailable(classID)).thenReturn(true);
@@ -272,7 +268,7 @@ public class EnrollmentServiceTests {
                 .student(student2)
                 .build();
 
-        when(studentRepository.exists(studentID1)).thenReturn(true);
+        when(userRepository.exists(studentID1)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID1)).thenReturn(Optional.of(registeredEnrollment));
         when(classRepository.exists(classID)).thenReturn(true);
         when(classRepository.isAvailable(classID)).thenReturn(true);
@@ -309,7 +305,7 @@ public class EnrollmentServiceTests {
                 .student(student)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.of(registeredEnrollment));
         when(classRepository.exists(classID)).thenReturn(false);
         when(classRepository.isAvailable(classID)).thenReturn(true);
@@ -347,7 +343,7 @@ public class EnrollmentServiceTests {
                 .student(student)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.of(registeredEnrollment));
         when(classRepository.exists(classID)).thenReturn(true);
         when(classRepository.isAvailable(classID)).thenReturn(false);
@@ -404,7 +400,7 @@ public class EnrollmentServiceTests {
                 .student(student)
                 .build();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.of(enrollment));
 
         assertDoesNotThrow(() -> enrollmentService.findByStudent(studentID));
@@ -416,7 +412,7 @@ public class EnrollmentServiceTests {
     void givenUnregisteredStudent_whenFindByStudent_thenItReturnsTheEnrollment() {
         String unregisteredStudentID = UUID.randomUUID().toString();
 
-        when(studentRepository.exists(unregisteredStudentID)).thenReturn(false);
+        when(userRepository.exists(unregisteredStudentID)).thenReturn(false);
         when(enrollmentRepository.findByStudent(unregisteredStudentID)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> enrollmentService.findByStudent(unregisteredStudentID));
@@ -426,7 +422,7 @@ public class EnrollmentServiceTests {
     void givenRegisteredStudentWithoutEnrollment_whenFindByStudent_thenItReturnsTheEnrollment() throws ResourceNotFoundException {
         String studentID = UUID.randomUUID().toString();
 
-        when(studentRepository.exists(studentID)).thenReturn(true);
+        when(userRepository.exists(studentID)).thenReturn(true);
         when(enrollmentRepository.findByStudent(studentID)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> enrollmentService.findByStudent(studentID));

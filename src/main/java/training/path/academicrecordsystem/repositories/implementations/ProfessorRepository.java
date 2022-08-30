@@ -46,58 +46,11 @@ public class ProfessorRepository implements IProfessorRepository {
     }
 
     @Override
-    public int updateBasicInfo(String id, Professor professor) {
-        String queryUser = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ?, email = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, professor.getFirstName(),
-                professor.getLastName(),
-                professor.getUserName(),
-                professor.getPassword(),
-                professor.getEmail(),
-                UUID.fromString(id));
-    }
-
-    @Override
-    public int deleteById(String id) {
-        String queryUser = "DELETE FROM users WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, UUID.fromString(id));
-    }
-
-    @Override
     public Optional<Professor> findById(String id) {
         String query = "SELECT * FROM professors p INNER JOIN users u ON p.id = u.id WHERE p.id = ?;";
         try {
             Professor professor = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id));
             return Optional.ofNullable(professor);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Professor> findByUserName(String userName) {
-        String query =
-                """
-                SELECT *
-                FROM professors p INNER JOIN users u ON p.id = u.id
-                WHERE u.username ILIKE ?;
-                """;
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), userName));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Professor> findByEmail(String email) {
-        String query =
-                """
-                SELECT *
-                FROM professors p INNER JOIN users u ON p.id = u.id
-                WHERE u.email ILIKE ?;
-                """;
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), email));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -136,14 +89,4 @@ public class ProfessorRepository implements IProfessorRepository {
         return classes;
     }
 
-    @Override
-    public boolean exists(String id) {
-        String query = "SELECT * FROM professors WHERE id = ?;";
-        try {
-            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Professor.class), UUID.fromString(id));
-            return true;
-        } catch (DataAccessException e) {
-            return false;
-        }
-    }
 }

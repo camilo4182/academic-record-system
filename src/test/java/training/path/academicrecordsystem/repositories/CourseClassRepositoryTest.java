@@ -14,9 +14,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
+import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.implementations.CourseClassRepository;
 import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
 import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.implementations.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +39,9 @@ public class CourseClassRepositoryTest {
 
     @Autowired
     private ProfessorRepository professorRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Container
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:14-alpine")
@@ -59,9 +64,9 @@ public class CourseClassRepositoryTest {
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
 
-        Optional<Professor> professorOptional = professorRepository.findByUserName("professor2.test2");
+        Optional<User> professorOptional = userRepository.findByUserName("professor2.test2");
         assertTrue(professorOptional.isPresent());
-        Professor professor = professorOptional.get();
+        Professor professor = (Professor) professorOptional.get();
 
         CourseClass newClass = CourseClass.builder()
                 .id(UUID.randomUUID().toString())
@@ -94,9 +99,9 @@ public class CourseClassRepositoryTest {
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
 
-        Optional<Professor> professorOptional = professorRepository.findByUserName("professor1.test1");
+        Optional<User> professorOptional = userRepository.findByUserName("professor1.test1");
         assertTrue(professorOptional.isPresent());
-        Professor professor = professorOptional.get();
+        Professor professor = (Professor) professorOptional.get();
 
         CourseClass newClass = CourseClass.builder()
                 .id(UUID.randomUUID().toString())

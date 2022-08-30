@@ -10,7 +10,7 @@ import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
 import training.path.academicrecordsystem.repositories.implementations.CourseClassRepository;
 import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
-import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
+import training.path.academicrecordsystem.repositories.implementations.UserRepository;
 import training.path.academicrecordsystem.services.implementations.CourseClassService;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class CourseClassServiceTests {
     CourseClassRepository courseClassRepository;
 
     @Mock
-    ProfessorRepository professorRepository;
+    UserRepository userRepository;
 
     @Mock
     CourseRepository courseRepository;
@@ -54,7 +54,7 @@ public class CourseClassServiceTests {
                 .build();
 
         when(courseRepository.exists(anyString())).thenReturn(true);
-        when(professorRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(courseClassRepository.save(any())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseClassService.save(courseClass));
@@ -79,7 +79,7 @@ public class CourseClassServiceTests {
 
         when(courseClassRepository.exists(anyString())).thenReturn(true);
         when(courseRepository.exists(anyString())).thenReturn(true);
-        when(professorRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(courseClassRepository.update(anyString(), any())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseClassService.update(courseClass));

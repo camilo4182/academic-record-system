@@ -9,10 +9,7 @@ import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
 import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
-import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
-import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
-import training.path.academicrecordsystem.repositories.interfaces.IEnrollmentRepository;
-import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
+import training.path.academicrecordsystem.repositories.interfaces.*;
 import training.path.academicrecordsystem.services.interfaces.IEnrollmentService;
 
 import java.util.ArrayList;
@@ -26,13 +23,13 @@ import java.util.Optional;
 public class EnrollmentService implements IEnrollmentService {
 
     private final IEnrollmentRepository enrollmentRepository;
-    private final IStudentRepository studentRepository;
+    private final IUserRepository userRepository;
     private final ICourseClassRepository courseClassRepository;
     private final ICareerRepository careerRepository;
 
     @Override
     public void save(Enrollment enrollment) throws ResourceNotFoundException {
-        if (!studentRepository.exists(enrollment.getStudent().getId()))
+        if (!userRepository.exists(enrollment.getStudent().getId()))
             throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
 
         if (!careerRepository.exists(enrollment.getStudent().getCareer().getId()))
@@ -45,7 +42,7 @@ public class EnrollmentService implements IEnrollmentService {
     public void enrollToClasses(Enrollment enrollment, List<CourseClass> courseClasses)
             throws ResourceNotFoundException, NotMatchEnrollmentStudentException, StudentAlreadyEnrolledException, ClassNotAvailableException {
 
-        if (!studentRepository.exists(enrollment.getStudent().getId()))
+        if (!userRepository.exists(enrollment.getStudent().getId()))
             throw new ResourceNotFoundException("Student with id " + enrollment.getStudent().getId() + " was not found");
 
         Optional<Enrollment> enrollmentOptional = enrollmentRepository.findByStudent(enrollment.getStudent().getId());
@@ -86,7 +83,7 @@ public class EnrollmentService implements IEnrollmentService {
 
     @Override
     public Enrollment findByStudent(String id) throws ResourceNotFoundException {
-        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("The student " + id + " was not found");
+        if (!userRepository.exists(id)) throw new ResourceNotFoundException("The student " + id + " was not found");
         return enrollmentRepository.findByStudent(id).orElseThrow(() -> new ResourceNotFoundException("The student " + id + " does not have a enrollment"));
     }
 

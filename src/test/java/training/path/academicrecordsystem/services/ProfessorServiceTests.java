@@ -48,8 +48,8 @@ class ProfessorServiceTests {
 				.build();
 
 		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
-		when(professorRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
-		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
+		when(userRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
+		when(userRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
 		when(professorRepository.save(any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.save(professor));
@@ -69,8 +69,8 @@ class ProfessorServiceTests {
 				.build();
 
 		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.empty());
-		when(professorRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
-		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
+		when(userRepository.findByUserName(professorID)).thenReturn(Optional.of(professor));
+		when(userRepository.findByEmail(professor.getEmail())).thenReturn(Optional.of(professor));
 		when(professorRepository.save(any())).thenReturn(1);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.save(professor));
@@ -100,8 +100,8 @@ class ProfessorServiceTests {
 				.build();
 
 		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
-		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
-		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
+		when(userRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
+		when(userRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
 		when(professorRepository.save(any())).thenReturn(0);
 
 		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
@@ -131,8 +131,8 @@ class ProfessorServiceTests {
 				.build();
 
 		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
-		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
-		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.empty());
+		when(userRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.of(registeredProfessor));
+		when(userRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.empty());
 		when(professorRepository.save(any())).thenReturn(0);
 
 		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
@@ -162,8 +162,8 @@ class ProfessorServiceTests {
 				.build();
 
 		when(userRepository.findRoleByName(IRoles.PROFESSOR)).thenReturn(Optional.of(role));
-		when(professorRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.empty());
-		when(professorRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
+		when(userRepository.findByUserName(newProfessor.getUserName())).thenReturn(Optional.empty());
+		when(userRepository.findByEmail(newProfessor.getEmail())).thenReturn(Optional.of(registeredProfessor));
 		when(professorRepository.save(any())).thenReturn(0);
 
 		assertThrows(UniqueColumnViolationException.class, () -> professorService.save(newProfessor));
@@ -180,7 +180,7 @@ class ProfessorServiceTests {
 				.salary(15000)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
+		when(userRepository.exists(anyString())).thenReturn(true);
 		when(professorRepository.update(anyString(), any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.update(id, professor));
@@ -197,7 +197,7 @@ class ProfessorServiceTests {
 				.salary(0)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(false);
+		when(userRepository.exists(anyString())).thenReturn(false);
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.update(id, professor));
@@ -214,9 +214,9 @@ class ProfessorServiceTests {
 				.salary(35000)
 				.build();
 
-		when(professorRepository.exists(professorID)).thenReturn(true);
-		when(professorRepository.findByUserName(professor.getUserName())).thenReturn(Optional.empty());
-		when(professorRepository.findByEmail(professor.getEmail())).thenReturn(Optional.empty());
+		when(userRepository.exists(professorID)).thenReturn(true);
+		when(userRepository.findByUserName(professor.getUserName())).thenReturn(Optional.empty());
+		when(userRepository.findByEmail(professor.getEmail())).thenReturn(Optional.empty());
 		when(professorRepository.update(anyString(), any())).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.updateBasicInfo(professorID, professor));
@@ -233,7 +233,7 @@ class ProfessorServiceTests {
 				.salary(0)
 				.build();
 
-		when(professorRepository.exists(unregisteredProfessorID)).thenReturn(false);
+		when(userRepository.exists(unregisteredProfessorID)).thenReturn(false);
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.updateBasicInfo(unregisteredProfessorID, unregisteredProfessor));
@@ -258,8 +258,8 @@ class ProfessorServiceTests {
 				.salary(30000)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
+		when(userRepository.exists(anyString())).thenReturn(true);
+		when(userRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertDoesNotThrow(() -> professorService.updateBasicInfo(id, professorToUpdate));
@@ -284,8 +284,8 @@ class ProfessorServiceTests {
 				.salary(30000)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
+		when(userRepository.exists(anyString())).thenReturn(true);
+		when(userRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professorToUpdate));
@@ -310,9 +310,9 @@ class ProfessorServiceTests {
 				.salary(30000)
 				.build();
 
-		when(professorRepository.exists(anyString())).thenReturn(true);
-		when(professorRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.empty());
-		when(professorRepository.findByEmail(professorToUpdate.getEmail())).thenReturn(Optional.of(professor2));
+		when(userRepository.exists(anyString())).thenReturn(true);
+		when(userRepository.findByUserName(professorToUpdate.getUserName())).thenReturn(Optional.empty());
+		when(userRepository.findByEmail(professorToUpdate.getEmail())).thenReturn(Optional.of(professor2));
 		when(professorRepository.update(anyString(), any())).thenReturn(0);
 
 		assertThrows(UniqueColumnViolationException.class, () -> professorService.updateBasicInfo(id, professorToUpdate));
@@ -322,8 +322,8 @@ class ProfessorServiceTests {
 	void givenValidId_whenDeleteById_thenItDoesNotThrowException() {
 		String id = UUID.randomUUID().toString();
 
-		when(professorRepository.exists(id)).thenReturn(true);
-		when(professorRepository.deleteById(id)).thenReturn(1);
+		when(userRepository.exists(id)).thenReturn(true);
+		when(userRepository.deleteById(id)).thenReturn(1);
 
 		assertDoesNotThrow(() -> professorService.deleteById(id));
 	}
@@ -332,8 +332,8 @@ class ProfessorServiceTests {
 	void givenNonExistingId_whenDeleteById_thenThrowException() {
 		String id = UUID.randomUUID().toString();
 
-		when(professorRepository.exists(id)).thenReturn(false);
-		when(professorRepository.deleteById(anyString())).thenReturn(0);
+		when(userRepository.exists(id)).thenReturn(false);
+		when(userRepository.deleteById(anyString())).thenReturn(0);
 
 		assertThrows(ResourceNotFoundException.class, () -> professorService.deleteById(id));
 	}
@@ -492,7 +492,7 @@ class ProfessorServiceTests {
 
 		List<CourseClass> classesByProfessor = List.of(class1, class2, class3);
 
-		when(professorRepository.exists(professorID)).thenReturn(true);
+		when(userRepository.exists(professorID)).thenReturn(true);
 		when(professorRepository.findClasses(professorID)).thenReturn(classesByProfessor);
 
 		List<CourseClass> responseList = professorService.findClassesByProfessor(professorID);
@@ -504,8 +504,8 @@ class ProfessorServiceTests {
 		String professorID = UUID.randomUUID().toString();
 		String nonExistingProfessorID = UUID.randomUUID().toString();
 
-		when(professorRepository.exists(professorID)).thenReturn(true);
-		when(professorRepository.exists(nonExistingProfessorID)).thenReturn(false);
+		when(userRepository.exists(professorID)).thenReturn(true);
+		when(userRepository.exists(nonExistingProfessorID)).thenReturn(false);
 
 		assertDoesNotThrow(() -> professorService.findClassesByProfessor(professorID));
 		assertThrows(ResourceNotFoundException.class, () -> professorService.findClassesByProfessor(nonExistingProfessorID));

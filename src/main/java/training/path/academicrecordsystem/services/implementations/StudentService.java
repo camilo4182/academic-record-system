@@ -8,6 +8,7 @@ import training.path.academicrecordsystem.exceptions.UniqueColumnViolationExcept
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.model.Role;
 import training.path.academicrecordsystem.model.Student;
+import training.path.academicrecordsystem.model.User;
 import training.path.academicrecordsystem.repositories.interfaces.ICareerRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IStudentRepository;
 import training.path.academicrecordsystem.repositories.interfaces.IUserRepository;
@@ -47,7 +48,7 @@ public class StudentService implements IStudentService {
 
     @Override
     public void update(String id, Student student) throws ResourceNotFoundException, UniqueColumnViolationException {
-        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
+        if (!userRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
         if (!careerRepository.exists(student.getCareer().getId()))
             throw new ResourceNotFoundException("Career " + student.getCareer().getId() + " was not found");
         verifyUniqueness(student);
@@ -56,25 +57,25 @@ public class StudentService implements IStudentService {
 
     @Override
     public void updateBasicInfo(String id, Student student) throws ResourceNotFoundException, UniqueColumnViolationException {
-        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
+        if (!userRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
         verifyUniqueness(student);
-        studentRepository.updateBasicInfo(id, student);
+        userRepository.update(id, student);
     }
 
     private void verifyUniqueness(Student student) throws UniqueColumnViolationException {
-        Optional<Student> foundStudentWithName = studentRepository.findByUserName(student.getUserName());
+        Optional<User> foundStudentWithName = userRepository.findByUserName(student.getUserName());
         if (foundStudentWithName.isPresent() && !Objects.equals(foundStudentWithName.orElseThrow().getId(), student.getId()))
             throw new UniqueColumnViolationException("There is already a student named " + student.getFirstName() + " " + student.getLastName() + ". Enter another one.");
 
-        Optional<Student> foundStudentWithEmail = studentRepository.findByEmail(student.getEmail());
+        Optional<User> foundStudentWithEmail = userRepository.findByEmail(student.getEmail());
         if (foundStudentWithEmail.isPresent() && !Objects.equals(foundStudentWithEmail.orElseThrow().getId(), student.getId()))
             throw new UniqueColumnViolationException("There is already a student with the email " + student.getEmail() + ". Enter another one.");
     }
 
     @Override
     public void deleteById(String id) throws ResourceNotFoundException {
-        if (!studentRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
-        studentRepository.deleteById(id);
+        if (!userRepository.exists(id)) throw new ResourceNotFoundException("Student " + id + " was not found");
+        userRepository.deleteById(id);
     }
 
     @Override
@@ -94,13 +95,13 @@ public class StudentService implements IStudentService {
 
     @Override
     public List<Enrollment> findEnrollmentInfo(String studentId) throws ResourceNotFoundException {
-        if (!studentRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
+        if (!userRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
         return studentRepository.findEnrollmentInfo(studentId);
     }
 
     @Override
     public Enrollment findEnrollmentsBySemester(String studentId, int semester) throws ResourceNotFoundException {
-        if (!studentRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
+        if (!userRepository.exists(studentId)) throw new ResourceNotFoundException("Student with id " + studentId + " could not be found");
         return studentRepository.findEnrollmentsBySemester(studentId, semester)
                 .orElseThrow(() -> new ResourceNotFoundException("The student has not enrolled to any class this semester"));
     }

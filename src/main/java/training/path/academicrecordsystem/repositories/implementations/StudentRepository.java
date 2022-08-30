@@ -47,23 +47,6 @@ public class StudentRepository implements IStudentRepository {
     }
 
     @Override
-    public int updateBasicInfo(String id, Student student) {
-        String queryUser = "UPDATE users SET first_name = ?, last_name = ?, username = ?, password = ?, email = ? WHERE id = ?;";
-        return jdbcTemplate.update(queryUser, student.getFirstName(),
-                student.getLastName(),
-                student.getUserName(),
-                student.getPassword(),
-                student.getEmail(),
-                UUID.fromString(id));
-    }
-
-    @Override
-    public int deleteById(String id) {
-        String query = "DELETE FROM users WHERE id = ?;";
-        return jdbcTemplate.update(query, UUID.fromString(id));
-    }
-
-    @Override
     public Optional<Student> findById(String id) {
         String query =
                 """
@@ -77,51 +60,6 @@ public class StudentRepository implements IStudentRepository {
         try {
             Student student = jdbcTemplate.queryForObject(query, new StudentInfoRowMapper(), UUID.fromString(id));
             return Optional.ofNullable(student);
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Student> findByFirstName(String firstName) {
-        String query =
-                """
-                SELECT *
-                FROM students s INNER JOIN users u ON s.id = u.id
-                WHERE u.first_name ILIKE ?;
-                """;
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), firstName));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Student> findByUserName(String name) {
-        String query =
-                """
-                SELECT *
-                FROM students s INNER JOIN users u ON s.id = u.id
-                WHERE u.username ILIKE ?;
-                """;
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), name));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Student> findByEmail(String email) {
-        String query =
-                """
-                SELECT *
-                FROM students s INNER JOIN users u ON s.id = u.id
-                WHERE u.email ILIKE ?;
-                """;
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), email));
         } catch (DataAccessException e) {
             return Optional.empty();
         }
@@ -153,17 +91,6 @@ public class StudentRepository implements IStudentRepository {
                 LIMIT ? OFFSET ?;
                 """;
         return jdbcTemplate.query(query, new StudentInfoRowMapper(), limit, offset);
-    }
-
-    @Override
-    public boolean exists(String id) {
-        String query = "SELECT * FROM students WHERE id = ?;";
-        try {
-            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Student.class), UUID.fromString(id));
-            return true;
-        } catch (DataAccessException e) {
-            return false;
-        }
     }
 
     @Override

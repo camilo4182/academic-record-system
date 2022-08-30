@@ -12,23 +12,11 @@ public interface IStudentRepository {
 
     int update(String id, Student student);
 
-    int updateBasicInfo(String id, Student student);
-
-    int deleteById(String id);
-
     Optional<Student> findById(String id);
-
-    Optional<Student> findByFirstName(String firstName);
-
-    Optional<Student> findByUserName(String userName);
-
-    Optional<Student> findByEmail(String email);
 
     List<Student> findAll();
 
     List<Student> findAll(int limit, int offset);
-
-    boolean exists(String id);
 
     List<Enrollment> findEnrollmentInfo(String studentId);
 

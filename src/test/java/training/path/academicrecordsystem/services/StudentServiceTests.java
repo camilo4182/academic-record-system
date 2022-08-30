@@ -104,8 +104,8 @@ public class StudentServiceTests {
 
         when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
         when(careerRepository.exists(career.getId())).thenReturn(true);
-        when(studentRepository.findByUserName(newStudent.getUserName())).thenReturn(Optional.of(registeredStudent));
-        when(studentRepository.findByEmail(newStudent.getEmail())).thenReturn(Optional.of(registeredStudent));
+        when(userRepository.findByUserName(newStudent.getUserName())).thenReturn(Optional.of(registeredStudent));
+        when(userRepository.findByEmail(newStudent.getEmail())).thenReturn(Optional.of(registeredStudent));
         when(studentRepository.save(any())).thenReturn(0);
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.save(newStudent));
@@ -135,8 +135,8 @@ public class StudentServiceTests {
 
         when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
         when(careerRepository.exists(studentToSave.getCareer().getId())).thenReturn(true);
-        when(studentRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.of(student2));
-        when(studentRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.empty());
+        when(userRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.of(student2));
+        when(userRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.empty());
         when(studentRepository.save(any())).thenReturn(0);
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.save(studentToSave));
@@ -166,8 +166,8 @@ public class StudentServiceTests {
 
         when(userRepository.findRoleByName(IRoles.STUDENT)).thenReturn(Optional.of(role));
         when(careerRepository.exists(studentToSave.getCareer().getId())).thenReturn(true);
-        when(studentRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.empty());
-        when(studentRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.of(student2));
+        when(userRepository.findByUserName(studentToSave.getUserName())).thenReturn(Optional.empty());
+        when(userRepository.findByEmail(studentToSave.getEmail())).thenReturn(Optional.of(student2));
         when(studentRepository.save(any())).thenReturn(0);
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.save(studentToSave));
@@ -208,7 +208,7 @@ public class StudentServiceTests {
                 .build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.update(anyString(), any())).thenReturn(1);
 
         assertDoesNotThrow(() -> studentService.update(id, student));
@@ -229,7 +229,7 @@ public class StudentServiceTests {
                 .build();
 
         when(careerRepository.exists(anyString())).thenReturn(true);
-        when(studentRepository.exists(anyString())).thenReturn(false);
+        when(userRepository.exists(anyString())).thenReturn(false);
         when(studentRepository.update(anyString(), any())).thenReturn(0);
 
         assertThrows(ResourceNotFoundException.class, () -> studentService.update(id, student));
@@ -242,7 +242,7 @@ public class StudentServiceTests {
         Student student = Student.builder().id(id).firstName("Juan").email("juan@email.com").career(career).build();
 
         when(careerRepository.exists(anyString())).thenReturn(false);
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.update(anyString(), any())).thenReturn(0);
 
         assertThrows(ResourceNotFoundException.class, () -> studentService.update(id, student));
@@ -253,10 +253,10 @@ public class StudentServiceTests {
         String id = UUID.randomUUID().toString();
         Student student = Student.builder().id(id).firstName("New Name").email("new_email@email.com").build();
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.update(anyString(), any())).thenReturn(1);
-        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(student));
-        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(student));
+        when(userRepository.findByUserName(anyString())).thenReturn(Optional.of(student));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(student));
 
         assertDoesNotThrow(() -> studentService.updateBasicInfo(id, student));
     }
@@ -267,9 +267,9 @@ public class StudentServiceTests {
         Student studentToUpdate = Student.builder().id(id).firstName("Juan").email("same@email.com").build();
         Student existingStudent = Student.builder().id(UUID.randomUUID().toString()).firstName("Juan").email("same@email.com").build();
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
-        when(studentRepository.findByUserName(anyString())).thenReturn(Optional.of(existingStudent));
-        when(studentRepository.findByEmail(anyString())).thenReturn(Optional.of(existingStudent));
+        when(userRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.findByUserName(anyString())).thenReturn(Optional.of(existingStudent));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(existingStudent));
         when(studentRepository.update(anyString(), any())).thenReturn(0);
 
         assertThrows(UniqueColumnViolationException.class, () -> studentService.updateBasicInfo(id, studentToUpdate));
@@ -279,8 +279,8 @@ public class StudentServiceTests {
     void givenValidId_whenDeleteById_thenItDoesNotThrowException() {
         String id = UUID.randomUUID().toString();
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
-        when(studentRepository.deleteById(anyString())).thenReturn(1);
+        when(userRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.deleteById(anyString())).thenReturn(1);
 
         assertDoesNotThrow(() -> studentService.deleteById(id));
     }
@@ -289,8 +289,8 @@ public class StudentServiceTests {
     void givenNonExistingId_whenDeleteById_thenThrowException() {
         String id = UUID.randomUUID().toString();
 
-        when(studentRepository.exists(anyString())).thenReturn(false);
-        when(studentRepository.deleteById(anyString())).thenReturn(0);
+        when(userRepository.exists(anyString())).thenReturn(false);
+        when(userRepository.deleteById(anyString())).thenReturn(0);
 
         assertThrows(ResourceNotFoundException.class, () -> studentService.deleteById(id));
     }
@@ -351,7 +351,7 @@ public class StudentServiceTests {
         String enrollmentId = UUID.randomUUID().toString();
         Enrollment enrollment = Enrollment.builder().id(enrollmentId).student(student).semester(1).build();
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.findEnrollmentInfo(anyString())).thenReturn(List.of(enrollment));
 
         assertDoesNotThrow(() -> studentService.findEnrollmentInfo(studentId));
@@ -410,7 +410,7 @@ public class StudentServiceTests {
                 .semester(2)
                 .build();
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.findEnrollmentsBySemester(anyString(), anyInt())).thenReturn(Optional.of(enrollment2));
 
         assertDoesNotThrow(() -> studentService.findEnrollmentsBySemester(studentId, semester));
@@ -426,7 +426,7 @@ public class StudentServiceTests {
         student.setId(studentId);
         int semester = 4;
 
-        when(studentRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
         when(studentRepository.findEnrollmentsBySemester(anyString(), anyInt())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> studentService.findEnrollmentsBySemester(studentId, semester));
