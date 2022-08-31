@@ -27,6 +27,7 @@ public class ProfessorClassesRowMapper implements RowMapper<Professor> {
         courseClass.setEnrolledStudents(rs.getInt("enrolled_students"));
         courseClass.setAvailable(rs.getBoolean("available"));
         courseClass.setCourse(course);
+        courseClass.setProfessor(professor);
 
         professor.addClass(courseClass);
 
