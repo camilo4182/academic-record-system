@@ -24,7 +24,7 @@ public interface ICareerService {
 
     List<Career> findAll(@Min(0) int limit, @Min(0) int offset);
 
-    void assignCourseToCareer(@UUIDValidator String courseId, @UUIDValidator String careerId) throws ResourceNotFoundException;
+    void assignCourseToCareer(@UUIDValidator String courseId, @UUIDValidator String careerId) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     List<Course> findCoursesByCareer(@UUIDValidator String careerId) throws ResourceNotFoundException;
 

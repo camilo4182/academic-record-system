@@ -156,6 +156,32 @@ public class CareerRepositoryTest {
     }
 
     @Test
+    void givenCourseAlreadyAssignedToCareer_whenCallingIsCourseAssignedToCareerMethod_thenItReturnsTrue() {
+        Optional<Career> careerOptional = careerRepository.findByName("Software Engineering");
+        assertTrue(careerOptional.isPresent());
+        String careerID = careerOptional.get().getId();
+
+        Optional<Course> courseOptional = courseRepository.findByName("Algorithms I");
+        assertTrue(courseOptional.isPresent());
+        String courseID = courseOptional.get().getId();
+
+        assertTrue(careerRepository.isCourseAssignedToCareer(courseID, careerID));
+    }
+
+    @Test
+    void givenCourseNotAssignedToCareer_whenCallingIsCourseAssignedToCareerMethod_thenItReturnsFalse() {
+        Optional<Career> careerOptional = careerRepository.findByName("Software Engineering");
+        assertTrue(careerOptional.isPresent());
+        String careerID = careerOptional.get().getId();
+
+        Optional<Course> courseOptional = courseRepository.findByName("Cellular Biology");
+        assertTrue(courseOptional.isPresent());
+        String courseID = courseOptional.get().getId();
+
+        assertFalse(careerRepository.isCourseAssignedToCareer(courseID, careerID));
+    }
+
+    @Test
     void givenCareerWithCourses_whenFindCoursesByCareer_thenAListWithCoursesIsReturned() {
         Optional<Career> careerOptional = careerRepository.findByName("Software Engineering");
         assertTrue(careerOptional.isPresent());

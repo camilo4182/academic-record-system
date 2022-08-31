@@ -64,9 +64,13 @@ public class CareerService implements ICareerService {
     }
 
     @Override
-    public void assignCourseToCareer(String courseId, String careerId) throws ResourceNotFoundException {
-        if (!careerRepository.exists(careerId)) throw new ResourceNotFoundException("Career with id " + careerId + " does not exist");
-        if (!courseRepository.exists(courseId)) throw new ResourceNotFoundException("Course with id " + courseId + " does not exist");
+    public void assignCourseToCareer(String courseId, String careerId) throws ResourceNotFoundException, UniqueColumnViolationException {
+        if (!careerRepository.exists(careerId))
+            throw new ResourceNotFoundException("Career with id " + careerId + " does not exist");
+        if (!courseRepository.exists(courseId))
+            throw new ResourceNotFoundException("Course with id " + courseId + " does not exist");
+        if (careerRepository.isCourseAssignedToCareer(courseId, careerId))
+            throw new UniqueColumnViolationException("This course is already assigned to this career");
         careerRepository.assignCourseToCareer(courseId, careerId);
     }
 

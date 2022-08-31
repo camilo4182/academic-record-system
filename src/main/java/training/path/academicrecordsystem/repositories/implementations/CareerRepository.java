@@ -87,6 +87,17 @@ public class CareerRepository implements ICareerRepository {
     }
 
     @Override
+    public boolean isCourseAssignedToCareer(String courseId, String careerId) {
+        String query = "SELECT * FROM career_courses WHERE career_id = ? AND course_id = ?;";
+        try {
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Career.class), UUID.fromString(careerId), UUID.fromString(courseId));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
+
+    @Override
     public void assignCourseToCareer(String courseId, String careerId) {
         String query = "INSERT INTO career_courses (career_id, course_id) VALUES (?, ?);";
         jdbcTemplate.update(query, UUID.fromString(careerId), UUID.fromString(courseId));

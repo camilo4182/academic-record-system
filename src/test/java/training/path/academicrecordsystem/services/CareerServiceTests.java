@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Career;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.repositories.implementations.CareerRepository;
@@ -133,27 +134,55 @@ public class CareerServiceTests {
     }
 
     @Test
-    void givenValidCourseAndCareer_whenAssignCourseToCareer_thenItDoesNotThrowException() {
+    void givenRegisteredCourseAndCareer_whenAssignCourseToCareer_thenItDoesNotThrowException() {
         String careerId = UUID.randomUUID().toString();
         String courseId = UUID.randomUUID().toString();
 
         doNothing().when(careerRepository).assignCourseToCareer(anyString(), anyString());
         when(courseRepository.exists(anyString())).thenReturn(true);
         when(careerRepository.exists(anyString())).thenReturn(true);
+        when(careerRepository.isCourseAssignedToCareer(courseId, careerId)).thenReturn(false);
 
         assertDoesNotThrow(() -> careerService.assignCourseToCareer(courseId, careerId));
     }
 
     @Test
-    void givenInvalidCourseOrCareer_whenAssignCourseToCareer_thenItThrowsException() {
-        String careerId = "123-456";
+    void givenUnregisteredCourseAndRegisteredCareer_whenAssignCourseToCareer_thenItThrowsException() {
+        String careerId = UUID.randomUUID().toString();
+        String courseId = UUID.randomUUID().toString();
+
+        doNothing().when(careerRepository).assignCourseToCareer(anyString(), anyString());
+        when(courseRepository.exists(anyString())).thenReturn(false);
+        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(careerRepository.isCourseAssignedToCareer(courseId, careerId)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> careerService.assignCourseToCareer(courseId, careerId));
+    }
+
+    @Test
+    void givenRegisteredCourseAndUnregisteredCareer_whenAssignCourseToCareer_thenItThrowsException() {
+        String careerId = UUID.randomUUID().toString();
         String courseId = UUID.randomUUID().toString();
 
         doNothing().when(careerRepository).assignCourseToCareer(anyString(), anyString());
         when(courseRepository.exists(anyString())).thenReturn(true);
         when(careerRepository.exists(anyString())).thenReturn(false);
+        when(careerRepository.isCourseAssignedToCareer(courseId, careerId)).thenReturn(false);
 
         assertThrows(ResourceNotFoundException.class, () -> careerService.assignCourseToCareer(courseId, careerId));
+    }
+
+    @Test
+    void givenCourseAlreadyAssignedToCareer_whenAssignCourseToCareer_thenItThrowsException() {
+        String careerId = UUID.randomUUID().toString();
+        String courseId = UUID.randomUUID().toString();
+
+        doNothing().when(careerRepository).assignCourseToCareer(anyString(), anyString());
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(careerRepository.exists(anyString())).thenReturn(true);
+        when(careerRepository.isCourseAssignedToCareer(courseId, careerId)).thenReturn(true);
+
+        assertThrows(UniqueColumnViolationException.class, () -> careerService.assignCourseToCareer(courseId, careerId));
     }
 
     @Test

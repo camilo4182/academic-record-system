@@ -25,7 +25,7 @@ public interface ICareerController {
     ResponseEntity<List<CareerDTO>> findAll(Integer limit, Integer offset);
 
     @Validated(OnAssignToCareer.class)
-    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId) throws ResourceNotFoundException;
+    ResponseEntity<String> assignCourseToCareer(String careerId, @Valid CourseOnlyIdDTO courseId) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     ResponseEntity<List<CourseDTO>> findCoursesByCareer(String careerId) throws ResourceNotFoundException;
 

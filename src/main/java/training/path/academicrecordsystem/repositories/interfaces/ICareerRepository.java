@@ -24,6 +24,8 @@ public interface ICareerRepository {
 
     boolean exists(String id);
 
+    boolean isCourseAssignedToCareer(String courseId, String careerId);
+
     void assignCourseToCareer(String courseId, String careerId);
 
     List<Course> findCoursesByCareer(String careerName);

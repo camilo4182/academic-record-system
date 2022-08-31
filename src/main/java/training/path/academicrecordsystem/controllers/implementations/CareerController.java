@@ -76,7 +76,7 @@ public class CareerController implements ICareerController {
 
     @PutMapping("careers/courses/{careerId}")
     public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId,
-                                                       @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException {
+                                                       @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException, UniqueColumnViolationException {
         careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
         return new ResponseEntity<>("Course was assigned to career", HttpStatus.OK);
     }
