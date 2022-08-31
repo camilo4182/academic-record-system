@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
-    private static Logger log = Logger.getLogger(JWTTokenValidatorFilter.class.getName());
+    private static final Logger log = Logger.getLogger(JWTTokenValidatorFilter.class.getName());
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, JwtException {
