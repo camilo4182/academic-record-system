@@ -11,10 +11,7 @@ import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseCla
 import training.path.academicrecordsystem.controllers.interfaces.ICourseClassController;
 import training.path.academicrecordsystem.controllers.mappers.CourseClassMapper;
 import training.path.academicrecordsystem.controllers.mappers.EnrollmentMapper;
-import training.path.academicrecordsystem.exceptions.ClassNotAvailableException;
-import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
+import training.path.academicrecordsystem.exceptions.*;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Enrollment;
 import training.path.academicrecordsystem.services.interfaces.ICourseClassService;
@@ -38,7 +35,7 @@ public class CourseClassController implements ICourseClassController {
 
     @Override
     @PostMapping("classes")
-    public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException {
+    public ResponseEntity<String> save(@RequestBody RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException, UniqueColumnViolationException {
         CourseClass courseClass = CourseClassMapper.createEntity(courseClassDTO);
         courseClassService.save(courseClass);
         return new ResponseEntity<>("Class registered", HttpStatus.OK);

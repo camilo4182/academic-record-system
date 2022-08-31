@@ -1,6 +1,7 @@
 package training.path.academicrecordsystem.services.interfaces;
 
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface ICourseClassService {
 
-    void save(@Valid CourseClass courseClass) throws ResourceNotFoundException;
+    void save(@Valid CourseClass courseClass) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     void update(@Valid CourseClass courseClass) throws ResourceNotFoundException;
 

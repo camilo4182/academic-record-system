@@ -147,6 +147,17 @@ public class CourseClassRepository implements ICourseClassRepository {
     }
 
     @Override
+    public boolean exists(String professorId, String classId) {
+        String query = "SELECT * FROM classes WHERE classes.professor_id = ? AND classes.course_id = ?";
+        try {
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(professorId), UUID.fromString(classId));
+            return true;
+        } catch (DataAccessException e) {
+            return false;
+        }
+    }
+
+    @Override
     public boolean isAvailable(String id) {
         String query = "SELECT available FROM classes WHERE id = ?";
         CourseClass courseClass = jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(CourseClass.class), UUID.fromString(id));

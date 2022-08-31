@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.repositories.interfaces.ICourseClassRepository;
 import training.path.academicrecordsystem.repositories.interfaces.ICourseRepository;
@@ -29,9 +30,13 @@ public class CourseClassService implements ICourseClassService {
     }
 
     @Override
-    public void save(CourseClass courseClass) throws ResourceNotFoundException {
-        if (!courseRepository.exists(courseClass.getCourse().getId())) throw new ResourceNotFoundException("Course " + courseClass.getCourse().getId() + " was not found");
-        if (!userRepository.exists(courseClass.getProfessor().getId())) throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
+    public void save(CourseClass courseClass) throws ResourceNotFoundException, UniqueColumnViolationException {
+        if (!courseRepository.exists(courseClass.getCourse().getId()))
+            throw new ResourceNotFoundException("Course " + courseClass.getCourse().getId() + " was not found");
+        if (!userRepository.exists(courseClass.getProfessor().getId()))
+            throw new ResourceNotFoundException("Professor " + courseClass.getProfessor().getId() + " was not found");
+        if (courseClassRepository.exists(courseClass.getProfessor().getId(), courseClass.getCourse().getId()))
+            throw new UniqueColumnViolationException("This professor is already teaching in this class");
         courseClassRepository.save(courseClass);
     }
 

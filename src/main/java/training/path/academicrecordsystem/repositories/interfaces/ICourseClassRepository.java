@@ -29,6 +29,8 @@ public interface ICourseClassRepository {
 
     boolean exists(String id);
 
+    boolean exists(String professorId, String classId);
+
     boolean isAvailable(String id);
     
 }

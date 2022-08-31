@@ -117,7 +117,7 @@ public class CourseClassRepositoryTest {
     }
 
     @Test
-    void givenClassId_whenFindById_thenTheClassIdentifiedByThatIdIsReturned() {
+    void givenRegisteredClassId_whenFindById_thenTheClassIdentifiedByThatIdIsReturned() {
         Optional<Course> courseOptional = courseRepository.findByName("Cellular Biology");
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
@@ -126,6 +126,14 @@ public class CourseClassRepositoryTest {
 
         Optional<CourseClass> classOptional = classRepository.findById(classToFind.getId());
         assertTrue(classOptional.isPresent());
+    }
+
+    @Test
+    void givenUnregisteredClassId_whenFindById_thenAnEmptyOptionalIsReturned() {
+        String unregisteredClassID = UUID.randomUUID().toString();
+
+        Optional<CourseClass> classOptional = classRepository.findById(unregisteredClassID);
+        assertTrue(classOptional.isEmpty());
     }
 
     @Test
@@ -176,6 +184,34 @@ public class CourseClassRepositoryTest {
         String unregisteredClassID = UUID.randomUUID().toString();
 
         assertFalse(classRepository.exists(unregisteredClassID));
+    }
+
+    @Test
+    void givenProfessorThatTeachesAClass_whenCallingExistsMethod_thenItReturnsTrue() {
+        Optional<User> professorOptional = userRepository.findByUserName("professor1.test1");
+        assertTrue(professorOptional.isPresent());
+        Professor professor = (Professor) professorOptional.get();
+
+        List<CourseClass> classes = professorRepository.findClasses(professor.getId());
+        assertFalse(classes.isEmpty());
+
+        CourseClass classGivenByProfessor = classes.get(0);
+
+        assertTrue(classRepository.exists(professor.getId(), classGivenByProfessor.getCourse().getId()));
+    }
+
+    @Test
+    void givenProfessorThatDoesNotTeachAClass_whenCallingExistsMethod_thenItReturnsFalse() {
+        Optional<User> professorOptional = userRepository.findByUserName("professor1.test1");
+        assertTrue(professorOptional.isPresent());
+        Professor professor = (Professor) professorOptional.get();
+
+        Optional<Course> courseOptional = courseRepository.findByName("Metabolism");
+        assertTrue(courseOptional.isPresent());
+
+        Course course = courseOptional.get();
+
+        assertFalse(classRepository.exists(professor.getId(), course.getId()));
     }
 
     @Test

@@ -4,10 +4,7 @@ import org.springframework.http.ResponseEntity;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyCourseClassDTO;
 import training.path.academicrecordsystem.controllers.dtos.RequestBodyEnrollmentDTO;
 import training.path.academicrecordsystem.controllers.dtos.ResponseBodyCourseClassDTO;
-import training.path.academicrecordsystem.exceptions.ClassNotAvailableException;
-import training.path.academicrecordsystem.exceptions.NotMatchEnrollmentStudentException;
-import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
-import training.path.academicrecordsystem.exceptions.StudentAlreadyEnrolledException;
+import training.path.academicrecordsystem.exceptions.*;
 import training.path.academicrecordsystem.validations.custom.UUIDValidator;
 
 import javax.validation.Valid;
@@ -16,7 +13,7 @@ import java.util.List;
 
 public interface ICourseClassController {
 
-    ResponseEntity<String> save(@Valid RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException;
+    ResponseEntity<String> save(@Valid RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException, UniqueColumnViolationException;
 
     ResponseEntity<String> update(String id, @Valid RequestBodyCourseClassDTO courseClassDTO) throws ResourceNotFoundException;
 

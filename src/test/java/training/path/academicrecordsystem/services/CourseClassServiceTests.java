@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import training.path.academicrecordsystem.exceptions.ResourceNotFoundException;
+import training.path.academicrecordsystem.exceptions.UniqueColumnViolationException;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
 import training.path.academicrecordsystem.model.Professor;
@@ -46,7 +47,7 @@ public class CourseClassServiceTests {
         Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
 
         CourseClass courseClass = CourseClass.builder()
-                .id(UUID.randomUUID().toString())
+                .id(classId)
                 .capacity(30)
                 .course(course)
                 .professor(professor)
@@ -55,9 +56,85 @@ public class CourseClassServiceTests {
 
         when(courseRepository.exists(anyString())).thenReturn(true);
         when(userRepository.exists(anyString())).thenReturn(true);
+        when(courseClassRepository.exists(professorId, courseId)).thenReturn(false);
         when(courseClassRepository.save(any())).thenReturn(1);
 
         assertDoesNotThrow(() -> courseClassService.save(courseClass));
+    }
+
+    @Test
+    void givenUnregisteredProfessorAndRegisteredCourse_whenSave_thenItThrowsException() {
+        String classId = UUID.randomUUID().toString();
+        String courseId = UUID.randomUUID().toString();
+        String professorId = UUID.randomUUID().toString();
+
+        Course course = Course.builder().id(courseId).name("Course 1").credits(0).build();
+        Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
+
+        CourseClass courseClass = CourseClass.builder()
+                .id(classId)
+                .capacity(30)
+                .course(course)
+                .professor(professor)
+                .available(true)
+                .build();
+
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(false);
+        when(courseClassRepository.exists(professorId, courseId)).thenReturn(false);
+        when(courseClassRepository.save(any())).thenReturn(1);
+
+        assertThrows(ResourceNotFoundException.class, () -> courseClassService.save(courseClass));
+    }
+
+    @Test
+    void givenRegisteredProfessorAndUnregisteredCourse_whenSave_thenItThrowsException() {
+        String classId = UUID.randomUUID().toString();
+        String courseId = UUID.randomUUID().toString();
+        String professorId = UUID.randomUUID().toString();
+
+        Course course = Course.builder().id(courseId).name("Course 1").credits(0).build();
+        Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
+
+        CourseClass courseClass = CourseClass.builder()
+                .id(classId)
+                .capacity(30)
+                .course(course)
+                .professor(professor)
+                .available(true)
+                .build();
+
+        when(courseRepository.exists(anyString())).thenReturn(false);
+        when(userRepository.exists(anyString())).thenReturn(true);
+        when(courseClassRepository.exists(professorId, courseId)).thenReturn(false);
+        when(courseClassRepository.save(any())).thenReturn(1);
+
+        assertThrows(ResourceNotFoundException.class, () -> courseClassService.save(courseClass));
+    }
+
+    @Test
+    void givenProfessorAlreadyTeachingCourseClass_whenSave_thenItThrowsException() {
+        String classId = UUID.randomUUID().toString();
+        String courseId = UUID.randomUUID().toString();
+        String professorId = UUID.randomUUID().toString();
+
+        Course course = Course.builder().id(courseId).name("Course 1").credits(0).build();
+        Professor professor = Professor.builder().id(professorId).firstName("Professor 1").salary(30000).build();
+
+        CourseClass courseClass = CourseClass.builder()
+                .id(classId)
+                .capacity(30)
+                .course(course)
+                .professor(professor)
+                .available(true)
+                .build();
+
+        when(courseRepository.exists(anyString())).thenReturn(true);
+        when(userRepository.exists(anyString())).thenReturn(true);
+        when(courseClassRepository.exists(professorId, courseId)).thenReturn(true);
+        when(courseClassRepository.save(any())).thenReturn(1);
+
+        assertThrows(UniqueColumnViolationException.class, () -> courseClassService.save(courseClass));
     }
 
     @Test
