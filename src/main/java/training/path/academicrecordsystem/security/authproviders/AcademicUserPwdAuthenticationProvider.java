@@ -42,7 +42,7 @@ public class AcademicUserPwdAuthenticationProvider implements AuthenticationProv
                 return new UsernamePasswordAuthenticationToken(username, password, authorities);
             }
             else {
-                throw new BadCredentialsException("Invalid password!");
+                throw new BadCredentialsException("Password is not correct");
             }
         }
         else {
