@@ -48,7 +48,7 @@ public class WebSecurityConfiguration {
                         .mvcMatchers(HttpMethod.PUT, "/careers/**").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.DELETE, "/careers/**").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.GET, "/courses/classes/*").authenticated()
-                        .mvcMatchers(HttpMethod.POST, "/courses").hasAnyRole(IRoles.ADMIN, IRoles.PROFESSOR)
+                        .mvcMatchers(HttpMethod.POST, "/courses").hasAnyRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.PUT, "/courses/**").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.DELETE, "/courses/**").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.POST, "/classes/enroll/*").hasRole(IRoles.STUDENT)
