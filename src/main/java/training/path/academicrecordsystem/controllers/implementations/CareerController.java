@@ -74,7 +74,7 @@ public class CareerController implements ICareerController {
         return new ResponseEntity<>(careerList.stream().map(CareerMapper::toDTO).toList(), HttpStatus.OK);
     }
 
-    @PutMapping("careers/{careerId}/courses")
+    @PutMapping("careers/courses/{careerId}")
     public ResponseEntity<String> assignCourseToCareer(@PathVariable("careerId") String careerId,
                                                        @RequestBody CourseOnlyIdDTO courseId) throws ResourceNotFoundException {
         careerService.assignCourseToCareer(courseId.getCourseId(), careerId);
@@ -82,7 +82,7 @@ public class CareerController implements ICareerController {
     }
 
     @Override
-    @GetMapping("careers/{careerId}/courses")
+    @GetMapping("careers/courses/{careerId}")
     public ResponseEntity<List<CourseDTO>> findCoursesByCareer(@PathVariable("careerId") String careerId)
             throws ResourceNotFoundException {
         List<Course> courseList = careerService.findCoursesByCareer(careerId);
