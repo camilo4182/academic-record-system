@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import training.path.academicrecordsystem.security.exceptionshandlers.CustomAccessDeniedHandler;
 import training.path.academicrecordsystem.security.interfaces.IRoles;
 import training.path.academicrecordsystem.security.interfaces.SecurityConstants;
 import training.path.academicrecordsystem.security.jwtauth.JWTTokenValidatorFilter;
@@ -32,6 +33,9 @@ public class WebSecurityConfiguration {
     @Autowired
     @Qualifier("restAuthenticationEntryPoint")
     AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -68,7 +72,8 @@ public class WebSecurityConfiguration {
                         .anyRequest().permitAll()
         ).httpBasic(Customizer.withDefaults())
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler);
         return http.build();
     }
 
