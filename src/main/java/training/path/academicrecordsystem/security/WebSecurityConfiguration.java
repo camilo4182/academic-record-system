@@ -15,6 +15,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import training.path.academicrecordsystem.security.interfaces.IRoles;
 import training.path.academicrecordsystem.security.interfaces.SecurityConstants;
 import training.path.academicrecordsystem.security.jwtauth.JWTTokenValidatorFilter;

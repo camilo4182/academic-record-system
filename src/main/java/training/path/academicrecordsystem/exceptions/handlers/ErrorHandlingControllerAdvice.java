@@ -1,5 +1,6 @@
 package training.path.academicrecordsystem.exceptions.handlers;
 
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,13 @@ import java.util.List;
 
 @ControllerAdvice
 public class ErrorHandlingControllerAdvice {
+
+    private ExceptionResponse createExceptionResponse(HttpStatus httpStatus, String message) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setHttpStatus(httpStatus);
+        response.setMessage(message);
+        return response;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -99,6 +107,14 @@ public class ErrorHandlingControllerAdvice {
         response.setHttpStatus(HttpStatus.FORBIDDEN);
         response.setMessage(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    ResponseEntity<ExceptionResponse> handleMalformedJwtException(MalformedJwtException e) {
+        ExceptionResponse response = createExceptionResponse(HttpStatus.BAD_REQUEST, "Malformed JWT token!");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }
