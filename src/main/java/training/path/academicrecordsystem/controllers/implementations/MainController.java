@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequest;
+import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequestDTO;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationResponse;
 import training.path.academicrecordsystem.controllers.interfaces.IMainController;
 import training.path.academicrecordsystem.security.userdetails.AcademicUserDetailsService;
@@ -29,7 +29,7 @@ public class MainController implements IMainController {
 
     @Override
     @PostMapping("login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) throws AuthenticationException {
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequestDTO request) throws AuthenticationException {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
         Authentication responseToken = authenticationProvider.authenticate(authenticationToken);
         UserDetails userDetails = service.loadUserByUsername(responseToken.getName());

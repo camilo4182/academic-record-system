@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequestDTO {
 
+    @NotBlank(message = "Please fill out this field")
     private String username;
+
+    @NotBlank(message = "Please fill out this field")
     private String password;
 
 }

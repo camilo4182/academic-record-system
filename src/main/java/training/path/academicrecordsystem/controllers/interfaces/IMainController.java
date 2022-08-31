@@ -1,12 +1,13 @@
 package training.path.academicrecordsystem.controllers.interfaces;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequest;
+import training.path.academicrecordsystem.controllers.dtos.AuthenticationRequestDTO;
 import training.path.academicrecordsystem.controllers.dtos.AuthenticationResponse;
+
+import javax.validation.Valid;
 
 public interface IMainController {
 
-    ResponseEntity<AuthenticationResponse> login(AuthenticationRequest request) throws Exception;
+    ResponseEntity<AuthenticationResponse> login(@Valid AuthenticationRequestDTO request) throws Exception;
 
 }
