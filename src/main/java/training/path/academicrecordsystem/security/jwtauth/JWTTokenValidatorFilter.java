@@ -62,6 +62,9 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                 log.info("Handled ExpiredJwtException - Token has expired");
             }
         }
+        else {
+            filterChain.doFilter(request, response);
+        }
     }
 
     @Override

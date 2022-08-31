@@ -30,7 +30,7 @@ public class JWTTokenGeneratorService {
                     .signWith(key)
                     .compact();
 
-            log.info("JWT: " + jwt);
+            log.info("User %s signed in at %s".formatted(authentication.getUsername(), new Date()));
 
             return jwt;
         }
