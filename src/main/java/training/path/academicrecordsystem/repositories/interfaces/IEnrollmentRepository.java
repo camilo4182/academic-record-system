@@ -10,7 +10,7 @@ public interface IEnrollmentRepository {
 
     int save(Enrollment enrollment);
 
-    void saveEnrollmentClasses(Enrollment enrollment, CourseClass courseClass);
+    int enrollToClass(Enrollment enrollment, CourseClass courseClass);
 
     Optional<Enrollment> findById(String id);
 

@@ -87,7 +87,7 @@ public class CourseRepository implements ICourseRepository {
     }
 
     @Override
-    public List<CourseClass> getClassesByCourse(String courseId) {
+    public List<CourseClass> findClassesByCourse(String courseId) {
         String query = """
                 SELECT co.id AS course_id, co.name AS course_name, enrolled_students, available, capacity, credits,
                 cl.id AS class_id, available, cl.professor_id AS prof_id, u.first_name AS prof_first_name, u.last_name AS prof_last_name,

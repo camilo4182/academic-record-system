@@ -24,6 +24,6 @@ public interface ICourseRepository {
 
     boolean exists(String id);
 
-    List<CourseClass> getClassesByCourse(String courseId);
+    List<CourseClass> findClassesByCourse(String courseId);
 
 }

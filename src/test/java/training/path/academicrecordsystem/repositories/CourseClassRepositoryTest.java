@@ -85,7 +85,7 @@ public class CourseClassRepositoryTest {
         Optional<Course> courseOptional = courseRepository.findByName("Data Bases");
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
-        List<CourseClass> classes = courseRepository.getClassesByCourse(course.getId());
+        List<CourseClass> classes = courseRepository.findClassesByCourse(course.getId());
         CourseClass classToUpdate = classes.get(0);
         classToUpdate.setEnrolledStudents(30);
         classToUpdate.setAvailable(false);
@@ -121,7 +121,7 @@ public class CourseClassRepositoryTest {
         Optional<Course> courseOptional = courseRepository.findByName("Cellular Biology");
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
-        List<CourseClass> classes = courseRepository.getClassesByCourse(course.getId());
+        List<CourseClass> classes = courseRepository.findClassesByCourse(course.getId());
         CourseClass classToFind = classes.get(0);
 
         Optional<CourseClass> classOptional = classRepository.findById(classToFind.getId());
@@ -165,7 +165,7 @@ public class CourseClassRepositoryTest {
         Optional<Course> courseOptional = courseRepository.findByName("Algorithms I");
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
-        List<CourseClass> classes = courseRepository.getClassesByCourse(course.getId());
+        List<CourseClass> classes = courseRepository.findClassesByCourse(course.getId());
         CourseClass classToFind = classes.get(0);
 
         assertTrue(classRepository.exists(classToFind.getId()));
@@ -183,7 +183,7 @@ public class CourseClassRepositoryTest {
         Optional<Course> courseOptional = courseRepository.findByName("Algorithms I");
         assertTrue(courseOptional.isPresent());
         Course course = courseOptional.get();
-        List<CourseClass> classes = courseRepository.getClassesByCourse(course.getId());
+        List<CourseClass> classes = courseRepository.findClassesByCourse(course.getId());
         CourseClass classToFind = classes.get(0);
 
         assertTrue(classRepository.isAvailable(classToFind.getId()));

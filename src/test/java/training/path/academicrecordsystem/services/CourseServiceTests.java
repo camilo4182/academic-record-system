@@ -147,7 +147,7 @@ public class CourseServiceTests {
         List<CourseClass> classes = List.of(courseClass1, courseClass2, courseClass3, courseClass4);
 
         when(courseRepository.exists(anyString())).thenReturn(true);
-        when(courseRepository.getClassesByCourse(anyString())).thenReturn(classes);
+        when(courseRepository.findClassesByCourse(anyString())).thenReturn(classes);
 
         List<CourseClass> responseList = courseService.findClassesByCourse(courseId);
 
@@ -164,7 +164,7 @@ public class CourseServiceTests {
         List<CourseClass> classes = new ArrayList<>();
 
         when(courseRepository.exists(anyString())).thenReturn(false);
-        when(courseRepository.getClassesByCourse(anyString())).thenReturn(classes);
+        when(courseRepository.findClassesByCourse(anyString())).thenReturn(classes);
 
         assertThrows(ResourceNotFoundException.class, () -> courseService.findClassesByCourse(courseId));
     }

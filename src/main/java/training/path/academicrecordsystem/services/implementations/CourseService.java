@@ -63,7 +63,7 @@ public class CourseService implements ICourseService {
     @Override
     public List<CourseClass> findClassesByCourse(String courseId) throws ResourceNotFoundException {
         if (!courseRepository.exists(courseId)) throw new ResourceNotFoundException("Course " + courseId + " was not found");
-        return courseRepository.getClassesByCourse(courseId);
+        return courseRepository.findClassesByCourse(courseId);
     }
 
 }

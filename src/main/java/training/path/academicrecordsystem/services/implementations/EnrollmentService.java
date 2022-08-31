@@ -72,7 +72,7 @@ public class EnrollmentService implements IEnrollmentService {
         }
         for (CourseClass courseClass : classesToEnroll) {
             courseClass.increaseEnrolledStudents();
-            enrollmentRepository.saveEnrollmentClasses(enrollment, courseClass);
+            enrollmentRepository.enrollToClass(enrollment, courseClass);
         }
     }
 

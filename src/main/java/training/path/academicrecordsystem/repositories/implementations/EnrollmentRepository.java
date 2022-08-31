@@ -35,13 +35,15 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     }
 
     @Override
-    public void saveEnrollmentClasses(Enrollment enrollment, CourseClass courseClass) {
+    public int enrollToClass(Enrollment enrollment, CourseClass courseClass) {
+        int rowsModified = 0;
         String queryEnrollmentClasses = "INSERT INTO enrollment_classes (enrollment_id, class_id, semester) VALUES (?, ?, ?);";
-        jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()),
+        rowsModified += jdbcTemplate.update(queryEnrollmentClasses, UUID.fromString(enrollment.getId()),
                 UUID.fromString(courseClass.getId()),
                 enrollment.getSemester());
         String queryUpdateClass = "UPDATE classes SET enrolled_students = ?, available = ? WHERE id = ?;";
-        jdbcTemplate.update(queryUpdateClass, courseClass.getEnrolledStudents(), courseClass.isAvailable(), UUID.fromString(courseClass.getId()));
+        rowsModified += jdbcTemplate.update(queryUpdateClass, courseClass.getEnrolledStudents(), courseClass.isAvailable(), UUID.fromString(courseClass.getId()));
+        return rowsModified;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     public boolean exists(String id) {
         String query = "SELECT * FROM enrollments WHERE id = ?;";
         try {
-            jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(id));
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(id));
             return true;
         } catch (DataAccessException e) {
             return false;
@@ -107,7 +109,7 @@ public class EnrollmentRepository implements IEnrollmentRepository {
     public boolean studentAlreadyEnrolled(String enrollmentId, String classId) {
         String query = "SELECT * FROM enrollment_classes WHERE enrollment_id = ? AND class_id = ?;";
         try {
-            jdbcTemplate.query(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(enrollmentId), UUID.fromString(classId));
+            jdbcTemplate.queryForObject(query, new BeanPropertyRowMapper<>(Enrollment.class), UUID.fromString(enrollmentId), UUID.fromString(classId));
             return true;
         } catch (DataAccessException e) {
             return false;

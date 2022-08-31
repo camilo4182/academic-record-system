@@ -10,13 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import training.path.academicrecordsystem.model.Course;
 import training.path.academicrecordsystem.model.CourseClass;
-import training.path.academicrecordsystem.model.Professor;
-import training.path.academicrecordsystem.model.Role;
-import training.path.academicrecordsystem.repositories.implementations.CourseClassRepository;
 import training.path.academicrecordsystem.repositories.implementations.CourseRepository;
-import training.path.academicrecordsystem.repositories.implementations.ProfessorRepository;
-import training.path.academicrecordsystem.repositories.implementations.UserRepository;
-import training.path.academicrecordsystem.security.interfaces.IRoles;
 
 import java.util.List;
 import java.util.Optional;
@@ -166,7 +160,7 @@ public class CourseRepositoryTest {
     void givenACourseWithClasses_whenFindClassesByCourse_thenAListOfClassesIsReturned() {
         Course course = courseRepository.findByName("Algorithms I").orElseThrow();
 
-        List<CourseClass> classes = courseRepository.getClassesByCourse(course.getId());
+        List<CourseClass> classes = courseRepository.findClassesByCourse(course.getId());
 
         assertFalse(classes.isEmpty());
         assertEquals(2, classes.size());
