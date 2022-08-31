@@ -109,12 +109,4 @@ public class ErrorHandlingControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(MalformedJwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    ResponseEntity<ExceptionResponse> handleMalformedJwtException(MalformedJwtException e) {
-        ExceptionResponse response = createExceptionResponse(HttpStatus.BAD_REQUEST, "Malformed JWT token!");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
 }
