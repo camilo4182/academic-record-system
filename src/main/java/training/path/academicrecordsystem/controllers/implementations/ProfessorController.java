@@ -69,15 +69,8 @@ public class ProfessorController implements IProfessorController {
     }
 
     @Override
-    @GetMapping("professors/{id}")
-    public ResponseEntity<ResponseBodyProfessorDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
-        ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
-        return new ResponseEntity<>(professorDTO, HttpStatus.OK);
-    }
-
-    @Override
     @GetMapping("professors/profile/{id}")
-    public ResponseEntity<ResponseBodyProfessorDTO> viewProfile(@PathVariable("id") String id) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseBodyProfessorDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
         ResponseBodyProfessorDTO professorDTO = ProfessorMapper.toDTO(professorService.findById(id));
         return new ResponseEntity<>(professorDTO, HttpStatus.OK);
     }

@@ -73,15 +73,8 @@ public class StudentController implements IStudentController {
     }
 
     @Override
-    @GetMapping("students/{id}")
-    public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
-        ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
-        return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
-    }
-
-    @Override
     @GetMapping("students/profile/{id}")
-    public ResponseEntity<ResponseBodyStudentDTO> viewProfile(@PathVariable("id") String id) throws ResourceNotFoundException {
+    public ResponseEntity<ResponseBodyStudentDTO> findById(@PathVariable("id") String id) throws ResourceNotFoundException {
         ResponseBodyStudentDTO responseBodyStudentDTO = StudentMapper.toDTO(studentService.findById(id));
         return new ResponseEntity<>(responseBodyStudentDTO, HttpStatus.OK);
     }

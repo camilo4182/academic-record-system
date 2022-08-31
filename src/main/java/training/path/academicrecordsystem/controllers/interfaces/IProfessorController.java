@@ -21,8 +21,6 @@ public interface IProfessorController {
 
     ResponseEntity<ResponseBodyProfessorDTO> findById(String id) throws ResourceNotFoundException;
 
-    ResponseEntity<ResponseBodyProfessorDTO> viewProfile(String id) throws ResourceNotFoundException;
-
     ResponseEntity<List<ResponseBodyProfessorDTO>> findAll(Integer limit, Integer offset);
 
     ResponseEntity<List<ResponseBodyCourseClassDTO>> findClassesByProfessor(String professorId) throws ResourceNotFoundException;
