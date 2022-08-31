@@ -56,6 +56,7 @@ public class WebSecurityConfiguration {
                         .mvcMatchers(HttpMethod.POST, "/classes").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.PUT, "/classes/*").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.GET, "/students").authenticated()
+                        .mvcMatchers(HttpMethod.POST, "/students").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.PUT, "/students/*").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.GET, "/students/profile/**").authenticated()
                         .mvcMatchers(HttpMethod.PUT, "/students/profile/**").hasRole(IRoles.STUDENT)
