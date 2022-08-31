@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 @Service
 public class JWTTokenGeneratorService {
 
-    private static final int EXPIRATION_TIME = 60000;
     private final Logger log = Logger.getLogger(JWTTokenGeneratorService.class.getName());
 
     public String generateJWT(UserDetails authentication) {
@@ -26,7 +25,7 @@ public class JWTTokenGeneratorService {
                     .claim("username", authentication.getUsername())
                     .claim("authorities", populateAuthorities(authentication.getAuthorities()))
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(new Date().getTime() + EXPIRATION_TIME))
+                    .setExpiration(new Date(new Date().getTime() + SecurityConstants.EXPIRATION_TIME))
                     .signWith(key)
                     .compact();
 
