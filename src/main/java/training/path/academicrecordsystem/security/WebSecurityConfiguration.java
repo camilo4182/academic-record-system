@@ -44,6 +44,7 @@ public class WebSecurityConfiguration {
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .mvcMatchers(HttpMethod.POST,"/login").permitAll()
+                        .mvcMatchers(HttpMethod.POST, "/admin").permitAll()
                         .mvcMatchers(HttpMethod.POST, "/careers").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.PUT, "/careers/**").hasRole(IRoles.ADMIN)
                         .mvcMatchers(HttpMethod.DELETE, "/careers/**").hasRole(IRoles.ADMIN)
