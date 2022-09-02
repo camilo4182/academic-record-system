@@ -9,7 +9,7 @@ services:
     depends_on:
       - postgres_db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/academic-record-system_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_db:5432/academic-record-system
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
 
@@ -17,7 +17,9 @@ services:
     image: postgres:14-alpine
     ports:
       - "5432:5432"
+    volumes:
+      - './docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
     environment:
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=academic-record-system
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=academic-record-system_db
+      - POSTGRES_PASSWORD=password

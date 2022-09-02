@@ -25,7 +25,6 @@ import training.path.academicrecordsystem.security.authproviders.AcademicUserPwd
 import training.path.academicrecordsystem.security.jwtauth.JWTTokenGeneratorService;
 import training.path.academicrecordsystem.services.interfaces.IAdminService;
 
-@Profile("dev")
 @RestController
 @RequiredArgsConstructor
 public class MainController implements IMainController {

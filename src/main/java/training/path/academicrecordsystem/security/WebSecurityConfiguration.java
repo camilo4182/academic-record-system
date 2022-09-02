@@ -24,7 +24,6 @@ import training.path.academicrecordsystem.security.jwtauth.JWTTokenValidatorFilt
 import java.util.Collections;
 import java.util.List;
 
-@Profile("dev")
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity

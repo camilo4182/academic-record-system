@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@Profile("dev")
 @Component
 public class AcademicUserPwdAuthenticationProvider implements AuthenticationProvider {
 
