@@ -126,11 +126,13 @@ public class StudentRepository implements IStudentRepository {
 
                 int finalI = i;
                 List<Enrollment> filteredEnrollments = enrollmentList.stream().filter(e -> e.getSemester() == finalI).toList();
-                enrollment.setSemester(filteredEnrollments.get(0).getSemester());
-                for (Enrollment e : filteredEnrollments) {
-                    enrollment.addClass(e.getCourseClasses().get(0));
+                if (!filteredEnrollments.isEmpty()) {
+                    enrollment.setSemester(filteredEnrollments.get(0).getSemester());
+                    for (Enrollment e : filteredEnrollments) {
+                        enrollment.addClass(e.getCourseClasses().get(0));
+                    }
+                    enrollmentsPerSemester.add(enrollment);
                 }
-                enrollmentsPerSemester.add(enrollment);
             }
             return enrollmentsPerSemester;
         } catch (NoSuchElementException e) {
